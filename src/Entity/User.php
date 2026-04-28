@@ -76,12 +76,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var Collection<int, Post>
      */
     #[ORM\ManyToMany(targetEntity: Post::class, inversedBy: 'users')]
+    #[ORM\JoinTable(name: 'user_post_likes')]
     private Collection $likes;
 
     /**
      * @var Collection<int, Post>
      */
     #[ORM\ManyToMany(targetEntity: Post::class, inversedBy: 'users')]
+    #[ORM\JoinTable(name: 'user_post_reposts')]
     private Collection $repost;
 
     public function __construct()
