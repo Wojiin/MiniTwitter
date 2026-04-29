@@ -24,9 +24,15 @@ class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
+            $now = new \DateTimeImmutable();
 
             // encode the plain password
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+            $user->setStatus('actif');
+            $user->setCountFlag(0);
+            $user->setDeleteFlag(0);
+            $user->setLastLoginAt($now);
+            $user->setCreatedAt($now);
 
             $entityManager->persist($user);
             $entityManager->flush();
