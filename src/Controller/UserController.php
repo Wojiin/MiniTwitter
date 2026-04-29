@@ -3,17 +3,69 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\ProfileSettingsType;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/user')]
 final class UserController extends AbstractController
 {
+    #[Route('/profile/edit', name: 'app_user_profile_edit', methods: ['GET', 'POST'])]
+public function editProfile(
+    Request $request,
+    EntityManagerInterface $entityManager,
+    UserPasswordHasherInterface $userPasswordHasher
+): Response {
+    $user = $this->getUser();
+
+    if (!$user instanceof User) {
+        throw $this->createAccessDeniedException();
+    }
+
+    $form = $this->createForm(ProfileSettingsType::class, $user);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted()) {
+        $currentPassword = $form->get('currentPassword')->getData();
+        $plainPassword = $form->get('plainPassword')->getData();
+
+        if (!empty($plainPassword)) {
+            if (empty($currentPassword)) {
+                $form->get('currentPassword')->addError(
+                    new FormError('Veuillez renseigner votre mot de passe actuel pour le modifier.')
+                );
+            } elseif (!$userPasswordHasher->isPasswordValid($user, $currentPassword)) {
+                $form->get('currentPassword')->addError(
+                    new FormError('Le mot de passe actuel est incorrect.')
+                );
+            } else {
+                $user->setPassword(
+                    $userPasswordHasher->hashPassword($user, $plainPassword)
+                );
+            }
+        }
+
+        if ($form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_user_profile_edit');
+        }
+    }
+
+    return $this->render('user/profile_edit.html.twig', [
+        'form' => $form,
+        'user' => $user,
+    ]);
+}
+
+    
     #[Route(name: 'app_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
