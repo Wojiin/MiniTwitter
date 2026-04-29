@@ -11,15 +11,14 @@
                 <th>Id</th>
                 <th>Email</th>
                 <th>Roles</th>
-                <th>Password</th>
-                <th>User_name</th>
-                <th>Status</th>
-                <th>Count_flag</th>
+                <th>Nom d'utilisateur</th>
+                <th>Statut</th>
+                <th>Compteur de flags</th>
                 <th>Delete_flag</th>
-                <th>Last_login_at</th>
-                <th>Profil_picture</th>
-                <th>Created_at</th>
-                <th>Updated_at</th>
+                <th>Dernière connexion</th>
+                <th>Photo de profil</th>
+                <th>Crée le</th>
+                <th>Mis à jour le</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -29,7 +28,6 @@
                 <td>{{ user.id }}</td>
                 <td>{{ user.email }}</td>
                 <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-                <td>{{ user.password }}</td>
                 <td>{{ user.userName }}</td>
                 <td>{{ user.status }}</td>
                 <td>{{ user.countFlag }}</td>
