@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Post;
+// use App\Entity\User;
 use App\Form\PostType;
 use App\Repository\PostRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,12 +24,21 @@ final class PostController extends AbstractController
         ]);
     }
 
+   
     #[Route('/new', name: 'app_post_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $now = new \DateTimeImmutable();
         $post = new Post();
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
+        $post->setCreatedAt($now);
+        $post->setStatus('actif');
+        $post->setCountFlag(0);
+        $post->setCountLike(0);
+        $post->setCountRepost(0);
+        $post->setAuthor($this->getUser()->getUserName());
+        $post->setCreator($this->getUser());
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($post);
@@ -71,11 +82,14 @@ final class PostController extends AbstractController
     #[Route('/{id}', name: 'app_post_delete', methods: ['POST'])]
     public function delete(Request $request, Post $post, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$post->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $post->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($post);
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
     }
+
+
+    
 }
