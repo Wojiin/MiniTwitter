@@ -16,22 +16,22 @@ class ReplyType extends AbstractType
     {
         $builder
             ->add('content')
-            ->add('created_at', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('updated_at', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('status')
-            ->add('count_flag')
-            ->add('creator', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'id',
-            ])
-            ->add('post', EntityType::class, [
-                'class' => Post::class,
-                'choice_label' => 'id',
-            ])
+            // ->add('created_at', null, [
+            //     'widget' => 'single_text',
+            // ])
+            // ->add('updated_at', null, [
+            //     'widget' => 'single_text',
+            // ])
+            // ->add('status')
+            // ->add('count_flag')
+            // ->add('creator', EntityType::class, [
+            //     'class' => User::class,
+            //     'choice_label' => 'id',
+            // ])
+            // ->add('post', EntityType::class, [
+            //     'class' => Post::class,
+            //     'choice_label' => 'id',
+            // ])
         ;
     }
 
