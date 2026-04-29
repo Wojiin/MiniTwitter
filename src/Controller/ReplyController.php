@@ -4,6 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Reply;
 use App\Form\ReplyType;
+use App\Entity\Post;
+use App\Entity\User;
+use App\Repository\PostRepository;
+use DateTimeImmutable;
 use App\Repository\ReplyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,13 +27,25 @@ final class ReplyController extends AbstractController
     }
 
     #[Route('/new', name: 'app_reply_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, PostRepository $postRepository): Response
     {
+        if (isset($_GET['id'])) {
+            $post = new Post();
+            $post = $postRepository->find($_GET['id']);
+        
+        $now = new \DateTimeImmutable();
         $reply = new Reply();
         $form = $this->createForm(ReplyType::class, $reply);
         $form->handleRequest($request);
+        $reply->setCreatedAt($now);
+        $reply->setStatus('actif');
+        $reply->setCountFlag(0);
+        $reply->setCreator($this->getUser());
+        $reply->setPost($post);
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $entityManager->persist($reply);
             $entityManager->flush();
 
@@ -71,7 +87,7 @@ final class ReplyController extends AbstractController
     #[Route('/{id}', name: 'app_reply_delete', methods: ['POST'])]
     public function delete(Request $request, Reply $reply, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$reply->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $reply->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($reply);
             $entityManager->flush();
         }
