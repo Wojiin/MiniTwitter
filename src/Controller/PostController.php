@@ -6,6 +6,7 @@ use App\Entity\Post;
 // use App\Entity\User;
 use App\Form\PostType;
 use App\Repository\PostRepository;
+use App\Service\UploadService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,7 +27,7 @@ final class PostController extends AbstractController
 
    
     #[Route('/new', name: 'app_post_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, UploadService $uploadService): Response
     {
         $now = new \DateTimeImmutable();
         $post = new Post();
@@ -41,6 +42,13 @@ final class PostController extends AbstractController
         $post->setCreator($this->getUser());
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('image')->getData();
+
+            if ($imageFile) {
+                $fileName = $uploadService->upload($imageFile, 'uploads/posts');
+                $post->setImage($fileName);
+            }
+
             $entityManager->persist($post);
             $entityManager->flush();
 
@@ -62,12 +70,19 @@ final class PostController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_post_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Post $post, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Post $post, EntityManagerInterface $entityManager, UploadService $uploadService): Response
     {
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('image')->getData();
+
+            if ($imageFile) {
+                $fileName = $uploadService->upload($imageFile, 'uploads/posts');
+                $post->setImage($fileName);
+            }
+
             $entityManager->flush();
 
             return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);

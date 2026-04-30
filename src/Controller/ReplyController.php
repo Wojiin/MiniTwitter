@@ -9,6 +9,7 @@ use App\Entity\User;
 use App\Repository\PostRepository;
 use DateTimeImmutable;
 use App\Repository\ReplyRepository;
+use App\Service\UploadService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +28,7 @@ final class ReplyController extends AbstractController
     }
 
     #[Route('/new', name: 'app_reply_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, PostRepository $postRepository): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, PostRepository $postRepository, UploadService $uploadService): Response
     {
         if (isset($_GET['id'])) {
             $post = new Post();
@@ -45,6 +46,12 @@ final class ReplyController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('image')->getData();
+
+            if ($imageFile) {
+                $fileName = $uploadService->upload($imageFile, 'uploads/replies');
+                $reply->setImage($fileName);
+            }
 
             $entityManager->persist($reply);
             $entityManager->flush();
@@ -67,12 +74,19 @@ final class ReplyController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_reply_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Reply $reply, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Reply $reply, EntityManagerInterface $entityManager, UploadService $uploadService): Response
     {
         $form = $this->createForm(ReplyType::class, $reply);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('image')->getData();
+
+            if ($imageFile) {
+                $fileName = $uploadService->upload($imageFile, 'uploads/replies');
+                $reply->setImage($fileName);
+            }
+
             $entityManager->flush();
 
             return $this->redirectToRoute('app_reply_index', [], Response::HTTP_SEE_OTHER);

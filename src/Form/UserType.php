@@ -7,9 +7,11 @@ use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 class UserType extends AbstractType
 {
@@ -26,7 +28,20 @@ class UserType extends AbstractType
             ->add('last_login_at', null, [
                 'widget' => 'single_text',
             ])
-            ->add('profil_picture')
+            ->add('profil_picture', FileType::class, [
+                'label' => 'Photo de profil',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new File(
+                        maxSize: '5000k',
+                        mimeTypes: [
+                            'image/*',
+                        ],
+                        mimeTypesMessage: 'Image trop lourde',
+                    ),
+                ],
+            ])
             ->add('created_at', null, [
                 'widget' => 'single_text',
             ])

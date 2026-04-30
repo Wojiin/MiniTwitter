@@ -4,10 +4,12 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 class ProfileSettingsType extends AbstractType
 {
@@ -17,10 +19,19 @@ class ProfileSettingsType extends AbstractType
             ->add('user_name', null, [
                 'label' => 'Nom d\'utilisateur',
             ])
-            ->add('profil_picture', null, [
+            ->add('profil_picture', FileType::class, [
                 'label' => 'Photo de profil',
+                'mapped' => false,
                 'required' => false,
-                'help' => 'Renseigne simplement un nom de fichier ou un chemin pour le moment.',
+                'constraints' => [
+                    new File(
+                        maxSize: '5000k',
+                        mimeTypes: [
+                            'image/*',
+                        ],
+                        mimeTypesMessage: 'Image trop lourde',
+                    ),
+                ],
             ])
             ->add('currentPassword', PasswordType::class, [
                 'mapped' => false,

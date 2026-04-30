@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\ProfileSettingsType;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use App\Service\UploadService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -21,7 +22,8 @@ final class UserController extends AbstractController
 public function editProfile(
     Request $request,
     EntityManagerInterface $entityManager,
-    UserPasswordHasherInterface $userPasswordHasher
+    UserPasswordHasherInterface $userPasswordHasher,
+    UploadService $uploadService
 ): Response {
     $user = $this->getUser();
 
@@ -53,6 +55,13 @@ public function editProfile(
         }
 
         if ($form->isValid()) {
+            $imageFile = $form->get('profil_picture')->getData();
+
+            if ($imageFile) {
+                $fileName = $uploadService->upload($imageFile, 'uploads/profile_pictures');
+                $user->setProfilPicture($fileName);
+            }
+
             $entityManager->flush();
 
             return $this->redirectToRoute('app_user_profile_edit');
@@ -75,13 +84,20 @@ public function editProfile(
     }
 
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, UploadService $uploadService): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('profil_picture')->getData();
+
+            if ($imageFile) {
+                $fileName = $uploadService->upload($imageFile, 'uploads/profile_pictures');
+                $user->setProfilPicture($fileName);
+            }
+
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -103,12 +119,19 @@ public function editProfile(
     }
 
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, User $user, EntityManagerInterface $entityManager, UploadService $uploadService): Response
     {
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('profil_picture')->getData();
+
+            if ($imageFile) {
+                $fileName = $uploadService->upload($imageFile, 'uploads/profile_pictures');
+                $user->setProfilPicture($fileName);
+            }
+
             $entityManager->flush();
 
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
