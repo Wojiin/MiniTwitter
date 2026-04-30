@@ -11,6 +11,7 @@
                 <th>Author</th>
                 <th>Title</th>
                 <th>Content</th>
+                <th>Image</th>
                 <th>Created_at</th>
                 <th>Updated_at</th>
                 <th>Count_repost</th>
@@ -25,6 +26,11 @@
                 <td>{{ post.author }}</td>
                 <td>{{ post.title }}</td>
                 <td>{{ post.content }}</td>
+                <td>
+                    {% if post.image %}
+                        <img src="{{ asset('uploads/posts/' ~ post.image) }}" alt="Image du post {{ post.title }}" style="max-width: 120px; max-height: 120px;">
+                    {% endif %}
+                </td>
                 <td>{{ post.createdAt ? post.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ post.updatedAt ? post.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ post.countRepost }}</td>
@@ -38,7 +44,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="11">no records found</td>
+                <td colspan="12">no records found</td>
             </tr>
         {% endfor %}
         </tbody>

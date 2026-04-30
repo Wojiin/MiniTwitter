@@ -41,7 +41,13 @@
             </tr>
             <tr>
                 <th>Profil_picture</th>
-                <td>{{ user.profilPicture }}</td>
+                <td>
+                    {% if user.profilPicture %}
+                        <img src="{{ asset('uploads/profile_pictures/' ~ user.profilPicture) }}" alt="Photo de profil de {{ user.userName }}" style="max-width: 120px; max-height: 120px;">
+                    {% else %}
+                        Non renseignee
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <th>Created_at</th>

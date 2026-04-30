@@ -16,6 +16,16 @@
                 <td>{{ reply.content }}</td>
             </tr>
             <tr>
+                <th>Image</th>
+                <td>
+                    {% if reply.image %}
+                        <img src="{{ asset('uploads/replies/' ~ reply.image) }}" alt="Image de la reponse {{ reply.id }}" style="max-width: 250px; max-height: 250px;">
+                    {% else %}
+                        Aucune image
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
                 <th>Created_at</th>
                 <td>{{ reply.createdAt ? reply.createdAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>

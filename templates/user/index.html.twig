@@ -33,7 +33,13 @@
                 <td>{{ user.countFlag }}</td>
                 <td>{{ user.deleteFlag }}</td>
                 <td>{{ user.lastLoginAt ? user.lastLoginAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ user.profilPicture }}</td>
+                <td>
+                    {% if user.profilPicture %}
+                        <img src="{{ asset('uploads/profile_pictures/' ~ user.profilPicture) }}" alt="Photo de profil de {{ user.userName }}" style="max-width: 80px; max-height: 80px;">
+                    {% else %}
+                        Non renseignee
+                    {% endif %}
+                </td>
                 <td>{{ user.createdAt ? user.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ user.updatedAt ? user.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>

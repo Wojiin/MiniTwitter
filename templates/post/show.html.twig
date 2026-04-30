@@ -25,6 +25,16 @@
 				<td>{{ post.content }}</td>
 			</tr>
 			<tr>
+				<th>Image</th>
+				<td>
+					{% if post.image %}
+						<img src="{{ asset('uploads/posts/' ~ post.image) }}" alt="Image du post {{ post.title }}" style="max-width: 250px; max-height: 250px;">
+					{% else %}
+						Aucune image
+					{% endif %}
+				</td>
+			</tr>
+			<tr>
 				<th>Created_at</th>
 				<td>{{ post.createdAt ? post.createdAt|date('Y-m-d H:i:s') : '' }}</td>
 			</tr>
@@ -58,11 +68,21 @@
 
 	<h2>Reply</h2>
 	<table class="table">
-		{% if (reply !== null) %}
-			{% for rep in reply %}
+		{% if replies|length > 0 %}
+			{% for rep in replies %}
 				<tr>
 					<th>Content</th>
 					<td>{{ rep.content }}</td>
+				</tr>
+				<tr>
+					<th>Image</th>
+					<td>
+						{% if rep.image %}
+							<img src="{{ asset('uploads/replies/' ~ rep.image) }}" alt="Image de la reponse" style="max-width: 200px; max-height: 200px;">
+						{% else %}
+							Aucune image
+						{% endif %}
+					</td>
 				</tr>
 				<tr>
 					<th>Creator</th>
@@ -72,10 +92,13 @@
 					<th>Created_at</th>
 					<td>{{ rep.createdAt ? rep.createdAt|date('Y-m-d H:i:s') : '' }}</td>
 				</tr>
-				<tr>
-				{% endfor %}
-			{% endif %}
-		</table>
+			{% endfor %}
+		{% else %}
+			<tr>
+				<td>Il n'y a pas de replies</td>
+			</tr>
+		{% endif %}
+	</table>
         <h2><a href="{{ path('app_reply_new', {'id': post.id}) }}">New Reply</a></h2>
         {# <a href="{{ path('app_reply_new', {'id': post.id}) }}">New Reply</a> #}
 		{# {{ include('reply/_form.html.twig') }} #}

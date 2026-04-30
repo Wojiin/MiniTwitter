@@ -18,8 +18,15 @@ class UploadService
     public function upload(UploadedFile $file, string $targetDirectory): string
     {
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-        $safeFilename = $this->slugger->slug($originalFilename);
-        $fileName = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
+        $safeFilename = substr((string) $this->slugger->slug($originalFilename), 0, 12);
+
+        if ($safeFilename === '') {
+            $safeFilename = 'file';
+        }
+
+        $uniquePart = substr(bin2hex(random_bytes(4)), 0, 8);
+        $extension = $file->guessExtension() ?: 'bin';
+        $fileName = $safeFilename.'-'.$uniquePart.'.'.$extension;
 
         try {
             $file->move($this->getTargetDirectory($targetDirectory), $fileName);

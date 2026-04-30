@@ -3,17 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Post;
-use App\Entity\Reply;
 use App\Entity\User;
-// use App\Entity\User;
 use App\Form\PostType;
-use App\Form\ReplyType;
 use App\Repository\PostRepository;
-<<<<<<< HEAD
 use App\Service\UploadService;
-=======
-use App\Repository\ReplyRepository;
->>>>>>> origin/dev
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -69,12 +62,11 @@ final class PostController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_post_show', methods: ['GET'])]
-    public function show(Post $post, Reply $reply): Response
+    public function show(Post $post): Response
     {
-        $replies = $post->getReplies();
         return $this->render('post/show.html.twig', [
             'post' => $post,
-            'reply' => $replies
+            'replies' => $post->getReplies(),
         ]);
     }
     // #[Route('/newRep', name: 'app_reply_new', methods: ['GET', 'POST'])]

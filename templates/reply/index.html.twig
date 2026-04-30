@@ -10,6 +10,7 @@
             <tr>
                 <th>Id</th>
                 <th>Content</th>
+                <th>Image</th>
                 <th>Created_at</th>
                 <th>Updated_at</th>
                 <th>Status</th>
@@ -22,6 +23,11 @@
             <tr>
                 <td>{{ reply.id }}</td>
                 <td>{{ reply.content }}</td>
+                <td>
+                    {% if reply.image %}
+                        <img src="{{ asset('uploads/replies/' ~ reply.image) }}" alt="Image de la reponse {{ reply.id }}" style="max-width: 120px; max-height: 120px;">
+                    {% endif %}
+                </td>
                 <td>{{ reply.createdAt ? reply.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ reply.updatedAt ? reply.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ reply.status }}</td>
@@ -33,7 +39,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="7">no records found</td>
+                <td colspan="8">no records found</td>
             </tr>
         {% endfor %}
         </tbody>
