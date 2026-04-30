@@ -40,6 +40,8 @@
                     <a href="{{ path('app_post_show', {'id': post.id}) }}">show</a>
                     <a href="{{ path('app_post_edit', {'id': post.id}) }}">edit</a>
                     <a href="{{ path('app_reply_new', {'id': post.id}) }}">reply</a>
+                    <a href="{{ path('app_post_addlike', {'id': post.id}) }}">like</a>
+                    <a href="{{ path('app_post_addrepost', {'id': post.id}) }}">repost</a>
                 </td>
             </tr>
         {% else %}
