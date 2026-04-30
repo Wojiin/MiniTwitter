@@ -66,36 +66,6 @@ final class PostController extends AbstractController
             'reply' => $replies
         ]);
     }
-    // #[Route('/newRep', name: 'app_reply_new', methods: ['GET', 'POST'])]
-    // public function newReply(Request $request, EntityManagerInterface $entityManager, PostRepository $postRepository): Response
-    // {
-    //     $reply = new Reply();
-    //     $form = $this->createForm(ReplyType::class, $reply);
-    //     $form->handleRequest($request);
-    //     if (isset($_GET['id'])) {
-    //         $post = new Post();
-    //         $post = $postRepository->find($_GET['id']);
-    //         $now = new \DateTimeImmutable();
-    //         $reply->setCreatedAt($now);
-    //         $reply->setStatus('actif');
-    //         $reply->setCountFlag(0);
-    //         $reply->setCreator($this->getUser());
-    //         $reply->setPost($post);
-    //     }
-
-    //     if ($form->isSubmitted() && $form->isValid()) {
-
-    //         $entityManager->persist($reply);
-    //         $entityManager->flush();
-
-    //         return $this->redirectToRoute('app_post_show', ['id'=>'reply.post_id'], Response::HTTP_SEE_OTHER);
-    //     }
-
-    //     return $this->render('reply/new.html.twig', [
-    //         'reply' => $reply,
-    //         'form' => $form,
-    //     ]);
-    // }
 
     #[Route('/{id}/edit', name: 'app_post_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Post $post, EntityManagerInterface $entityManager): Response
@@ -129,14 +99,42 @@ final class PostController extends AbstractController
     }
 
 
-    #[Route(name: 'app_post_like', methods: ['GET'])]
-    public function addlike(Post $post, User $user, EntityManagerInterface $entityManager): Response
+    #[Route(name: 'app_post_addlike', methods: ['GET'])]
+    public function addLike(Post $post, User $user): Response
     {
         $user->addLike($post);
-        $post->setCountLike(($post->getCountLike()) + 1);
+        $post->setCountLike(+($post->getCountLike()) + 1);
         return $this->render('post/show.html.twig', [
             'post' => $post,
-            'reply' => $replies
+        ]);
+    }
+    #[Route(name: 'app_post_remlike', methods: ['GET'])]
+    public function removeLike(Post $post, User $user): Response
+    {
+        $user->removeLike($post);
+        $post->setCountLike(+($post->getCountLike()) - 1);
+        return $this->render('post/show.html.twig', [
+            'post' => $post,
+        ]);
+    }
+
+        #[Route(name: 'app_post_addrepost', methods: ['GET'])]
+    public function addRepost(Post $post, User $user): Response
+    {
+        // if ($this->getUser()->getUserIdentifier() ===  )
+        $user->addRepost($post);
+        $post->setCountRepost(+($post->getCountRepost()) + 1);
+        return $this->render('post/show.html.twig', [
+            'post' => $post,
+        ]);
+    }
+    #[Route(name: 'app_post_remrepost', methods: ['GET'])]
+    public function removeRepost(Post $post, User $user): Response
+    {
+        $user->removeRepost($post);
+        $post->setCountRepost(+($post->getCountRepost()) - 1);
+        return $this->render('post/show.html.twig', [
+            'post' => $post,
         ]);
     }
 }
