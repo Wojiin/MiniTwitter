@@ -86,12 +86,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinTable(name: 'user_post_reposts')]
     private Collection $repost;
 
+    /**
+     * @var Collection<int, Post>
+     */
+    #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'user_flag')]
+    private Collection $flag_post;
+
+    /**
+     * @var Collection<int, Reply>
+     */
+    #[ORM\OneToMany(targetEntity: Reply::class, mappedBy: 'user_flag')]
+    private Collection $flag_reply;
+
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'flag_user')]
+    private ?self $user_flag = null;
+
+    /**
+     * @var Collection<int, self>
+     */
+    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'user_flag')]
+    private Collection $flag_user;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
         $this->replies = new ArrayCollection();
         $this->likes = new ArrayCollection();
         $this->repost = new ArrayCollection();
+        $this->flag_post = new ArrayCollection();
+        $this->flag_reply = new ArrayCollection();
+        $this->flag_user = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -369,6 +393,108 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeRepost(Post $repost): static
     {
         $this->repost->removeElement($repost);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Post>
+     */
+    public function getFlagPost(): Collection
+    {
+        return $this->flag_post;
+    }
+
+    public function addFlagPost(Post $flagPost): static
+    {
+        if (!$this->flag_post->contains($flagPost)) {
+            $this->flag_post->add($flagPost);
+            $flagPost->setUserFlag($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFlagPost(Post $flagPost): static
+    {
+        if ($this->flag_post->removeElement($flagPost)) {
+            // set the owning side to null (unless already changed)
+            if ($flagPost->getUserFlag() === $this) {
+                $flagPost->setUserFlag(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reply>
+     */
+    public function getFlagReply(): Collection
+    {
+        return $this->flag_reply;
+    }
+
+    public function addFlagReply(Reply $flagReply): static
+    {
+        if (!$this->flag_reply->contains($flagReply)) {
+            $this->flag_reply->add($flagReply);
+            $flagReply->setUserFlag($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFlagReply(Reply $flagReply): static
+    {
+        if ($this->flag_reply->removeElement($flagReply)) {
+            // set the owning side to null (unless already changed)
+            if ($flagReply->getUserFlag() === $this) {
+                $flagReply->setUserFlag(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getUserFlag(): ?self
+    {
+        return $this->user_flag;
+    }
+
+    public function setUserFlag(?self $user_flag): static
+    {
+        $this->user_flag = $user_flag;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getFlagUser(): Collection
+    {
+        return $this->flag_user;
+    }
+
+    public function addFlagUser(self $flagUser): static
+    {
+        if (!$this->flag_user->contains($flagUser)) {
+            $this->flag_user->add($flagUser);
+            $flagUser->setUserFlag($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFlagUser(self $flagUser): static
+    {
+        if ($this->flag_user->removeElement($flagUser)) {
+            // set the owning side to null (unless already changed)
+            if ($flagUser->getUserFlag() === $this) {
+                $flagUser->setUserFlag(null);
+            }
+        }
 
         return $this;
     }

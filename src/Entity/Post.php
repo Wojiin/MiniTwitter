@@ -62,6 +62,9 @@ class Post
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
+    #[ORM\ManyToOne(inversedBy: 'flag_post')]
+    private ?User $user_flag = null;
+
     public function __construct()
     {
         $this->replies = new ArrayCollection();
@@ -258,6 +261,18 @@ class Post
     public function setImage(?string $image): static
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function getUserFlag(): ?User
+    {
+        return $this->user_flag;
+    }
+
+    public function setUserFlag(?User $user_flag): static
+    {
+        $this->user_flag = $user_flag;
 
         return $this;
     }
