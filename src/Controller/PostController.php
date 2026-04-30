@@ -99,42 +99,63 @@ final class PostController extends AbstractController
     }
 
 
-    #[Route(name: 'app_post_addlike', methods: ['GET'])]
-    public function addLike(Post $post, User $user): Response
+    #[Route('/like/{id}', name: 'app_post_addlike', methods: ['GET', 'POST'])]
+    public function addLikePost(Post $post, User $user, EntityManagerInterface $entityManager): Response
     {
-        $user->addLike($post);
-        $post->setCountLike(+($post->getCountLike()) + 1);
-        return $this->render('post/show.html.twig', [
-            'post' => $post,
-        ]);
-    }
-    #[Route(name: 'app_post_remlike', methods: ['GET'])]
-    public function removeLike(Post $post, User $user): Response
-    {
-        $user->removeLike($post);
-        $post->setCountLike(+($post->getCountLike()) - 1);
-        return $this->render('post/show.html.twig', [
-            'post' => $post,
-        ]);
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // dd("if");
+            $user->addLike($post);
+            $post->setCountLike(+ ($post->getCountLike()) + 1);
+            $entityManager->persist($post);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+        }
+        return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
     }
 
-        #[Route(name: 'app_post_addrepost', methods: ['GET'])]
-    public function addRepost(Post $post, User $user): Response
+
+
+
+    #[Route('/remlike/{id}', name: 'app_post_remlike', methods: ['POST'])]
+    public function removeLikePost(Post $post, User $user, EntityManagerInterface $entityManager): Response
     {
-        // if ($this->getUser()->getUserIdentifier() ===  )
-        $user->addRepost($post);
-        $post->setCountRepost(+($post->getCountRepost()) + 1);
-        return $this->render('post/show.html.twig', [
-            'post' => $post,
-        ]);
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $user->removeLike($post);
+            $post->setCountLike(+ ($post->getCountLike()) - 1);
+            $entityManager->persist($post);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+        }
+        return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
     }
-    #[Route(name: 'app_post_remrepost', methods: ['GET'])]
-    public function removeRepost(Post $post, User $user): Response
+
+
+    #[Route('/repost/{id}', name: 'app_post_addrepost', methods: ['POST'])]
+    public function addRepo(Post $post, User $user, EntityManagerInterface $entityManager): Response
     {
-        $user->removeRepost($post);
-        $post->setCountRepost(+($post->getCountRepost()) - 1);
-        return $this->render('post/show.html.twig', [
-            'post' => $post,
-        ]);
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $user->addRepost($post);
+            $post->setCountRepost(+ ($post->getCountRepost()) + 1);
+            $entityManager->persist($post);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+        }
+        return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+
+
+
+    #[Route('/remrepo/{id}', name: 'app_post_remrepost', methods: ['POST'])]
+    public function removeRepo(Post $post, User $user, EntityManagerInterface $entityManager): Response
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $user->removeRepost($post);
+            $post->setCountRepost(+ ($post->getCountRepost()) - 1);
+             $entityManager->persist($post);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+        }
+        return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
     }
 }
