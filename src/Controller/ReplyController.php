@@ -29,19 +29,18 @@ final class ReplyController extends AbstractController
     #[Route('/new', name: 'app_reply_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, PostRepository $postRepository): Response
     {
-        if (isset($_GET['id'])) {
-            $post = new Post();
-            $post = $postRepository->find($_GET['id']);
-        
-        $now = new \DateTimeImmutable();
         $reply = new Reply();
         $form = $this->createForm(ReplyType::class, $reply);
         $form->handleRequest($request);
-        $reply->setCreatedAt($now);
-        $reply->setStatus('actif');
-        $reply->setCountFlag(0);
-        $reply->setCreator($this->getUser());
-        $reply->setPost($post);
+        if (isset($_GET['id'])) {
+            $post = new Post();
+            $post = $postRepository->find($_GET['id']);
+            $now = new \DateTimeImmutable();
+            $reply->setCreatedAt($now);
+            $reply->setStatus('actif');
+            $reply->setCountFlag(0);
+            $reply->setCreator($this->getUser());
+            $reply->setPost($post);
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -71,6 +70,8 @@ final class ReplyController extends AbstractController
     {
         $form = $this->createForm(ReplyType::class, $reply);
         $form->handleRequest($request);
+        $now = new \DateTimeImmutable();
+        $reply->setUpdatedAt($now);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
