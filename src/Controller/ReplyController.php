@@ -75,6 +75,10 @@ final class ReplyController extends AbstractController
     #[Route('/{id}/edit', name: 'app_reply_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Reply $reply, EntityManagerInterface $entityManager, UploadService $uploadService): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN') && $reply->getCreator() !== $this->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
+
         $form = $this->createForm(ReplyType::class, $reply);
         $form->handleRequest($request);
         $now = new \DateTimeImmutable();
@@ -102,6 +106,10 @@ final class ReplyController extends AbstractController
     #[Route('/{id}', name: 'app_reply_delete', methods: ['POST'])]
     public function delete(Request $request, Reply $reply, EntityManagerInterface $entityManager): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN') && $reply->getCreator() !== $this->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
+
         if ($this->isCsrfTokenValid('delete' . $reply->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($reply);
             $entityManager->flush();
