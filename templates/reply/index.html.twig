@@ -6,56 +6,65 @@
 {% block body %}
 	<h1>Reply index</h1>
 
-	<table class="table">
-		<thead>
-			<tr>
-				<th>Id</th>
-				<th>Content</th>
-				<th>Image</th>
-				<th>Created_at</th>
-				<th>Updated_at</th>
-				<th>Status</th>
-				<th>Count_flag</th>
-				<th>actions</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for reply in replies %}
+	{% set has_flagged_replies = false %}
+	{% for reply in replies %}
+		{% if reply.countFlag > 0 %}
+			{% set has_flagged_replies = true %}
+		{% endif %}
+	{% endfor %}
+
+	{% if has_flagged_replies %}
+		<table class="table">
+			<thead>
 				<tr>
-					<td>{{ reply.id }}</td>
-					<td>{{ reply.content }}</td>
-					<td>
-						{% if reply.image %}
-							<img src="{{ asset('uploads/replies/' ~ reply.image) }}" alt="Image de la reponse {{ reply.id }}" style="max-width: 120px; max-height: 120px;">
-						{% endif %}
-					</td>
-					<td>{{ reply.createdAt ? reply.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-					<td>{{ reply.updatedAt ? reply.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-					<td>{{ reply.status }}</td>
-					<td>{{ reply.countFlag }}</td>
-					<td>
-						<a href="{{ path('app_reply_show', {'id': reply.id}) }}">show</a>
-						{% if is_granted('ROLE_ADMIN') or (app.user and reply.creator and app.user.id == reply.creator.id) %}
-							<a href="{{ path('app_reply_edit', {'id': reply.id}) }}">edit</a>
-						{% endif %}
-						{% if app.user and post not in app.user.flagReply %}
-							<form action={{ path('app_reply_addflag', {'id': reply.id} )}} method="post">
-								<input name="flag" id="flag" value="flag" type="submit">
-							</form>
-						{% else %}
-							<form action={{ path('app_reply_unflag', {'id': reply.id} )}} method="post">
-								<input name="unflag" id="unflag" value="remove flag" type="submit">
-							</form>
-						{% endif %}
-					</td>
+					<th>Id</th>
+					<th>Content</th>
+					<th>Image</th>
+					<th>Created_at</th>
+					<th>Updated_at</th>
+					<th>Status</th>
+					<th>Count_flag</th>
+					<th>actions</th>
 				</tr>
-			{% else %}
-				<tr>
-					<td colspan="8">no records found</td>
-				</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+			</thead>
+			<tbody>
+				{% for reply in replies %}
+					{% if reply.countFlag > 0 %}
+						<tr>
+							<td>{{ reply.id }}</td>
+							<td>{{ reply.content }}</td>
+							<td>
+								{% if reply.image %}
+									<img src="{{ asset('uploads/replies/' ~ reply.image) }}" alt="Image de la reponse {{ reply.id }}" style="max-width: 120px; max-height: 120px;">
+								{% endif %}
+							</td>
+							<td>{{ reply.createdAt ? reply.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+							<td>{{ reply.updatedAt ? reply.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+							<td>{{ reply.status }}</td>
+							<td>{{ reply.countFlag }}</td>
+							<td>
+								<a href="{{ path('app_reply_show', {'id': reply.id}) }}">show</a>
+								{% if is_granted('ROLE_ADMIN') or (app.user and reply.creator and app.user.id == reply.creator.id) %}
+									<a href="{{ path('app_reply_edit', {'id': reply.id}) }}">edit</a>
+								{% endif %}
+								{% if app.user and reply not in app.user.flagReply %}
+									<form action={{ path('app_reply_addflag', {'id': reply.id} )}} method="post">
+										<input name="flag" id="flag" value="flag" type="submit">
+									</form>
+								{% else %}
+									<form action={{ path('app_reply_unflag', {'id': reply.id} )}} method="post">
+										<input name="unflag" id="unflag" value="remove flag" type="submit">
+									</form>
+								{% endif %}
+							</td>
+						</tr>
+					{% endif %}
+				{% endfor %}
+			</tbody>
+		</table>
+	{% else %}
+		<p>aucune reply n'a de flag</p>
+	{% endif %}
 
 	<a href="{{ path('app_reply_new') }}">Create new</a>
 {% endblock %}

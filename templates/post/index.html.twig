@@ -6,79 +6,88 @@
 {% block body %}
 	<h1>Post index</h1>
 
-	<table class="table">
-		<thead>
-			<tr>
-				<th>Author</th>
-				<th>Title</th>
-				<th>Content</th>
-				<th>Created_at</th>
-				<th>Updated_at</th>
-				<th>Count_repost</th>
-				<th>Count_like</th>
-				<th>actions</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for post in posts %}
+	{% set has_flagged_posts = false %}
+	{% for post in posts %}
+		{% if post.countFlag > 0 %}
+			{% set has_flagged_posts = true %}
+		{% endif %}
+	{% endfor %}
+
+	{% if has_flagged_posts %}
+		<table class="table">
+			<thead>
 				<tr>
-
-					<td>{{ post.author }}</td>
-					<td>{{ post.title }}</td>
-					<td>{{ post.content }}</td>
-					<td>{{ post.createdAt ? post.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-					<td>{{ post.updatedAt ? post.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-					<td>{{ post.countRepost }}</td>
-					<td>{{ post.countLike }}</td>
-
-					<td>
-						<a href="{{ path('app_post_show', {'id': post.id}) }}">show</a>
-						<a href="{{ path('app_reply_new', {'id': post.id}) }}">reply</a>
-						{% if is_granted('ROLE_ADMIN') or (app.user and post.creator and app.user.id == post.creator.id) %}
-							<a href="{{ path('app_post_edit', {'id': post.id}) }}">edit</a>
-						{% endif %}
-						{% if app.user and post not in app.user.likes %}
-							<form action={{ path('app_post_addlike', {'id': post.id} )}} method="post">
-								<input name="like" id="like" value="like" type="submit">
-							</form>
-						{% else %}
-							<form action={{ path('app_post_remlike', {'id': post.id} )}} method="post">
-								<input name="unlike" id="unlike" value="unlike" type="submit">
-							</form>
-						{% endif %}
-
-						{% if app.user and post not in app.user.repost %}
-							<form action={{ path('app_post_addrepost', {'id': post.id} )}} method="post">
-								<input name="repost" id="repost" value="repost" type="submit">
-							</form>
-						{% else %}
-							<form action={{ path('app_post_remrepost', {'id': post.id} )}} method="post">
-								<input name="unrepost" id="unrepost" value="remove repost" type="submit">
-							</form>
-						{% endif %}
-
-						{% if app.user and post not in app.user.flagPost %}
-							<form action={{ path('app_post_addflag', {'id': post.id} )}} method="post">
-								<input name="flag" id="flag" value="flag" type="submit">
-							</form>
-						{% else %}
-							<form action={{ path('app_post_unflag', {'id': post.id} )}} method="post">
-								<input name="unflag" id="unflag" value="remove flag" type="submit">
-							</form>
-						{% endif %}
-						{% if is_granted('ROLE_ADMIN') or (app.user and post.creator and app.user.id == post.creator.id) %}
-							{{ include('post/_delete_form.html.twig') }}
-						{% endif %}
-
-					</td>
+					<th>Author</th>
+					<th>Title</th>
+					<th>Content</th>
+					<th>Created_at</th>
+					<th>Updated_at</th>
+					<th>Count_repost</th>
+					<th>Count_like</th>
+					<th>actions</th>
 				</tr>
-			{% else %}
-				<tr>
-					<td colspan="11">no records found</td>
-				</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+			</thead>
+			<tbody>
+				{% for post in posts %}
+					{% if post.countFlag > 0 %}
+						<tr>
+
+							<td>{{ post.author }}</td>
+							<td>{{ post.title }}</td>
+							<td>{{ post.content }}</td>
+							<td>{{ post.createdAt ? post.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+							<td>{{ post.updatedAt ? post.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+							<td>{{ post.countRepost }}</td>
+							<td>{{ post.countLike }}</td>
+
+							<td>
+								<a href="{{ path('app_post_show', {'id': post.id}) }}">show</a>
+								<a href="{{ path('app_reply_new', {'id': post.id}) }}">reply</a>
+								{% if is_granted('ROLE_ADMIN') or (app.user and post.creator and app.user.id == post.creator.id) %}
+									<a href="{{ path('app_post_edit', {'id': post.id}) }}">edit</a>
+								{% endif %}
+								{% if app.user and post not in app.user.likes %}
+									<form action={{ path('app_post_addlike', {'id': post.id} )}} method="post">
+										<input name="like" id="like" value="like" type="submit">
+									</form>
+								{% else %}
+									<form action={{ path('app_post_remlike', {'id': post.id} )}} method="post">
+										<input name="unlike" id="unlike" value="unlike" type="submit">
+									</form>
+								{% endif %}
+
+								{% if app.user and post not in app.user.repost %}
+									<form action={{ path('app_post_addrepost', {'id': post.id} )}} method="post">
+										<input name="repost" id="repost" value="repost" type="submit">
+									</form>
+								{% else %}
+									<form action={{ path('app_post_remrepost', {'id': post.id} )}} method="post">
+										<input name="unrepost" id="unrepost" value="remove repost" type="submit">
+									</form>
+								{% endif %}
+
+								{% if app.user and post not in app.user.flagPost %}
+									<form action={{ path('app_post_addflag', {'id': post.id} )}} method="post">
+										<input name="flag" id="flag" value="flag" type="submit">
+									</form>
+								{% else %}
+									<form action={{ path('app_post_unflag', {'id': post.id} )}} method="post">
+										<input name="unflag" id="unflag" value="remove flag" type="submit">
+									</form>
+								{% endif %}
+								{% if is_granted('ROLE_ADMIN') or (app.user and post.creator and app.user.id == post.creator.id) %}
+									{{ include('post/_delete_form.html.twig') }}
+								{% endif %}
+
+							</td>
+						</tr>
+					{% endif %}
+				{% endfor %}
+			</tbody>
+		</table>
+	{% else %}
+		<p>aucun post n'a de flag</p>
+	{% endif %}
 
 	<a href="{{ path('app_post_new') }}">Create new</a>
 {% endblock %}

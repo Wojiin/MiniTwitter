@@ -4,9 +4,10 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\ProfileSettingsType;
-use App\Form\UserType;
+use App\Form\UserModerationType;
 use App\Repository\UserRepository;
 use App\Service\UploadService;
+use App\Service\UserStatusService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -83,33 +84,6 @@ public function editProfile(
         ]);
     }
 
-    #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, UploadService $uploadService): Response
-    {
-        $user = new User();
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $imageFile = $form->get('profil_picture')->getData();
-
-            if ($imageFile) {
-                $fileName = $uploadService->upload($imageFile, 'uploads/profile_pictures');
-                $user->setProfilPicture($fileName);
-            }
-
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('user/new.html.twig', [
-            'user' => $user,
-            'form' => $form,
-        ]);
-    }
-
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
     public function show(User $user): Response
     {
@@ -119,21 +93,38 @@ public function editProfile(
     }
 
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, EntityManagerInterface $entityManager, UploadService $uploadService): Response
+    public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN') && $user !== $this->getUser()) {
-            throw $this->createAccessDeniedException();
-        }
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserModerationType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $imageFile = $form->get('profil_picture')->getData();
+            $status = $user->getStatus();
+            $suspendedUntil = $user->getSuspendedUntil();
 
-            if ($imageFile) {
-                $fileName = $uploadService->upload($imageFile, 'uploads/profile_pictures');
-                $user->setProfilPicture($fileName);
+            if ($status === UserStatusService::STATUT_ACTIF || $status === UserStatusService::STATUT_BANNI) {
+                $user->setSuspendedUntil(null);
+            }
+
+            if ($status === UserStatusService::STATUT_SUSPENDU && $suspendedUntil !== null && $suspendedUntil <= new \DateTimeImmutable()) {
+                $form->get('suspended_until')->addError(
+                    new FormError('La fin de suspension doit etre dans le futur.')
+                );
+            }
+
+            if ($user === $this->getUser() && $status !== UserStatusService::STATUT_ACTIF) {
+                $form->get('status')->addError(
+                    new FormError('Vous ne pouvez pas vous bannir ou vous suspendre vous-meme.')
+                );
+            }
+
+            if (!$form->isValid()) {
+                return $this->render('user/edit.html.twig', [
+                    'user' => $user,
+                    'form' => $form,
+                ]);
             }
 
             $entityManager->flush();
@@ -150,9 +141,7 @@ public function editProfile(
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN') && $user !== $this->getUser()) {
-            throw $this->createAccessDeniedException();
-        }
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($user);

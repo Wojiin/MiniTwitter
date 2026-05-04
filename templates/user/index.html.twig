@@ -5,6 +5,51 @@
 {% block body %}
     <h1>User index</h1>
 
+    {% if is_granted('ROLE_ADMIN') %}
+        <h2>Utilisateurs signales</h2>
+
+        {% set has_flagged_users = false %}
+        {% for user in users %}
+            {% if user.countFlag > 0 %}
+                {% set has_flagged_users = true %}
+            {% endif %}
+        {% endfor %}
+
+        {% if has_flagged_users %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Email</th>
+                        <th>Nom d'utilisateur</th>
+                        <th>Statut</th>
+                        <th>Compteur de flags</th>
+                        <th>actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                    {% if user.countFlag > 0 %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.userName }}</td>
+                            <td>{{ user.status }}</td>
+                            <td>{{ user.countFlag }}</td>
+                            <td>
+                                <a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
+                                <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>aucun utilisateur n'a de flag</p>
+        {% endif %}
+    {% endif %}
+
     <table class="table">
         <thead>
             <tr>
@@ -13,6 +58,7 @@
                 <th>Roles</th>
                 <th>Nom d'utilisateur</th>
                 <th>Statut</th>
+                <th>Fin de suspension</th>
                 <th>Compteur de flags</th>
                 <th>Delete_flag</th>
                 <th>Dernière connexion</th>
@@ -30,6 +76,7 @@
                 <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
                 <td>{{ user.userName }}</td>
                 <td>{{ user.status }}</td>
+                <td>{{ user.suspendedUntil ? user.suspendedUntil|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ user.countFlag }}</td>
                 <td>{{ user.deleteFlag }}</td>
                 <td>{{ user.lastLoginAt ? user.lastLoginAt|date('Y-m-d H:i:s') : '' }}</td>
@@ -44,18 +91,16 @@
                 <td>{{ user.updatedAt ? user.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
                     <a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
-                    {% if is_granted('ROLE_ADMIN') or (app.user and app.user.id == user.id) %}
+                    {% if is_granted('ROLE_ADMIN') %}
                         <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
                     {% endif %}
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="13">no records found</td>
+                <td colspan="14">no records found</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('app_user_new') }}">Create new</a>
 {% endblock %}
