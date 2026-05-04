@@ -33,6 +33,17 @@
 		{% endfor %}
 	</ul>
 
+	<ul>
+		<h2>Reposts</h2>
+		{% for repost in user.repost %}
+			<li>
+				<a href="{{ path('app_post_show', {id: repost.id}) }}">{{ repost.title }}</a>
+			</li>
+		{% else %}
+			<li>Aucun repost pour le moment.</li>
+		{% endfor %}
+	</ul>
+
 	<a href="{{ path('app_user_index') }}">back to list</a>
 
 	{% if app.user and app.user.id != user.id %}

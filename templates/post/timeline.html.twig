@@ -112,7 +112,7 @@
 									{{ rep.countFlag }}
 								</td>
 								<td>
-									{% if app.user and post not in app.user.flagReply %}
+									{% if app.user and rep not in app.user.flagReply %}
 										<form action={{ path('app_reply_addflag', {'id': rep.id} )}} method="post">
 											<input name="flag" id="flag" value="flag" type="submit">
 										</form>

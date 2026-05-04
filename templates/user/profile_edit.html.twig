@@ -1,43 +1,63 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mon profil{% endblock %}
+{% block title %}Mon profil
+{% endblock %}
 
 {% block body %}
-    <ul>
-        <h2>Mes Infos</h2>
-        <li>Email : {{ user.email }}</li>
-        <li>Nom d'utilisateur : {{ user.userName }}</li>
-        <li>
-            Photo de profil :
-            {% if user.profilPicture %}
-                <img src="{{ asset('uploads/profile_pictures/' ~ user.profilPicture) }}" alt="Photo de profil de {{ user.userName }}" style="max-width: 120px; max-height: 120px;">
-            {% else %}
-                Non renseignee
-            {% endif %}
-        </li>
-        <li>Statut : {{ user.status }}</li>
-        <li>Compte cree le : {{ user.createdAt|date('d/m/Y H:i') }}</li>
-    </ul>
+	<ul>
+		<h2>Mes Infos</h2>
+		<li>Email :
+			{{ user.email }}</li>
+		<li>Nom d'utilisateur :
+			{{ user.userName }}</li>
+		<li>
+			Photo de profil :
+			{% if user.profilPicture %}
+				<img src="{{ asset('uploads/profile_pictures/' ~ user.profilPicture) }}" alt="Photo de profil de {{ user.userName }}" style="max-width: 120px; max-height: 120px;">
+			{% else %}
+				Non renseignee
+			{% endif %}
+		</li>
+		<li>Statut :
+			{{ user.status }}</li>
+		<li>Compte cree le :
+			{{ user.createdAt|date('d/m/Y H:i') }}</li>
+	</ul>
 
-    <ul>
-        <h2>Mes gazouillis</h2>
-        {% for post in user.posts %}
-            <li><a href="{{ path('app_post_show', {id: post.id}) }}">{{ post.title }}</a></li>
-        {% else %}
-            <li>Aucun gazouillis pour le moment.</li>
-        {% endfor %}
-    </ul>
-    <h2>Modifier mon profil</h2>
-    <p>Tu peux changer ici ton nom d'utilisateur, ton mot de passe et ta photo de profil.</p>
+	<ul>
+		<h2>Mes gazouillis</h2>
+		{% for post in user.posts %}
+			<li>
+				<a href="{{ path('app_post_show', {id: post.id}) }}">{{ post.title }}</a>
+			</li>
+		{% else %}
+			<li>Aucun gazouillis pour le moment.</li>
+		{% endfor %}
+	</ul>
 
-    {{ form_start(form) }}
-        {{ form_row(form.user_name) }}
-        {{ form_row(form.profil_picture) }}
-        <p>Le mot de passe actuel est obligatoire si tu veux definir un nouveau mot de passe.</p>
-        {{ form_row(form.currentPassword) }}
-        {{ form_row(form.plainPassword.first) }}
-        {{ form_row(form.plainPassword.second) }}
+	<ul>
+		<h2>Mes reposts</h2>
+		{% for repost in user.repost %}
+			<li>
+				<a href="{{ path('app_post_show', {id: repost.id}) }}">{{ repost.title }}</a>
+			</li>
+		{% else %}
+			<li>Aucun repost pour le moment.</li>
+		{% endfor %}
+	</ul>
 
-        <button type="submit" class="btn">Enregistrer</button>
-    {{ form_end(form) }}
+
+	<h2>Modifier mon profil</h2>
+	<p>Tu peux changer ici ton nom d'utilisateur, ton mot de passe et ta photo de profil.</p>
+
+	{{ form_start(form) }}
+	{{ form_row(form.user_name) }}
+	{{ form_row(form.profil_picture) }}
+	<p>Le mot de passe actuel est obligatoire si tu veux definir un nouveau mot de passe.</p>
+	{{ form_row(form.currentPassword) }}
+	{{ form_row(form.plainPassword.first) }}
+	{{ form_row(form.plainPassword.second) }}
+
+	<button type="submit" class="btn">Enregistrer</button>
+	{{ form_end(form) }}
 {% endblock %}

@@ -80,7 +80,7 @@
 					{% else %}
 						User
 					{% endif %}
-					{{ user.roles ? user.roles|json_encode : '' }}</td>
+					</td>
 					<td>
 						<a href="{{ path('app_user_show', {'id': user.id}) }}">details</a>
 						{% if is_granted('ROLE_ADMIN') %}
