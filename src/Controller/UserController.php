@@ -161,9 +161,9 @@ public function editProfile(
             $userFlag->setCountFlag(+ ($userFlag->getCountFlag()) + 1);
             $entityManager->persist($userFlag);
             $entityManager->flush();
-            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_user_show', ['id' => $userFlag->getId()], Response::HTTP_SEE_OTHER);
         }
-        return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_user_show', ['id' => $userFlag->getId()], Response::HTTP_SEE_OTHER);
     }
 
      #[Route('/unflaguser/{id}', name: 'app_user_unflag', methods: ['GET', 'POST'])]
@@ -176,8 +176,8 @@ public function editProfile(
             $userFlag->setCountFlag(+ ($userFlag->getCountFlag()) - 1);
             $entityManager->persist($userFlag);
             $entityManager->flush();
-            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_user_show', ['id' => $userFlag->getId()], Response::HTTP_SEE_OTHER);
         }
-        return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_user_show', ['id' => $userFlag->getId()], Response::HTTP_SEE_OTHER);
     }
 }
