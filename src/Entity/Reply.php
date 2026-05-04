@@ -40,8 +40,8 @@ class Reply
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
-    #[ORM\ManyToOne(inversedBy: 'flag_reply')]
-    private ?User $user_flag = null;
+    #[ORM\ManyToOne(inversedBy: 'flagReply')]
+    private ?User $userFlag = null;
 
     public function getId(): ?int
     {
@@ -146,12 +146,12 @@ class Reply
 
     public function getUserFlag(): ?User
     {
-        return $this->user_flag;
+        return $this->userFlag;
     }
 
-    public function setUserFlag(?User $user_flag): static
+    public function setUserFlag(?User $userFlag): static
     {
-        $this->user_flag = $user_flag;
+        $this->userFlag = $userFlag;
 
         return $this;
     }

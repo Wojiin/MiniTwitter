@@ -57,6 +57,16 @@
 							</form>
 						{% endif %}
 
+						{% if app.user and post not in app.user.flagPost %}
+							<form action={{ path('app_post_addflag', {'id': post.id} )}} method="post">
+								<input name="flag" id="flag" value="flag" type="submit">
+							</form>
+						{% else %}
+							<form action={{ path('app_post_unflag', {'id': post.id} )}} method="post">
+								<input name="unflag" id="unflag" value="remove flag" type="submit">
+							</form>
+						{% endif %}
+
 					</td>
 				</tr>
 			{% else %}

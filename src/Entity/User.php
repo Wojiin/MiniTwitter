@@ -89,23 +89,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Post>
      */
-    #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'user_flag')]
-    private Collection $flag_post;
+    #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'userFlag')]
+    private Collection $flagPost;
 
     /**
      * @var Collection<int, Reply>
      */
-    #[ORM\OneToMany(targetEntity: Reply::class, mappedBy: 'user_flag')]
-    private Collection $flag_reply;
+    #[ORM\OneToMany(targetEntity: Reply::class, mappedBy: 'userFlag')]
+    private Collection $flagReply;
 
-    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'flag_user')]
-    private ?self $user_flag = null;
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'flagUser')]
+    private ?self $userFlag = null;
 
     /**
      * @var Collection<int, self>
      */
-    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'user_flag')]
-    private Collection $flag_user;
+    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'userFlag')]
+    private Collection $flagUser;
 
     public function __construct()
     {
@@ -113,9 +113,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->replies = new ArrayCollection();
         $this->likes = new ArrayCollection();
         $this->repost = new ArrayCollection();
-        $this->flag_post = new ArrayCollection();
-        $this->flag_reply = new ArrayCollection();
-        $this->flag_user = new ArrayCollection();
+        $this->flagPost = new ArrayCollection();
+        $this->flagReply = new ArrayCollection();
+        $this->flagUser = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -402,13 +402,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getFlagPost(): Collection
     {
-        return $this->flag_post;
+        return $this->flagPost;
     }
 
     public function addFlagPost(Post $flagPost): static
     {
-        if (!$this->flag_post->contains($flagPost)) {
-            $this->flag_post->add($flagPost);
+        if (!$this->flagPost->contains($flagPost)) {
+            $this->flagPost->add($flagPost);
             $flagPost->setUserFlag($this);
         }
 
@@ -417,7 +417,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeFlagPost(Post $flagPost): static
     {
-        if ($this->flag_post->removeElement($flagPost)) {
+        if ($this->flagPost->removeElement($flagPost)) {
             // set the owning side to null (unless already changed)
             if ($flagPost->getUserFlag() === $this) {
                 $flagPost->setUserFlag(null);
@@ -432,13 +432,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getFlagReply(): Collection
     {
-        return $this->flag_reply;
+        return $this->flagReply;
     }
 
     public function addFlagReply(Reply $flagReply): static
     {
-        if (!$this->flag_reply->contains($flagReply)) {
-            $this->flag_reply->add($flagReply);
+        if (!$this->flagReply->contains($flagReply)) {
+            $this->flagReply->add($flagReply);
             $flagReply->setUserFlag($this);
         }
 
@@ -447,7 +447,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeFlagReply(Reply $flagReply): static
     {
-        if ($this->flag_reply->removeElement($flagReply)) {
+        if ($this->flagReply->removeElement($flagReply)) {
             // set the owning side to null (unless already changed)
             if ($flagReply->getUserFlag() === $this) {
                 $flagReply->setUserFlag(null);
@@ -459,12 +459,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUserFlag(): ?self
     {
-        return $this->user_flag;
+        return $this->userFlag;
     }
 
-    public function setUserFlag(?self $user_flag): static
+    public function setUserFlag(?self $userFlag): static
     {
-        $this->user_flag = $user_flag;
+        $this->userFlag = $userFlag;
 
         return $this;
     }
@@ -474,13 +474,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getFlagUser(): Collection
     {
-        return $this->flag_user;
+        return $this->flagUser;
     }
 
     public function addFlagUser(self $flagUser): static
     {
-        if (!$this->flag_user->contains($flagUser)) {
-            $this->flag_user->add($flagUser);
+        if (!$this->flagUser->contains($flagUser)) {
+            $this->flagUser->add($flagUser);
             $flagUser->setUserFlag($this);
         }
 
@@ -489,7 +489,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeFlagUser(self $flagUser): static
     {
-        if ($this->flag_user->removeElement($flagUser)) {
+        if ($this->flagUser->removeElement($flagUser)) {
             // set the owning side to null (unless already changed)
             if ($flagUser->getUserFlag() === $this) {
                 $flagUser->setUserFlag(null);

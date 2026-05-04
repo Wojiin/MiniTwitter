@@ -62,8 +62,8 @@ class Post
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
-    #[ORM\ManyToOne(inversedBy: 'flag_post')]
-    private ?User $user_flag = null;
+    #[ORM\ManyToOne(inversedBy: 'flagPost')]
+    private ?User $userFlag = null;
 
     public function __construct()
     {
@@ -267,12 +267,12 @@ class Post
 
     public function getUserFlag(): ?User
     {
-        return $this->user_flag;
+        return $this->userFlag;
     }
 
-    public function setUserFlag(?User $user_flag): static
+    public function setUserFlag(?User $userFlag): static
     {
-        $this->user_flag = $user_flag;
+        $this->userFlag = $userFlag;
 
         return $this;
     }
