@@ -4,7 +4,9 @@
             <a href="{{ path('app_user_index') }}">Utilisateurs</a>
             <a href="{{ path('app_post_index') }}">Gazouillis</a>
             <a href="{{ path('app_reply_index') }}">Réponses</a>
+            
         {% endif %}
+        <a href="{{ path('app_post_timeline') }}">Fil d'actualité</a>
         <a href="{{ path('app_user_profile_edit') }}">{{app.user.userName}}</a>
         <a href="{{ path('app_logout') }}">Se déconnecter</a>
     {% endif %}

@@ -1,0 +1,134 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Timeline
+{% endblock %}
+
+{% block body %}
+	<h1>Fil d'actualité :</h1>
+	<a href="{{ path('app_post_new') }}">Create new</a>
+	<section>
+		{% for post in posts |reverse %}
+			<article>
+				<h2>{{ post.title }}</h2>
+				<p>Créé le :
+					{{ post.createdAt ? post.createdAt|date('Y-m-d H:i:s') : '' }}
+					par :
+					{{ post.author }}</p>
+				<p>{{ post.content }}</p>
+
+				<p>
+					{% if post.image %}
+						<img src="{{ asset('uploads/posts/' ~ post.image) }}" alt="Image du post {{ post.title }}" style="max-width: 250px; max-height: 250px;">
+					{% endif %}
+				</p>
+				<tr>
+					<td>Like :
+						{{ post.countLike }}
+					</td>
+					<td>
+						{% if app.user and post not in app.user.likes %}
+							<form action={{ path('app_post_addlike', {'id': post.id} )}} method="post">
+								<input name="like" id="like" value="like" type="submit">
+							</form>
+						{% else %}
+							<form action={{ path('app_post_remlike', {'id': post.id} )}} method="post">
+								<input name="unlike" id="unlike" value="unlike" type="submit">
+							</form>
+						{% endif %}
+					</td>
+					<td>Repost :
+						{{ post.countRepost }}
+					</td>
+					<td>
+						{% if app.user and post not in app.user.repost %}
+							<form action={{ path('app_post_addrepost', {'id': post.id} )}} method="post">
+								<input name="repost" id="repost" value="repost" type="submit">
+							</form>
+						{% else %}
+							<form action={{ path('app_post_remrepost', {'id': post.id} )}} method="post">
+								<input name="unrepost" id="unrepost" value="remove repost" type="submit">
+							</form>
+						{% endif %}
+					</td>
+					<td>
+						<a href="{{ path('app_post_show', {'id': post.id}) }}">show</a>
+					</td>
+					<td>
+						<a href="{{ path('app_reply_new', {'id': post.id}) }}">reply</a>
+					</td>
+					<td>Flag :
+						{{ post.countFlag }}
+					</td>
+					<td>
+						{% if app.user and post not in app.user.flagPost %}
+							<form action={{ path('app_post_addflag', {'id': post.id} )}} method="post">
+								<input name="flag" id="flag" value="flag" type="submit">
+							</form>
+						{% else %}
+							<form action={{ path('app_post_unflag', {'id': post.id} )}} method="post">
+								<input name="unflag" id="unflag" value="remove flag" type="submit">
+							</form>
+						{% endif %}
+					</td>
+				</tr>
+				<tr>
+					<td>
+						{% if is_granted('ROLE_ADMIN') or (app.user and post.creator and app.user.id == post.creator.id) %}
+							<a href="{{ path('app_post_edit', {'id': post.id}) }}">edit</a>
+							{{ include('post/_delete_form.html.twig') }}
+						{% endif %}
+					</td>
+				</tr>
+			</article>
+			<article>
+
+				{% if post.replies|length > 0 %}
+					<h3>Reply</h3>
+					{% for rep in post.replies %}
+						<article>
+							<tr>
+								<td>Réponse le :
+									{{ rep.createdAt ? rep.createdAt|date('Y-m-d H:i:s') : '' }}
+									par :{{ rep.creator.userName }}</td>
+								<td>{{ rep.content }}</td>
+
+								<td>
+									{% if rep.image %}
+										<img src="{{ asset('uploads/replies/' ~ rep.image) }}" alt="Image de la reponse" style="max-width: 200px; max-height: 200px;">
+									{% endif %}
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<a href="{{ path('app_reply_show', {'id': rep.id}) }}">show</a>
+								</td>
+								<td>
+									{% if is_granted('ROLE_ADMIN') or (app.user and rep.creator and app.user.id == rep.creator.id) %}
+										<a href="{{ path('app_reply_edit', {'id': rep.id}) }}">edit</a>
+									{% endif %}
+								</td>
+								<td>
+									Flag :
+									{{ rep.countFlag }}
+								</td>
+								<td>
+									{% if app.user and post not in app.user.flagReply %}
+										<form action={{ path('app_reply_addflag', {'id': rep.id} )}} method="post">
+											<input name="flag" id="flag" value="flag" type="submit">
+										</form>
+									{% else %}
+										<form action={{ path('app_reply_unflag', {'id': rep.id} )}} method="post">
+											<input name="unflag" id="unflag" value="remove flag" type="submit">
+										</form>
+									{% endif %}
+								</td>
+							</tr>
+						</article>
+					{% endfor %}
+				{% endif %}
+			</article>
+		{% endfor %}
+	</section>
+
+
+{% endblock %}

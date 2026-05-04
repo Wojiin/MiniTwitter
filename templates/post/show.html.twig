@@ -108,6 +108,7 @@
 						<a href="{{ path('app_reply_show', {'id': rep.id}) }}">show</a>
 						{% if is_granted('ROLE_ADMIN') or (app.user and rep.creator and app.user.id == rep.creator.id) %}
 							<a href="{{ path('app_reply_edit', {'id': rep.id}) }}">edit</a>
+							{{ include('reply/_delete_form.html.twig') }}
 						{% endif %}
 						{% if app.user and post not in app.user.flagReply %}
 						<form action={{ path('app_reply_addflag', {'id': rep.id} )}} method="post">

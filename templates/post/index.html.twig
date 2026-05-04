@@ -66,6 +66,9 @@
 								<input name="unflag" id="unflag" value="remove flag" type="submit">
 							</form>
 						{% endif %}
+						{% if is_granted('ROLE_ADMIN') or (app.user and post.creator and app.user.id == post.creator.id) %}
+							{{ include('post/_delete_form.html.twig') }}
+						{% endif %}
 
 					</td>
 				</tr>
