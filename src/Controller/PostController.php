@@ -29,7 +29,7 @@ final class PostController extends AbstractController
     {
         return $this->render('post/timeline.html.twig', [
             'posts' => $postRepository->findAll(),
-               ]);
+        ]);
     }
 
     #[Route('/new', name: 'app_post_new', methods: ['GET', 'POST'])]
@@ -58,7 +58,7 @@ final class PostController extends AbstractController
             $entityManager->persist($post);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('post/new.html.twig', [
@@ -98,7 +98,7 @@ final class PostController extends AbstractController
 
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('post/edit.html.twig', [
@@ -119,7 +119,7 @@ final class PostController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
     }
 
 
@@ -133,9 +133,9 @@ final class PostController extends AbstractController
             $post->setCountLike(+ ($post->getCountLike()) + 1);
             $entityManager->persist($post);
             $entityManager->flush();
-            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
         }
-        return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
     }
 
 
@@ -150,9 +150,9 @@ final class PostController extends AbstractController
             $post->setCountLike(+ ($post->getCountLike()) - 1);
             $entityManager->persist($post);
             $entityManager->flush();
-            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
         }
-        return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
     }
 
 
@@ -165,9 +165,9 @@ final class PostController extends AbstractController
             $post->setCountRepost(+ ($post->getCountRepost()) + 1);
             $entityManager->persist($post);
             $entityManager->flush();
-            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
         }
-        return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
     }
 
 
@@ -182,9 +182,9 @@ final class PostController extends AbstractController
             $post->setCountRepost(+ ($post->getCountRepost()) - 1);
             $entityManager->persist($post);
             $entityManager->flush();
-            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
         }
-        return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/flag/{id}', name: 'app_post_addflag', methods: ['GET', 'POST'])]
@@ -197,9 +197,9 @@ final class PostController extends AbstractController
             $post->setCountFlag(+ ($post->getCountFlag()) + 1);
             $entityManager->persist($post);
             $entityManager->flush();
-            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
         }
-        return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/unflag/{id}', name: 'app_post_unflag', methods: ['GET', 'POST'])]
@@ -212,8 +212,12 @@ final class PostController extends AbstractController
             $post->setCountFlag(+ ($post->getCountFlag()) - 1);
             $entityManager->persist($post);
             $entityManager->flush();
-            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
         }
-        return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
     }
+
+
+
+    
 }

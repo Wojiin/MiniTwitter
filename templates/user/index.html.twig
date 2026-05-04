@@ -75,7 +75,12 @@
 					<td>{{ user.userName }}</td>
 					<td>{{ user.email }}</td>
 					<td>{{ user.status }}</td>
-					<td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+					<td>{% if 'ROLE_ADMIN' in user.roles %}
+					ADMIN
+					{% else %}
+						User
+					{% endif %}
+					{{ user.roles ? user.roles|json_encode : '' }}</td>
 					<td>
 						<a href="{{ path('app_user_show', {'id': user.id}) }}">details</a>
 						{% if is_granted('ROLE_ADMIN') %}

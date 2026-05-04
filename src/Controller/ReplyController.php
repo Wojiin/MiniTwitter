@@ -55,7 +55,7 @@ final class ReplyController extends AbstractController
             $entityManager->persist($reply);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_reply_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('reply/new.html.twig', [
@@ -94,7 +94,7 @@ final class ReplyController extends AbstractController
 
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_reply_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('reply/edit.html.twig', [
@@ -115,7 +115,7 @@ final class ReplyController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_reply_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/flagrep/{id}', name: 'app_reply_addflag', methods: ['GET', 'POST'])]
@@ -128,9 +128,9 @@ final class ReplyController extends AbstractController
             $reply->setCountFlag(+ ($reply->getCountFlag()) + 1);
             $entityManager->persist($reply);
             $entityManager->flush();
-            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
         }
-        return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
     }
 
      #[Route('/unflagrep/{id}', name: 'app_reply_unflag', methods: ['GET', 'POST'])]
@@ -143,8 +143,8 @@ final class ReplyController extends AbstractController
             $reply->setCountFlag(+ ($reply->getCountFlag()) - 1);
             $entityManager->persist($reply);
             $entityManager->flush();
-            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
         }
-        return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
     }
 }
