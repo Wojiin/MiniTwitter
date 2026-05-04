@@ -33,8 +33,10 @@
 
 					<td>
 						<a href="{{ path('app_post_show', {'id': post.id}) }}">show</a>
-						<a href="{{ path('app_post_edit', {'id': post.id}) }}">edit</a>
 						<a href="{{ path('app_reply_new', {'id': post.id}) }}">reply</a>
+						{% if is_granted('ROLE_ADMIN') or (app.user and post.creator and app.user.id == post.creator.id) %}
+							<a href="{{ path('app_post_edit', {'id': post.id}) }}">edit</a>
+						{% endif %}
 						{% if app.user and post not in app.user.likes %}
 							<form action={{ path('app_post_addlike', {'id': post.id} )}} method="post">
 								<input name="like" id="like" value="like" type="submit">

@@ -73,6 +73,10 @@ final class PostController extends AbstractController
     #[Route('/{id}/edit', name: 'app_post_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Post $post, EntityManagerInterface $entityManager, UploadService $uploadService): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN') && $post->getCreator() !== $this->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
+
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
         $now = new \DateTimeImmutable();
@@ -100,6 +104,10 @@ final class PostController extends AbstractController
     #[Route('/{id}', name: 'app_post_delete', methods: ['POST'])]
     public function delete(Request $request, Post $post, EntityManagerInterface $entityManager): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN') && $post->getCreator() !== $this->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
+
         if ($this->isCsrfTokenValid('delete' . $post->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($post);
             $entityManager->flush();
@@ -110,8 +118,9 @@ final class PostController extends AbstractController
 
 
     #[Route('/like/{id}', name: 'app_post_addlike', methods: ['GET', 'POST'])]
-    public function addLikePost(Post $post, User $user, EntityManagerInterface $entityManager): Response
+    public function addLikePost(Post $post, EntityManagerInterface $entityManager): Response
     {
+        $user = $this->getUser();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // dd("if");
             $user->addLike($post);
@@ -127,8 +136,9 @@ final class PostController extends AbstractController
 
 
     #[Route('/remlike/{id}', name: 'app_post_remlike', methods: ['POST'])]
-    public function removeLikePost(Post $post, User $user, EntityManagerInterface $entityManager): Response
+    public function removeLikePost(Post $post,  EntityManagerInterface $entityManager): Response
     {
+        $user = $this->getUser();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user->removeLike($post);
             $post->setCountLike(+ ($post->getCountLike()) - 1);
@@ -141,8 +151,9 @@ final class PostController extends AbstractController
 
 
     #[Route('/repost/{id}', name: 'app_post_addrepost', methods: ['POST'])]
-    public function addRepo(Post $post, User $user, EntityManagerInterface $entityManager): Response
+    public function addRepo(Post $post, EntityManagerInterface $entityManager): Response
     {
+        $user = $this->getUser();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user->addRepost($post);
             $post->setCountRepost(+ ($post->getCountRepost()) + 1);
@@ -157,8 +168,9 @@ final class PostController extends AbstractController
 
 
     #[Route('/remrepo/{id}', name: 'app_post_remrepost', methods: ['POST'])]
-    public function removeRepo(Post $post, User $user, EntityManagerInterface $entityManager): Response
+    public function removeRepo(Post $post, EntityManagerInterface $entityManager): Response
     {
+        $user = $this->getUser();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user->removeRepost($post);
             $post->setCountRepost(+ ($post->getCountRepost()) - 1);
