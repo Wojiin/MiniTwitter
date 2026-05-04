@@ -9,8 +9,8 @@
 	<table class="table">
 		<tbody>
 			<tr>
-				{# <th>Id</th>
-				                <td>{{ reply.id }}</td> #}
+				<th>Author</th>
+				<td>{{ reply.creator.userName }}</td>
 			</tr>
 			<tr>
 				<th>Content</th>
@@ -46,7 +46,7 @@
 		</tbody>
 	</table>
 
-	<a href="{{ path('app_reply_index') }}">back to list</a>
+	<a href="{{ path('app_post_timeline') }}">back to list</a>
 
 	{% if is_granted('ROLE_ADMIN') or (app.user and reply.creator and app.user.id == reply.creator.id) %}
 		<a href="{{ path('app_reply_edit', {'id': reply.id}) }}">edit</a>
