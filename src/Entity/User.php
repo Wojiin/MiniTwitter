@@ -60,6 +60,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updated_at = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $suspended_until = null;
+
     /**
      * @var Collection<int, Post>
      */
@@ -285,6 +288,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUpdatedAt(?\DateTimeImmutable $updated_at): static
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function getSuspendedUntil(): ?\DateTimeImmutable
+    {
+        return $this->suspended_until;
+    }
+
+    public function setSuspendedUntil(?\DateTimeImmutable $suspended_until): static
+    {
+        $this->suspended_until = $suspended_until;
 
         return $this;
     }
