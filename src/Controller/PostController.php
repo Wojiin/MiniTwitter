@@ -180,4 +180,35 @@ final class PostController extends AbstractController
         }
         return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
     }
+
+ #[Route('/flag/{id}', name: 'app_post_addflag', methods: ['GET', 'POST'])]
+    public function addFlagOnPost(Post $post, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // dd("if");
+            $user->addFlagPost($post);
+            $post->setCountFlag(+ ($post->getCountFlag()) + 1);
+            $entityManager->persist($post);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+        }
+        return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+     #[Route('/unflag/{id}', name: 'app_post_unflag', methods: ['GET', 'POST'])]
+    public function removeFlagOnPost(Post $post, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // dd("if");
+            $user->removeFlagPost($post);
+            $post->setCountFlag(+ ($post->getCountFlag()) - 1);
+            $entityManager->persist($post);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+        }
+        return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+    }
+
 }

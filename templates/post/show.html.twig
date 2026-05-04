@@ -9,9 +9,9 @@
 	<table class="table">
 		<tbody>
 			{# <tr>
-																			<th>Id</th>
-																			<td>{{ post.id }}</td>
-																		</tr> #}
+																									<th>Id</th>
+																									<td>{{ post.id }}</td>
+																								</tr> #}
 			<tr>
 				<th>Author</th>
 				<td>{{ post.author }}</td>
@@ -51,9 +51,9 @@
 				<td>{{ post.countLike }}</td>
 			</tr>
 			{# <tr>
-																			<th>Status</th>
-																			<td>{{ post.status }}</td>
-																		</tr> #}
+																									<th>Status</th>
+																									<td>{{ post.status }}</td>
+																								</tr> #}
 			<tr>
 				<th>Count_flag</th>
 				<td>{{ post.countFlag }}</td>
@@ -65,6 +65,15 @@
 	{% if is_granted('ROLE_ADMIN') or (app.user and post.creator and app.user.id == post.creator.id) %}
 		<a href="{{ path('app_post_edit', {'id': post.id}) }}">edit post</a>
 		{{ include('post/_delete_form.html.twig') }}
+	{% endif %}
+	{% if app.user and post not in app.user.flagPost %}
+		<form action={{ path('app_post_addflag', {'id': post.id} )}} method="post">
+			<input name="flag" id="flag" value="flag" type="submit">
+		</form>
+	{% else %}
+		<form action={{ path('app_post_unflag', {'id': post.id} )}} method="post">
+			<input name="unflag" id="unflag" value="remove flag" type="submit">
+		</form>
 	{% endif %}
 
 	<h2>Reply</h2>
@@ -100,6 +109,15 @@
 						{% if is_granted('ROLE_ADMIN') or (app.user and rep.creator and app.user.id == rep.creator.id) %}
 							<a href="{{ path('app_reply_edit', {'id': rep.id}) }}">edit</a>
 						{% endif %}
+						{% if app.user and post not in app.user.flagReply %}
+						<form action={{ path('app_reply_addflag', {'id': rep.id} )}} method="post">
+							<input name="flag" id="flag" value="flag" type="submit">
+						</form>
+						{% else %}
+						<form action={{ path('app_reply_unflag', {'id': rep.id} )}} method="post">
+							<input name="unflag" id="unflag" value="remove flag" type="submit">
+						</form>
+						{% endif %}
 					</td>
 				</tr>
 			{% endfor %}
@@ -109,10 +127,12 @@
 			</tr>
 		{% endif %}
 	</table>
-        <h2><a href="{{ path('app_reply_new', {'id': post.id}) }}">New Reply</a></h2>
-        {# <a href="{{ path('app_reply_new', {'id': post.id}) }}">New Reply</a> #}
-		{# {{ include('reply/_form.html.twig') }} #}
-		<a href="{{ path('app_post_index') }}">back to list</a>
+	<h2>
+		<a href="{{ path('app_reply_new', {'id': post.id}) }}">New Reply</a>
+	</h2>
+	{# <a href="{{ path('app_reply_new', {'id': post.id}) }}">New Reply</a> #}
+	{# {{ include('reply/_form.html.twig') }} #}
+	<a href="{{ path('app_post_index') }}">back to list</a>
 
 
-	{% endblock %}
+{% endblock %}

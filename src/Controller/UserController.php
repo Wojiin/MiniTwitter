@@ -161,4 +161,34 @@ public function editProfile(
 
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/flaguser/{id}', name: 'app_user_addflag', methods: ['GET', 'POST'])]
+    public function addFlagOnUser(User $userFlag, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // dd("if");
+            $user->addFlagUser($userFlag);
+            $userFlag->setCountFlag(+ ($userFlag->getCountFlag()) + 1);
+            $entityManager->persist($userFlag);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+        }
+        return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+     #[Route('/unflaguser/{id}', name: 'app_user_unflag', methods: ['GET', 'POST'])]
+    public function removeFlagOnUser(User $userFlag, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // dd("if");
+            $user->removeFlagUser($userFlag);
+            $userFlag->setCountFlag(+ ($userFlag->getCountFlag()) - 1);
+            $entityManager->persist($userFlag);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+        }
+        return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+    }
 }

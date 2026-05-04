@@ -117,4 +117,34 @@ final class ReplyController extends AbstractController
 
         return $this->redirectToRoute('app_reply_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/flagrep/{id}', name: 'app_reply_addflag', methods: ['GET', 'POST'])]
+    public function addFlagOnReply(Reply $reply, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // dd("if");
+            $user->addFlagReply($reply);
+            $reply->setCountFlag(+ ($reply->getCountFlag()) + 1);
+            $entityManager->persist($reply);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+        }
+        return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+     #[Route('/unflagrep/{id}', name: 'app_reply_unflag', methods: ['GET', 'POST'])]
+    public function removeFlagOnReply(Reply $reply, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // dd("if");
+            $user->removeFlagReply($reply);
+            $reply->setCountFlag(+ ($reply->getCountFlag()) - 1);
+            $entityManager->persist($reply);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+        }
+        return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+    }
 }
