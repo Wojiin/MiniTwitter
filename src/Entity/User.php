@@ -85,7 +85,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Post>
      */
-    #[ORM\ManyToMany(targetEntity: Post::class, inversedBy: 'users')]
+    #[ORM\ManyToMany(targetEntity: Post::class, inversedBy: 'repostedBy')]
     #[ORM\JoinTable(name: 'user_post_reposts')]
     private Collection $repost;
 
@@ -126,16 +126,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $count_notification = null;
 
     /**
-     * @var Collection<int, Message>
-     */
-    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'send')]
-    private Collection $messages;
-
-    /**
      * @var Collection<int, Discussion>
      */
     #[ORM\ManyToMany(targetEntity: Discussion::class, mappedBy: 'discuss')]
     private Collection $discussions;
+
+    /**
+     * @var Collection<int, Message>
+     */
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'send')]
+    private Collection $messages;
 
     public function __construct()
     {
@@ -148,8 +148,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->flagUser = new ArrayCollection();
         $this->associate = new ArrayCollection();
         $this->users = new ArrayCollection();
-        $this->messages = new ArrayCollection();
         $this->discussions = new ArrayCollection();
+        $this->messages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -169,23 +169,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
@@ -201,9 +192,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
     public function getPassword(): ?string
     {
         return $this->password;
@@ -216,9 +204,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * Ensure the session doesn't contain actual password hashes by CRC32C-hashing them, as supported since Symfony 7.3.
-     */
     public function __serialize(): array
     {
         $data = (array) $this;
@@ -356,7 +341,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removePost(Post $post): static
     {
         if ($this->posts->removeElement($post)) {
-            // set the owning side to null (unless already changed)
             if ($post->getCreator() === $this) {
                 $post->setCreator(null);
             }
@@ -386,7 +370,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeReply(Reply $reply): static
     {
         if ($this->replies->removeElement($reply)) {
-            // set the owning side to null (unless already changed)
             if ($reply->getCreator() === $this) {
                 $reply->setCreator(null);
             }
@@ -464,7 +447,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeFlagPost(Post $flagPost): static
     {
         if ($this->flagPost->removeElement($flagPost)) {
-            // set the owning side to null (unless already changed)
             if ($flagPost->getUserFlag() === $this) {
                 $flagPost->setUserFlag(null);
             }
@@ -494,7 +476,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeFlagReply(Reply $flagReply): static
     {
         if ($this->flagReply->removeElement($flagReply)) {
-            // set the owning side to null (unless already changed)
             if ($flagReply->getUserFlag() === $this) {
                 $flagReply->setUserFlag(null);
             }
@@ -536,7 +517,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeFlagUser(self $flagUser): static
     {
         if ($this->flagUser->removeElement($flagUser)) {
-            // set the owning side to null (unless already changed)
             if ($flagUser->getUserFlag() === $this) {
                 $flagUser->setUserFlag(null);
             }
@@ -609,36 +589,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Message>
-     */
-    public function getMessages(): Collection
-    {
-        return $this->messages;
-    }
-
-    public function addMessage(Message $message): static
-    {
-        if (!$this->messages->contains($message)) {
-            $this->messages->add($message);
-            $message->setSend($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMessage(Message $message): static
-    {
-        if ($this->messages->removeElement($message)) {
-            // set the owning side to null (unless already changed)
-            if ($message->getSend() === $this) {
-                $message->setSend(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, Discussion>
      */
     public function getDiscussions(): Collection
@@ -660,6 +610,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->discussions->removeElement($discussion)) {
             $discussion->removeDiscuss($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Message $message): static
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages->add($message);
+            $message->setSend($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): static
+    {
+        if ($this->messages->removeElement($message)) {
+            if ($message->getSend() === $this) {
+                $message->setSend(null);
+            }
         }
 
         return $this;

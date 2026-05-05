@@ -28,9 +28,9 @@ class Message
 
     #[ORM\ManyToOne(inversedBy: 'messages')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?user $send = null;
+    private ?User $send = null;
 
-    #[ORM\ManyToOne(inversedBy: 'include')]
+    #[ORM\ManyToOne(inversedBy: 'messages')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Discussion $discussion = null;
 
@@ -94,12 +94,12 @@ class Message
         return $this;
     }
 
-    public function getSend(): ?user
+    public function getSend(): ?User
     {
         return $this->send;
     }
 
-    public function setSend(?user $send): static
+    public function setSend(?User $send): static
     {
         $this->send = $send;
 

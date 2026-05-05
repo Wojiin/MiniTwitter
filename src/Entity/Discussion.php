@@ -25,21 +25,21 @@ class Discussion
     private ?\DateTimeImmutable $updated_at = null;
 
     /**
-     * @var Collection<int, user>
+     * @var Collection<int, User>
      */
-    #[ORM\ManyToMany(targetEntity: user::class, inversedBy: 'discussions')]
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'discussions')]
     private Collection $discuss;
 
     /**
-     * @var Collection<int, message>
+     * @var Collection<int, Message>
      */
-    #[ORM\OneToMany(targetEntity: message::class, mappedBy: 'discussion', orphanRemoval: true)]
-    private Collection $include;
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'discussion', orphanRemoval: true)]
+    private Collection $messages;
 
     public function __construct()
     {
         $this->discuss = new ArrayCollection();
-        $this->include = new ArrayCollection();
+        $this->messages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -91,14 +91,14 @@ class Discussion
     }
 
     /**
-     * @return Collection<int, user>
+     * @return Collection<int, User>
      */
     public function getDiscuss(): Collection
     {
         return $this->discuss;
     }
 
-    public function addDiscuss(user $discuss): static
+    public function addDiscuss(User $discuss): static
     {
         if (!$this->discuss->contains($discuss)) {
             $this->discuss->add($discuss);
@@ -107,7 +107,7 @@ class Discussion
         return $this;
     }
 
-    public function removeDiscuss(user $discuss): static
+    public function removeDiscuss(User $discuss): static
     {
         $this->discuss->removeElement($discuss);
 
@@ -115,29 +115,28 @@ class Discussion
     }
 
     /**
-     * @return Collection<int, message>
+     * @return Collection<int, Message>
      */
-    public function getInclude(): Collection
+    public function getMessages(): Collection
     {
-        return $this->include;
+        return $this->messages;
     }
 
-    public function addInclude(message $include): static
+    public function addMessage(Message $message): static
     {
-        if (!$this->include->contains($include)) {
-            $this->include->add($include);
-            $include->setDiscussion($this);
+        if (!$this->messages->contains($message)) {
+            $this->messages->add($message);
+            $message->setDiscussion($this);
         }
 
         return $this;
     }
 
-    public function removeInclude(message $include): static
+    public function removeMessage(Message $message): static
     {
-        if ($this->include->removeElement($include)) {
-            // set the owning side to null (unless already changed)
-            if ($include->getDiscussion() === $this) {
-                $include->setDiscussion(null);
+        if ($this->messages->removeElement($message)) {
+            if ($message->getDiscussion() === $this) {
+                $message->setDiscussion(null);
             }
         }
 
