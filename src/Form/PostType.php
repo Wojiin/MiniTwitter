@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Post;
 use App\Entity\User;
+use App\Entity\Tag;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -32,7 +33,15 @@ class PostType extends AbstractType
                     ),
                 ],
             ])
-            // ->add('tag')
+            ->add('tags', EntityType::class, [
+                'class' => Tag::class, 
+                'choice_label' => 'category',
+                'multiple' => true,
+                'required' => false,
+                'label' => 'Tag',
+                'placeholder' => 'Ajouter un tag'
+            ])
+
             // ->add('created_at', null, [
             //     'widget' => 'single_text',
             // ])
