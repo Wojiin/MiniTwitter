@@ -14,13 +14,7 @@ class TagType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('category')
-            ->add('postTag', EntityType::class, [
-                'class' => Post::class,
-                'choice_label' => 'id',
-                'multiple' => true,
-            ])
-        ;
+            ->add('category');
     }
 
     public function configureOptions(OptionsResolver $resolver): void

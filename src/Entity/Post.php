@@ -74,8 +74,10 @@ class Post
     /**
      * @var Collection<int, Tag>
      */
-    #[ORM\ManyToMany(targetEntity: Tag::class, mappedBy: 'postTag')]
+    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'posts')]
     private Collection $tags;
+
+    
 
     public function __construct()
     {
@@ -83,6 +85,7 @@ class Post
         $this->users = new ArrayCollection();
         $this->repostedBy = new ArrayCollection();
         $this->tags = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -330,7 +333,6 @@ class Post
     {
         if (!$this->tags->contains($tag)) {
             $this->tags->add($tag);
-            $tag->addPostTag($this);
         }
 
         return $this;
@@ -338,10 +340,10 @@ class Post
 
     public function removeTag(Tag $tag): static
     {
-        if ($this->tags->removeElement($tag)) {
-            $tag->removePostTag($this);
-        }
+        $this->tags->removeElement($tag);
 
         return $this;
     }
+
+    
 }
