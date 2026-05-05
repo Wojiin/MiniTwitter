@@ -32,6 +32,7 @@ class PostType extends AbstractType
                     ),
                 ],
             ])
+            // ->add('tag')
             // ->add('created_at', null, [
             //     'widget' => 'single_text',
             // ])
