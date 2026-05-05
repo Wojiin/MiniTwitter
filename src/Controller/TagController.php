@@ -17,6 +17,7 @@ final class TagController extends AbstractController
     #[Route(name: 'app_tag_index', methods: ['GET'])]
     public function index(TagRepository $tagRepository): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         return $this->render('tag/index.html.twig', [
             'tags' => $tagRepository->findAll(),
         ]);
@@ -25,6 +26,7 @@ final class TagController extends AbstractController
     #[Route('/new', name: 'app_tag_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $tag = new Tag();
         $form = $this->createForm(TagType::class, $tag);
         $form->handleRequest($request);
@@ -45,6 +47,7 @@ final class TagController extends AbstractController
     #[Route('/{id}', name: 'app_tag_show', methods: ['GET'])]
     public function show(Tag $tag): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         return $this->render('tag/show.html.twig', [
             'tag' => $tag,
         ]);
@@ -53,6 +56,7 @@ final class TagController extends AbstractController
     #[Route('/{id}/edit', name: 'app_tag_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Tag $tag, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $form = $this->createForm(TagType::class, $tag);
         $form->handleRequest($request);
 
@@ -68,10 +72,12 @@ final class TagController extends AbstractController
         ]);
     }
 
+
     #[Route('/{id}', name: 'app_tag_delete', methods: ['POST'])]
     public function delete(Request $request, Tag $tag, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$tag->getId(), $request->getPayload()->getString('_token'))) {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        if ($this->isCsrfTokenValid('delete' . $tag->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($tag);
             $entityManager->flush();
         }

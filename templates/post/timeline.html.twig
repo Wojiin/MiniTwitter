@@ -5,7 +5,7 @@
 
 {% block body %}
 	<h1>Fil d'actualité :</h1>
-	<a href="{{ path('app_post_new') }}">Create new</a>
+	<a href="{{ path('app_post_new') }}">Créer un nouveau post</a>
 	<section>
 		{% for post in posts |reverse %}
 			<article>
@@ -22,21 +22,29 @@
 					{% endif %}
 				</p>
 				<tr>
-					<td>Like :
+					<td>Nombre de "j'aime" :
 						{{ post.countLike }}
 					</td>
 					<td>
 						{% if app.user and post not in app.user.likes %}
 							<form action={{ path('app_post_addlike', {'id': post.id} )}} method="post">
-								<input name="like" id="like" value="like" type="submit">
+								<input name="like" id="like" value="J'aime" type="submit">
 							</form>
 						{% else %}
 							<form action={{ path('app_post_remlike', {'id': post.id} )}} method="post">
-								<input name="unlike" id="unlike" value="unlike" type="submit">
+								<input name="unlike" id="unlike" value="Je n'aime plus" type="submit">
 							</form>
 						{% endif %}
 					</td>
-					<td>Repost :
+					{% if post.tags|length > 0  %}
+						<td>Catégories :
+							{% for tag in post.tags %}
+								{{tag.category}}
+							{% endfor %}
+						</td>
+					{% endif %}
+
+					<td>Nombre de repost :
 						{{ post.countRepost }}
 					</td>
 					<td>
@@ -46,27 +54,27 @@
 							</form>
 						{% else %}
 							<form action={{ path('app_post_remrepost', {'id': post.id} )}} method="post">
-								<input name="unrepost" id="unrepost" value="remove repost" type="submit">
+								<input name="unrepost" id="unrepost" value="enlever le repost" type="submit">
 							</form>
 						{% endif %}
 					</td>
 					<td>
-						<a href="{{ path('app_post_show', {'id': post.id}) }}">show</a>
+						<a href="{{ path('app_post_show', {'id': post.id}) }}">détails</a>
 					</td>
 					<td>
-						<a href="{{ path('app_reply_new', {'id': post.id}) }}">reply</a>
+						<a href="{{ path('app_reply_new', {'id': post.id}) }}">répondre</a>
 					</td>
-					<td>Flag :
+					<td>Nombre de signalements :
 						{{ post.countFlag }}
 					</td>
 					<td>
 						{% if app.user and post not in app.user.flagPost %}
 							<form action={{ path('app_post_addflag', {'id': post.id} )}} method="post">
-								<input name="flag" id="flag" value="flag" type="submit">
+								<input name="flag" id="flag" value="signaler" type="submit">
 							</form>
 						{% else %}
 							<form action={{ path('app_post_unflag', {'id': post.id} )}} method="post">
-								<input name="unflag" id="unflag" value="remove flag" type="submit">
+								<input name="unflag" id="unflag" value="retirer le signalement" type="submit">
 							</form>
 						{% endif %}
 					</td>
@@ -74,7 +82,7 @@
 				<tr>
 					<td>
 						{% if is_granted('ROLE_ADMIN') or (app.user and post.creator and app.user.id == post.creator.id) %}
-							<a href="{{ path('app_post_edit', {'id': post.id}) }}">edit</a>
+							<a href="{{ path('app_post_edit', {'id': post.id}) }}">modifier</a>
 							{{ include('post/_delete_form.html.twig') }}
 						{% endif %}
 					</td>
@@ -83,11 +91,11 @@
 			<article>
 
 				{% if post.replies|length > 0 %}
-					<h3>Reply</h3>
+					<h3>Réponses</h3>
 					{% for rep in post.replies %}
 						<article>
 							<tr>
-								<td>Réponse le :
+								<td>Répondue le :
 									{{ rep.createdAt ? rep.createdAt|date('Y-m-d H:i:s') : '' }}
 									par :{{ rep.creator.userName }}</td>
 								<td>{{ rep.content }}</td>
@@ -100,25 +108,25 @@
 							</tr>
 							<tr>
 								<td>
-									<a href="{{ path('app_reply_show', {'id': rep.id}) }}">show</a>
+									<a href="{{ path('app_reply_show', {'id': rep.id}) }}">détails</a>
 								</td>
 								<td>
 									{% if is_granted('ROLE_ADMIN') or (app.user and rep.creator and app.user.id == rep.creator.id) %}
-										<a href="{{ path('app_reply_edit', {'id': rep.id}) }}">edit</a>
+										<a href="{{ path('app_reply_edit', {'id': rep.id}) }}">modifier</a>
 									{% endif %}
 								</td>
 								<td>
-									Flag :
+									Nombre de signalements :
 									{{ rep.countFlag }}
 								</td>
 								<td>
 									{% if app.user and rep not in app.user.flagReply %}
 										<form action={{ path('app_reply_addflag', {'id': rep.id} )}} method="post">
-											<input name="flag" id="flag" value="flag" type="submit">
+											<input name="flag" id="flag" value="signaler" type="submit">
 										</form>
 									{% else %}
 										<form action={{ path('app_reply_unflag', {'id': rep.id} )}} method="post">
-											<input name="unflag" id="unflag" value="remove flag" type="submit">
+											<input name="unflag" id="unflag" value="retirer le signalement" type="submit">
 										</form>
 									{% endif %}
 								</td>
