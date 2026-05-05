@@ -122,8 +122,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'associate')]
     private Collection $users;
 
-    #[ORM\Column]
-    private ?int $count_notification = null;
+    #[ORM\Column(options: ['default' => 0])]
+    private ?int $count_notification = 0;
 
     /**
      * @var Collection<int, Discussion>

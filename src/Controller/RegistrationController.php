@@ -31,6 +31,7 @@ class RegistrationController extends AbstractController
             $user->setStatus('actif');
             $user->setCountFlag(0);
             $user->setDeleteFlag(0);
+            $user->setCountNotification(0);
             $user->setLastLoginAt($now);
             $user->setCreatedAt($now);
 
