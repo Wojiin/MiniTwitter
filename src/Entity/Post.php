@@ -59,6 +59,12 @@ class Post
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'likes')]
     private Collection $users;
 
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'repost')]
+    private Collection $repostedBy;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
@@ -71,12 +77,16 @@ class Post
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'posts')]
     private Collection $tags;
 
+    #[ORM\OneToOne(mappedBy: 'post_notif', cascade: ['persist', 'remove'])]
+    private ?Notification $notification = null;
+
     
 
     public function __construct()
     {
         $this->replies = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->repostedBy = new ArrayCollection();
         $this->tags = new ArrayCollection();
 
     }
@@ -263,6 +273,33 @@ class Post
         return $this;
     }
 
+    /**
+     * @return Collection<int, User>
+     */
+    public function getRepostedBy(): Collection
+    {
+        return $this->repostedBy;
+    }
+
+    public function addRepostedBy(User $user): static
+    {
+        if (!$this->repostedBy->contains($user)) {
+            $this->repostedBy->add($user);
+            $user->addRepost($this);
+        }
+ 
+        return $this;
+    }
+
+    public function removeRepostedBy(User $user): static
+    {
+        if ($this->repostedBy->removeElement($user)) {
+            $user->removeRepost($this);
+        }
+
+        return $this;
+    }
+
     public function getImage(): ?string
     {
         return $this->image;
@@ -307,6 +344,28 @@ class Post
     public function removeTag(Tag $tag): static
     {
         $this->tags->removeElement($tag);
+
+        return $this;
+    }
+
+    public function getNotification(): ?Notification
+    {
+        return $this->notification;
+    }
+
+    public function setNotification(?Notification $notification): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($notification === null && $this->notification !== null) {
+            $this->notification->setPostNotif(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($notification !== null && $notification->getPostNotif() !== $this) {
+            $notification->setPostNotif($this);
+        }
+
+        $this->notification = $notification;
 
         return $this;
     }

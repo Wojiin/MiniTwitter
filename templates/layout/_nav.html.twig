@@ -2,13 +2,13 @@
     {% if app.user %}
         {% if is_granted('ROLE_ADMIN') %}
             <a href="{{ path('app_post_index') }}">Gazouillis</a>
-            <a href="{{ path('app_reply_index') }}">Réponses</a>
+            <a href="{{ path('app_reply_index') }}">Reponses</a>
             <a href="{{ path('app_tag_index') }}">Tags</a>
-            
         {% endif %}
         <a href="{{ path('app_user_index') }}">Utilisateurs</a>
-        <a href="{{ path('app_post_timeline') }}">Fil d'actualité</a>
-        <a href="{{ path('app_user_profile_edit') }}">{{app.user.userName}}</a>
-        <a href="{{ path('app_logout') }}">Se déconnecter</a>
+        <a href="{{ path('app_post_timeline') }}">Fil d'actualite</a>
+        <a href="{{ path('app_discussion_index') }}">Discussions</a>
+        <a href="{{ path('app_user_profile_edit') }}">{{ app.user.userName }}</a>
+        <a href="{{ path('app_logout') }}">Se deconnecter</a>
     {% endif %}
 </nav>

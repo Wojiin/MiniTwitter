@@ -43,6 +43,9 @@ class Reply
     #[ORM\ManyToOne(inversedBy: 'flagReply')]
     private ?User $userFlag = null;
 
+    #[ORM\OneToOne(mappedBy: 'reply_notif', cascade: ['persist', 'remove'])]
+    private ?Notification $notification = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -152,6 +155,28 @@ class Reply
     public function setUserFlag(?User $userFlag): static
     {
         $this->userFlag = $userFlag;
+
+        return $this;
+    }
+
+    public function getNotification(): ?Notification
+    {
+        return $this->notification;
+    }
+
+    public function setNotification(?Notification $notification): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($notification === null && $this->notification !== null) {
+            $this->notification->setReplyNotif(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($notification !== null && $notification->getReplyNotif() !== $this) {
+            $notification->setReplyNotif($this);
+        }
+
+        $this->notification = $notification;
 
         return $this;
     }

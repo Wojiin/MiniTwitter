@@ -85,7 +85,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Post>
      */
-    #[ORM\ManyToMany(targetEntity: Post::class, inversedBy: 'users')]
+    #[ORM\ManyToMany(targetEntity: Post::class, inversedBy: 'repostedBy')]
     #[ORM\JoinTable(name: 'user_post_reposts')]
     private Collection $repost;
 
@@ -110,6 +110,39 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'userFlag')]
     private Collection $flagUser;
 
+    /**
+     * @var Collection<int, self>
+     */
+    #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'users')]
+    private Collection $associate;
+
+    /**
+     * @var Collection<int, self>
+     */
+    #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'associate')]
+    private Collection $users;
+
+    #[ORM\Column(options: ['default' => 0])]
+    private ?int $count_notification = 0;
+
+    /**
+     * @var Collection<int, Discussion>
+     */
+    #[ORM\ManyToMany(targetEntity: Discussion::class, mappedBy: 'discuss')]
+    private Collection $discussions;
+
+    /**
+     * @var Collection<int, Message>
+     */
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'send')]
+    private Collection $messages;
+
+    /**
+     * @var Collection<int, Notification>
+     */
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'receive')]
+    private Collection $notifications;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -119,6 +152,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->flagPost = new ArrayCollection();
         $this->flagReply = new ArrayCollection();
         $this->flagUser = new ArrayCollection();
+        $this->associate = new ArrayCollection();
+        $this->users = new ArrayCollection();
+        $this->discussions = new ArrayCollection();
+        $this->messages = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -138,23 +176,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
@@ -170,9 +199,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
     public function getPassword(): ?string
     {
         return $this->password;
@@ -185,9 +211,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * Ensure the session doesn't contain actual password hashes by CRC32C-hashing them, as supported since Symfony 7.3.
-     */
     public function __serialize(): array
     {
         $data = (array) $this;
@@ -325,7 +348,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removePost(Post $post): static
     {
         if ($this->posts->removeElement($post)) {
-            // set the owning side to null (unless already changed)
             if ($post->getCreator() === $this) {
                 $post->setCreator(null);
             }
@@ -355,7 +377,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeReply(Reply $reply): static
     {
         if ($this->replies->removeElement($reply)) {
-            // set the owning side to null (unless already changed)
             if ($reply->getCreator() === $this) {
                 $reply->setCreator(null);
             }
@@ -433,7 +454,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeFlagPost(Post $flagPost): static
     {
         if ($this->flagPost->removeElement($flagPost)) {
-            // set the owning side to null (unless already changed)
             if ($flagPost->getUserFlag() === $this) {
                 $flagPost->setUserFlag(null);
             }
@@ -463,7 +483,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeFlagReply(Reply $flagReply): static
     {
         if ($this->flagReply->removeElement($flagReply)) {
-            // set the owning side to null (unless already changed)
             if ($flagReply->getUserFlag() === $this) {
                 $flagReply->setUserFlag(null);
             }
@@ -505,9 +524,157 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeFlagUser(self $flagUser): static
     {
         if ($this->flagUser->removeElement($flagUser)) {
-            // set the owning side to null (unless already changed)
             if ($flagUser->getUserFlag() === $this) {
                 $flagUser->setUserFlag(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getAssociate(): Collection
+    {
+        return $this->associate;
+    }
+
+    public function addAssociate(self $associate): static
+    {
+        if (!$this->associate->contains($associate)) {
+            $this->associate->add($associate);
+        }
+
+        return $this;
+    }
+
+    public function removeAssociate(self $associate): static
+    {
+        $this->associate->removeElement($associate);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(self $user): static
+    {
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->addAssociate($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(self $user): static
+    {
+        if ($this->users->removeElement($user)) {
+            $user->removeAssociate($this);
+        }
+
+        return $this;
+    }
+
+    public function getCountNotification(): ?int
+    {
+        return $this->count_notification;
+    }
+
+    public function setCountNotification(int $count_notification): static
+    {
+        $this->count_notification = $count_notification;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Discussion>
+     */
+    public function getDiscussions(): Collection
+    {
+        return $this->discussions;
+    }
+
+    public function addDiscussion(Discussion $discussion): static
+    {
+        if (!$this->discussions->contains($discussion)) {
+            $this->discussions->add($discussion);
+            $discussion->addDiscuss($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDiscussion(Discussion $discussion): static
+    {
+        if ($this->discussions->removeElement($discussion)) {
+            $discussion->removeDiscuss($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Message $message): static
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages->add($message);
+            $message->setSend($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): static
+    {
+        if ($this->messages->removeElement($message)) {
+            if ($message->getSend() === $this) {
+                $message->setSend(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Notification>
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): static
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
+            $notification->setReceive($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): static
+    {
+        if ($this->notifications->removeElement($notification)) {
+            // set the owning side to null (unless already changed)
+            if ($notification->getReceive() === $this) {
+                $notification->setReceive(null);
             }
         }
 
