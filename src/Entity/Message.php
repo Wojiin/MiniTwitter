@@ -34,6 +34,9 @@ class Message
     #[ORM\JoinColumn(nullable: false)]
     private ?Discussion $discussion = null;
 
+    #[ORM\OneToOne(mappedBy: 'message_notif', cascade: ['persist', 'remove'])]
+    private ?Notification $notification = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -114,6 +117,28 @@ class Message
     public function setDiscussion(?Discussion $discussion): static
     {
         $this->discussion = $discussion;
+
+        return $this;
+    }
+
+    public function getNotification(): ?Notification
+    {
+        return $this->notification;
+    }
+
+    public function setNotification(?Notification $notification): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($notification === null && $this->notification !== null) {
+            $this->notification->setMessageNotif(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($notification !== null && $notification->getMessageNotif() !== $this) {
+            $notification->setMessageNotif($this);
+        }
+
+        $this->notification = $notification;
 
         return $this;
     }
