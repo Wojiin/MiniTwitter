@@ -3,8 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Discussion;
-use App\Form\Discussion1Type;
+use App\Entity\Message;
+use App\Entity\User;
+use App\Form\DiscussionParticipantsType;
+use App\Form\DiscussionType;
+use App\Form\MessageType;
 use App\Repository\DiscussionRepository;
+use App\Service\UploadService;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,23 +23,72 @@ final class DiscussionController extends AbstractController
     #[Route(name: 'app_discussion_index', methods: ['GET'])]
     public function index(DiscussionRepository $discussionRepository): Response
     {
+        $user = $this->getUser();
+
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
         return $this->render('discussion/index.html.twig', [
-            'discussions' => $discussionRepository->findAll(),
+            'discussions' => $discussionRepository->findForParticipant($user),
         ]);
     }
 
     #[Route('/new', name: 'app_discussion_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $user = $this->getUser();
+
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
         $discussion = new Discussion();
-        $form = $this->createForm(Discussion1Type::class, $discussion);
+        $form = $this->createForm(DiscussionType::class, $discussion, [
+            'current_user' => $user,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $now = new \DateTimeImmutable();
+
+            if (!$discussion->getDiscuss()->contains($user)) {
+                $discussion->addDiscuss($user);
+            }
+
+            $discussion->setCreatedAt($now);
+
+            $title = trim((string) $discussion->getTitle());
+
+            if ($title === '') {
+                $participantNames = [];
+
+                foreach ($discussion->getDiscuss() as $participant) {
+                    if ($participant->getId() === $user->getId()) {
+                        continue;
+                    }
+
+                    $participantNames[] = $participant->getUserName();
+                }
+
+                $discussion->setTitle('discussion avec : '.implode(', ', $participantNames));
+            }
+
+            $firstMessage = new Message();
+            $firstMessage->setContent((string) $form->get('first_message')->getData());
+            $firstMessage->setCreatedAt($now);
+            $firstMessage->setSend($user);
+            $firstMessage->setDiscussion($discussion);
+
+            $discussion->setUpdatedAt($now);
+
             $entityManager->persist($discussion);
+            $entityManager->persist($firstMessage);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_discussion_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_discussion_show', [
+                'id' => $discussion->getId(),
+            ], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('discussion/new.html.twig', [
@@ -42,18 +97,131 @@ final class DiscussionController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_discussion_show', methods: ['GET'])]
-    public function show(Discussion $discussion): Response
+    #[Route('/{id}', name: 'app_discussion_show', methods: ['GET', 'POST'])]
+    public function show(
+        Request $request,
+        Discussion $discussion,
+        EntityManagerInterface $entityManager,
+        UploadService $uploadService
+    ): Response
     {
-        return $this->render('discussion/show.html.twig', [
+        $user = $this->getUser();
+
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
+        if (!$discussion->getDiscuss()->contains($user)) {
+            throw $this->createAccessDeniedException('Vous ne faites pas partie de cette discussion.');
+        }
+
+        $message = new Message();
+        $messageForm = $this->createForm(MessageType::class, $message);
+        $messageForm->handleRequest($request);
+
+        $participantsForm = $this->createForm(DiscussionParticipantsType::class, null, [
+            'current_user' => $user,
             'discussion' => $discussion,
         ]);
+        $participantsForm->handleRequest($request);
+
+        if ($messageForm->isSubmitted() && $messageForm->isValid()) {
+            $now = new \DateTimeImmutable();
+            $imageFile = $messageForm->get('picture')->getData();
+
+            $message->setCreatedAt($now);
+            $message->setSend($user);
+            $message->setDiscussion($discussion);
+
+            if ($imageFile) {
+                $fileName = $uploadService->upload($imageFile, 'uploads/messages');
+                $message->setPicture($fileName);
+            }
+
+            $discussion->setUpdatedAt($now);
+
+            $entityManager->persist($message);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_discussion_show', [
+                'id' => $discussion->getId(),
+            ], Response::HTTP_SEE_OTHER);
+        }
+
+        if ($participantsForm->isSubmitted() && $participantsForm->isValid()) {
+            /** @var iterable<User> $participantsToAdd */
+            $participantsToAdd = $participantsForm->get('participants')->getData();
+
+            foreach ($participantsToAdd as $participant) {
+                $discussion->addDiscuss($participant);
+            }
+
+            $discussion->setUpdatedAt(new \DateTimeImmutable());
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_discussion_show', [
+                'id' => $discussion->getId(),
+            ], Response::HTTP_SEE_OTHER);
+        }
+
+        $messages = $discussion->getMessages()->matching(
+            Criteria::create()->orderBy(['created_at' => Criteria::ASC])
+        );
+
+        return $this->render('discussion/show.html.twig', [
+            'discussion' => $discussion,
+            'participants' => $discussion->getDiscuss(),
+            'messages' => $messages,
+            'message_form' => $messageForm->createView(),
+            'participants_form' => $participantsForm->createView(),
+        ]);
+    }
+
+    #[Route('/{id}/leave', name: 'app_discussion_leave', methods: ['POST'])]
+    public function leave(
+        Request $request,
+        Discussion $discussion,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $user = $this->getUser();
+
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
+        if (!$this->isCsrfTokenValid('leave'.$discussion->getId(), $request->getPayload()->getString('_token'))) {
+            return $this->redirectToRoute('app_discussion_show', ['id' => $discussion->getId()], Response::HTTP_SEE_OTHER);
+        }
+
+        if (!$discussion->getDiscuss()->contains($user)) {
+            throw $this->createAccessDeniedException('Vous ne faites pas partie de cette discussion.');
+        }
+
+        $discussion->removeDiscuss($user);
+
+        if ($discussion->getDiscuss()->count() <= 1) {
+            $entityManager->remove($discussion);
+        } else {
+            $discussion->setUpdatedAt(new \DateTimeImmutable());
+        }
+
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_discussion_index', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/{id}/edit', name: 'app_discussion_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Discussion $discussion, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(Discussion1Type::class, $discussion);
+        $user = $this->getUser();
+
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $form = $this->createForm(DiscussionType::class, $discussion, [
+            'current_user' => $user,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
