@@ -122,6 +122,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'associate')]
     private Collection $users;
 
+    #[ORM\Column]
+    private ?int $count_notification = null;
+
+    /**
+     * @var Collection<int, Message>
+     */
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'send')]
+    private Collection $messages;
+
+    /**
+     * @var Collection<int, Discussion>
+     */
+    #[ORM\ManyToMany(targetEntity: Discussion::class, mappedBy: 'discuss')]
+    private Collection $discussions;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -133,6 +148,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->flagUser = new ArrayCollection();
         $this->associate = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->messages = new ArrayCollection();
+        $this->discussions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -574,6 +591,75 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->users->removeElement($user)) {
             $user->removeAssociate($this);
+        }
+
+        return $this;
+    }
+
+    public function getCountNotification(): ?int
+    {
+        return $this->count_notification;
+    }
+
+    public function setCountNotification(int $count_notification): static
+    {
+        $this->count_notification = $count_notification;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Message $message): static
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages->add($message);
+            $message->setSend($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): static
+    {
+        if ($this->messages->removeElement($message)) {
+            // set the owning side to null (unless already changed)
+            if ($message->getSend() === $this) {
+                $message->setSend(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Discussion>
+     */
+    public function getDiscussions(): Collection
+    {
+        return $this->discussions;
+    }
+
+    public function addDiscussion(Discussion $discussion): static
+    {
+        if (!$this->discussions->contains($discussion)) {
+            $this->discussions->add($discussion);
+            $discussion->addDiscuss($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDiscussion(Discussion $discussion): static
+    {
+        if ($this->discussions->removeElement($discussion)) {
+            $discussion->removeDiscuss($this);
         }
 
         return $this;
