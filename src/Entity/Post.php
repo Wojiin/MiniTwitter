@@ -65,10 +65,17 @@ class Post
     #[ORM\ManyToOne(inversedBy: 'flagPost')]
     private ?User $userFlag = null;
 
+    /**
+     * @var Collection<int, Tag>
+     */
+    #[ORM\ManyToMany(targetEntity: Tag::class, mappedBy: 'postTag')]
+    private Collection $tags;
+
     public function __construct()
     {
         $this->replies = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->tags = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -273,6 +280,33 @@ class Post
     public function setUserFlag(?User $userFlag): static
     {
         $this->userFlag = $userFlag;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tag>
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function addTag(Tag $tag): static
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags->add($tag);
+            $tag->addPostTag($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTag(Tag $tag): static
+    {
+        if ($this->tags->removeElement($tag)) {
+            $tag->removePostTag($this);
+        }
 
         return $this;
     }
