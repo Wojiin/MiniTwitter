@@ -59,6 +59,12 @@ class Post
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'likes')]
     private Collection $users;
 
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'repost')]
+    private Collection $repostedBy;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
@@ -75,6 +81,7 @@ class Post
     {
         $this->replies = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->repostedBy = new ArrayCollection();
         $this->tags = new ArrayCollection();
     }
 
@@ -255,6 +262,33 @@ class Post
     {
         if ($this->users->removeElement($user)) {
             $user->removeLike($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getRepostedBy(): Collection
+    {
+        return $this->repostedBy;
+    }
+
+    public function addRepostedBy(User $user): static
+    {
+        if (!$this->repostedBy->contains($user)) {
+            $this->repostedBy->add($user);
+            $user->addRepost($this);
+        }
+ 
+        return $this;
+    }
+
+    public function removeRepostedBy(User $user): static
+    {
+        if ($this->repostedBy->removeElement($user)) {
+            $user->removeRepost($this);
         }
 
         return $this;
