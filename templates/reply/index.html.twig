@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Reply index</h1>
+	<h1>Liste des réponses signalées</h1>
 
 	{% set has_flagged_replies = false %}
 	{% for reply in replies %}
@@ -18,13 +18,13 @@
 			<thead>
 				<tr>
 					<th>Id</th>
-					<th>Content</th>
+					<th>Contenu</th>
 					<th>Image</th>
-					<th>Created_at</th>
-					<th>Updated_at</th>
-					<th>Status</th>
-					<th>Count_flag</th>
-					<th>actions</th>
+					<th>Creée le:</th>
+					<th>Modifiée le :</th>
+					<th>Statut</th>
+					<th>Nombre de signalement</th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -43,17 +43,17 @@
 							<td>{{ reply.status }}</td>
 							<td>{{ reply.countFlag }}</td>
 							<td>
-								<a href="{{ path('app_reply_show', {'id': reply.id}) }}">show</a>
+								<a href="{{ path('app_reply_show', {'id': reply.id}) }}">détail</a>
 								{% if is_granted('ROLE_ADMIN') or (app.user and reply.creator and app.user.id == reply.creator.id) %}
-									<a href="{{ path('app_reply_edit', {'id': reply.id}) }}">edit</a>
+									<a href="{{ path('app_reply_edit', {'id': reply.id}) }}">modifier</a>
 								{% endif %}
 								{% if app.user and reply not in app.user.flagReply %}
 									<form action={{ path('app_reply_addflag', {'id': reply.id} )}} method="post">
-										<input name="flag" id="flag" value="flag" type="submit">
+										<input name="flag" id="flag" value="signaler" type="submit">
 									</form>
 								{% else %}
 									<form action={{ path('app_reply_unflag', {'id': reply.id} )}} method="post">
-										<input name="unflag" id="unflag" value="remove flag" type="submit">
+										<input name="unflag" id="unflag" value="retirer le signalement" type="submit">
 									</form>
 								{% endif %}
 							</td>
@@ -63,8 +63,7 @@
 			</tbody>
 		</table>
 	{% else %}
-		<p>aucune reply n'a de flag</p>
+		<p>aucune réponse n'a de signalement</p>
 	{% endif %}
 
-	<a href="{{ path('app_reply_new') }}">Create new</a>
 {% endblock %}

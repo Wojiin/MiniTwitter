@@ -4,16 +4,16 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Reply</h1>
+	<h1>Détail de la réponse</h1>
 
 	<table class="table">
 		<tbody>
 			<tr>
-				<th>Author</th>
+				<th>Auteur</th>
 				<td>{{ reply.creator.userName }}</td>
 			</tr>
 			<tr>
-				<th>Content</th>
+				<th>Contenu</th>
 				<td>{{ reply.content }}</td>
 			</tr>
 			<tr>
@@ -27,38 +27,38 @@
 				</td>
 			</tr>
 			<tr>
-				<th>Created_at</th>
+				<th>Créée le :</th>
 				<td>{{ reply.createdAt ? reply.createdAt|date('Y-m-d H:i:s') : '' }}</td>
 			</tr>
 			<tr>
-				<th>Updated_at</th>
+				<th>Modifiée le :</th>
 				<td>{{ reply.updatedAt ? reply.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
 			</tr>
 			<tr>
-				<th>Status</th>
+				<th>Statut</th>
 				<td>{{ reply.status }}</td>
 			</tr>
 			<tr>
-				<th>Count_flag</th>
+				<th>Nombre de signalement :</th>
 				<td>{{ reply.countFlag }}</td>
 			</tr>
 
 		</tbody>
 	</table>
 
-	<a href="{{ path('app_post_timeline') }}">back to list</a>
+	<a href="{{ path('app_post_timeline') }}">Retour au fil d'actualité</a>
 
 	{% if is_granted('ROLE_ADMIN') or (app.user and reply.creator and app.user.id == reply.creator.id) %}
-		<a href="{{ path('app_reply_edit', {'id': reply.id}) }}">edit</a>
+		<a href="{{ path('app_reply_edit', {'id': reply.id}) }}">modifier</a>
 		{{ include('reply/_delete_form.html.twig') }}
 	{% endif %}
 	{% if app.user and reply not in app.user.flagReply %}
 		<form action={{ path('app_reply_addflag', {'id': reply.id} )}} method="post">
-			<input name="flag" id="flag" value="flag" type="submit">
+			<input name="flag" id="flag" value="signaler" type="submit">
 		</form>
 	{% else %}
 		<form action={{ path('app_reply_unflag', {'id': reply.id} )}} method="post">
-			<input name="unflag" id="unflag" value="remove flag" type="submit">
+			<input name="unflag" id="unflag" value="retirer le signalement" type="submit">
 		</form>
 	{% endif %}
 {% endblock %}
