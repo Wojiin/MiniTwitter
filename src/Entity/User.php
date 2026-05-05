@@ -110,6 +110,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'userFlag')]
     private Collection $flagUser;
 
+    /**
+     * @var Collection<int, self>
+     */
+    #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'users')]
+    private Collection $associate;
+
+    /**
+     * @var Collection<int, self>
+     */
+    #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'associate')]
+    private Collection $users;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -119,6 +131,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->flagPost = new ArrayCollection();
         $this->flagReply = new ArrayCollection();
         $this->flagUser = new ArrayCollection();
+        $this->associate = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -509,6 +523,57 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             if ($flagUser->getUserFlag() === $this) {
                 $flagUser->setUserFlag(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getAssociate(): Collection
+    {
+        return $this->associate;
+    }
+
+    public function addAssociate(self $associate): static
+    {
+        if (!$this->associate->contains($associate)) {
+            $this->associate->add($associate);
+        }
+
+        return $this;
+    }
+
+    public function removeAssociate(self $associate): static
+    {
+        $this->associate->removeElement($associate);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(self $user): static
+    {
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->addAssociate($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(self $user): static
+    {
+        if ($this->users->removeElement($user)) {
+            $user->removeAssociate($this);
         }
 
         return $this;
