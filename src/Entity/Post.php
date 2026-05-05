@@ -77,6 +77,9 @@ class Post
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'posts')]
     private Collection $tags;
 
+    #[ORM\OneToOne(mappedBy: 'post_notif', cascade: ['persist', 'remove'])]
+    private ?Notification $notification = null;
+
     
 
     public function __construct()
@@ -341,6 +344,28 @@ class Post
     public function removeTag(Tag $tag): static
     {
         $this->tags->removeElement($tag);
+
+        return $this;
+    }
+
+    public function getNotification(): ?Notification
+    {
+        return $this->notification;
+    }
+
+    public function setNotification(?Notification $notification): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($notification === null && $this->notification !== null) {
+            $this->notification->setPostNotif(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($notification !== null && $notification->getPostNotif() !== $this) {
+            $notification->setPostNotif($this);
+        }
+
+        $this->notification = $notification;
 
         return $this;
     }
