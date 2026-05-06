@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Reply;
+use App\Event\ReplyCreatedEvent;
 use App\Form\ReplyType;
 use App\Entity\Post;
 use App\Entity\User;
@@ -12,6 +13,7 @@ use App\Repository\ReplyRepository;
 use App\Service\UploadService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -28,7 +30,7 @@ final class ReplyController extends AbstractController
     }
 
     #[Route('/new', name: 'app_reply_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, PostRepository $postRepository, UploadService $uploadService): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, PostRepository $postRepository, UploadService $uploadService, EventDispatcherInterface $eventDispatcher): Response
     {
         $reply = new Reply();
         $form = $this->createForm(ReplyType::class, $reply);
@@ -54,6 +56,7 @@ final class ReplyController extends AbstractController
 
             $entityManager->persist($reply);
             $entityManager->flush();
+            $eventDispatcher->dispatch(new ReplyCreatedEvent($reply));
 
             return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
         }

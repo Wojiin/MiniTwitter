@@ -36,10 +36,17 @@ class Discussion
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'discussion', orphanRemoval: true)]
     private Collection $messages;
 
+    /**
+     * @var Collection<int, Notification>
+     */
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'discussion_notif')]
+    private Collection $notifications;
+
     public function __construct()
     {
         $this->discuss = new ArrayCollection();
         $this->messages = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -137,6 +144,35 @@ class Discussion
         if ($this->messages->removeElement($message)) {
             if ($message->getDiscussion() === $this) {
                 $message->setDiscussion(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Notification>
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): static
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
+            $notification->setDiscussionNotif($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): static
+    {
+        if ($this->notifications->removeElement($notification)) {
+            if ($notification->getDiscussionNotif() === $this) {
+                $notification->setDiscussionNotif(null);
             }
         }
 

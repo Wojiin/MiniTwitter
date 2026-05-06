@@ -4,12 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Post;
 use App\Entity\User;
+use App\Event\PostCreatedEvent;
 use App\Form\PostType;
 use App\Repository\PostRepository;
 use App\Service\UploadService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -33,7 +35,7 @@ final class PostController extends AbstractController
     }
 
     #[Route('/new', name: 'app_post_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, UploadService $uploadService): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, UploadService $uploadService, EventDispatcherInterface $eventDispatcher): Response
     {
         $now = new \DateTimeImmutable();
         $post = new Post();
@@ -57,6 +59,7 @@ final class PostController extends AbstractController
 
             $entityManager->persist($post);
             $entityManager->flush();
+            $eventDispatcher->dispatch(new PostCreatedEvent($post));
 
             return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
         }

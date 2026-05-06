@@ -77,8 +77,11 @@ class Post
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'posts')]
     private Collection $tags;
 
-    #[ORM\OneToOne(mappedBy: 'post_notif', cascade: ['persist', 'remove'])]
-    private ?Notification $notification = null;
+    /**
+     * @var Collection<int, Notification>
+     */
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'post_notif')]
+    private Collection $notifications;
 
     #[ORM\OneToOne(targetEntity: self::class, cascade: ['persist', 'remove'])]
     private ?self $id_citation = null;
@@ -93,6 +96,7 @@ class Post
         $this->users = new ArrayCollection();
         $this->repostedBy = new ArrayCollection();
         $this->tags = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
 
     }
 
@@ -353,28 +357,34 @@ class Post
         return $this;
     }
 
-    public function getNotification(): ?Notification
+    /**
+     * @return Collection<int, Notification>
+     */
+    public function getNotifications(): Collection
     {
-        return $this->notification;
+        return $this->notifications;
     }
 
-    public function setNotification(?Notification $notification): static
+    public function addNotification(Notification $notification): static
     {
-        // unset the owning side of the relation if necessary
-        if ($notification === null && $this->notification !== null) {
-            $this->notification->setPostNotif(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($notification !== null && $notification->getPostNotif() !== $this) {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
             $notification->setPostNotif($this);
         }
-
-        $this->notification = $notification;
 
         return $this;
     }
 
+    public function removeNotification(Notification $notification): static
+    {
+        if ($this->notifications->removeElement($notification)) {
+            if ($notification->getPostNotif() === $this) {
+                $notification->setPostNotif(null);
+            }
+        }
+
+        return $this;
+    }
     public function getIdCitation(): ?self
     {
         return $this->id_citation;
