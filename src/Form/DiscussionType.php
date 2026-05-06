@@ -7,11 +7,12 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Count;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\File;
 
 class DiscussionType extends AbstractType
 {
@@ -27,9 +28,19 @@ class DiscussionType extends AbstractType
             ->add('first_message', TextareaType::class, [
                 'mapped' => false,
                 'label' => 'Premier message',
+                'required' => false,
+            ])
+            ->add('first_message_picture', FileType::class, [
+                'label' => 'Image du premier message',
+                'mapped' => false,
+                'required' => false,
                 'constraints' => [
-                    new NotBlank(
-                        message: 'Veuillez ecrire un premier message.',
+                    new File(
+                        maxSize: '5000k',
+                        mimeTypes: [
+                            'image/*',
+                        ],
+                        mimeTypesMessage: 'Image trop lourde',
                     ),
                 ],
             ])

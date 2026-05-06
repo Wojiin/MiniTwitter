@@ -156,7 +156,6 @@ public function editProfile(
     {
         $user = $this->getUser();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // dd("if");
             $user->addFlagUser($userFlag);
             $userFlag->setCountFlag(+ ($userFlag->getCountFlag()) + 1);
             $entityManager->persist($userFlag);
@@ -171,7 +170,6 @@ public function editProfile(
     {
         $user = $this->getUser();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // dd("if");
             $user->removeFlagUser($userFlag);
             $userFlag->setCountFlag(+ ($userFlag->getCountFlag()) - 1);
             $entityManager->persist($userFlag);

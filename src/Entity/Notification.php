@@ -31,7 +31,7 @@ class Notification
     #[ORM\OneToOne(inversedBy: 'notification', cascade: ['persist', 'remove'])]
     private ?Reply $reply_notif = null;
 
-    #[ORM\OneToOne(inversedBy: 'notification', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'notifications')]
     private ?Message $message_notif = null;
 
     #[ORM\OneToOne(inversedBy: 'notification', cascade: ['persist', 'remove'])]
