@@ -35,7 +35,11 @@ final class DiscussionController extends AbstractController
     }
 
     #[Route('/new', name: 'app_discussion_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        UploadService $uploadService
+    ): Response
     {
         $user = $this->getUser();
 
@@ -51,6 +55,8 @@ final class DiscussionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $now = new \DateTimeImmutable();
+            $firstMessageContent = (string) $form->get('first_message')->getData();
+            $firstMessageImage = $form->get('first_message_picture')->getData();
 
             if (!$discussion->getDiscuss()->contains($user)) {
                 $discussion->addDiscuss($user);
@@ -74,16 +80,24 @@ final class DiscussionController extends AbstractController
                 $discussion->setTitle('discussion avec : '.implode(', ', $participantNames));
             }
 
-            $firstMessage = new Message();
-            $firstMessage->setContent((string) $form->get('first_message')->getData());
-            $firstMessage->setCreatedAt($now);
-            $firstMessage->setSend($user);
-            $firstMessage->setDiscussion($discussion);
-
             $discussion->setUpdatedAt($now);
 
             $entityManager->persist($discussion);
-            $entityManager->persist($firstMessage);
+            if ($firstMessageContent !== '') {
+                $firstMessage = new Message();
+                $firstMessage->setContent(trim($firstMessageContent));
+                $firstMessage->setCreatedAt($now);
+                $firstMessage->setSend($user);
+                $firstMessage->setDiscussion($discussion);
+
+                if ($firstMessageImage) {
+                    $fileName = $uploadService->upload($firstMessageImage, 'uploads/messages');
+                    $firstMessage->setPicture($fileName);
+                }
+
+                $entityManager->persist($firstMessage);
+            
+            }
             $entityManager->flush();
 
             return $this->redirectToRoute('app_discussion_show', [
@@ -128,6 +142,7 @@ final class DiscussionController extends AbstractController
         if ($messageForm->isSubmitted() && $messageForm->isValid()) {
             $now = new \DateTimeImmutable();
             $imageFile = $messageForm->get('picture')->getData();
+            $message->setContent(trim((string) $message->getContent()));
 
             $message->setCreatedAt($now);
             $message->setSend($user);
