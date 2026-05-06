@@ -5,13 +5,13 @@
 
 {% block body %}
 	<h1>Détail du post</h1>
-
+	<a href="{{ path('app_post_postrepost', {'id': post.id}) }}">Créer un nouveau repost</a>
 	<table class="table">
 		<tbody>
 			{# <tr>
-																																								<th>Id</th>
-																																								<td>{{ post.id }}</td>
-																																							</tr> #}
+																																											<th>Id</th>
+																																											<td>{{ post.id }}</td>
+																																										</tr> #}
 			<tr>
 				<th>Auteur</th>
 				<td>{{ post.author }}</td>

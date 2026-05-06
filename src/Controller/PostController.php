@@ -221,6 +221,47 @@ final class PostController extends AbstractController
     }
 
 
+    #[Route('/postrepost/{id}', name: 'app_post_postrepost', methods: ['GET', 'POST'])]
+    public function postrepost(Post $repost, Request $request, EntityManagerInterface $entityManager, UploadService $uploadService): Response
+    {
 
-    
+        $user = $this->getUser();
+        $now = new \DateTimeImmutable();
+        $post = new Post();
+        $form = $this->createForm(PostType::class, $post);
+        $form->handleRequest($request);
+        $post->setCreatedAt($now);
+        $post->setStatus('actif');
+        $post->setCountFlag(0);
+        $post->setCountLike(0);
+        $post->setCountRepost(0);
+        $post->setAuthor($user->getUserName());
+        $post->setCreator($user);
+        $post->setIdCitation($repost);
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $user->addRepost($repost);
+                $repost->setCountRepost(+ ($repost->getCountRepost()) + 1);
+            }
+            $imageFile = $form->get('image')->getData();
+
+            if ($imageFile) {
+                $fileName = $uploadService->upload($imageFile, 'uploads/posts');
+                $post->setImage($fileName);
+            }
+
+            $entityManager->persist($post);
+            $entityManager->persist($repost);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('post/new.html.twig', [
+            'post' => $post,
+            'form' => $form,
+        ]);
+    }
 }

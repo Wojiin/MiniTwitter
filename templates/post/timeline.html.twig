@@ -6,7 +6,7 @@
 {% block body %}
 	<h1>Fil d'actualité :</h1>
 	<a href="{{ path('app_post_new') }}">Créer un nouveau post</a>
-	<section>
+		<section>
 		{% for post in posts |reverse %}
 			<article>
 				<h2>{{ post.title }}</h2>
@@ -21,6 +21,10 @@
 						<img src="{{ asset('uploads/posts/' ~ post.image) }}" alt="Image du post {{ post.title }}" style="max-width: 250px; max-height: 250px;">
 					{% endif %}
 				</p>
+				{% if post.id_citation !== null %}
+				
+				{% endif %}
+				
 				<tr>
 					<td>Nombre de "j'aime" :
 						{{ post.countLike }}
