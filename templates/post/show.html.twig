@@ -4,142 +4,141 @@
 {% endblock %}
 
 {% block body %}
+
 	<h1>Détail du post</h1>
-	<a href="{{ path('app_post_postrepost', {'id': post.id}) }}">Créer un nouveau repost</a>
+	<h3><a href="{{ path('app_post_postrepost', {'id': post.id}) }}">Créer un nouveau repost</a></h3>
 	<table class="table">
 		<tbody>
-			{# <tr>
-																																											<th>Id</th>
-																																											<td>{{ post.id }}</td>
-																																										</tr> #}
-			<tr>
-				<th>Auteur</th>
-				<td>{{ post.author }}</td>
-			</tr>
-			<tr>
-				<th>Title</th>
-				<td>{{ post.title }}</td>
-			</tr>
-			<tr>
-				<th>Contenu</th>
-				<td>{{ post.content }}</td>
-			</tr>
-			<tr>
-				<th>Image</th>
-				<td>
-					{% if post.image %}
-						<img src="{{ asset('uploads/posts/' ~ post.image) }}" alt="Image du post {{ post.title }}" style="max-width: 250px; max-height: 250px;">
-					{% else %}
-						Aucune image
-					{% endif %}
-				</td>
-			</tr>
-			<tr>
-				<th>Créé le :</th>
-				<td>{{ post.createdAt ? post.createdAt|date('Y-m-d H:i') : '' }}</td>
-			</tr>
-			<tr>
-				<th>Modifié le :</th>
-				<td>{{ post.updatedAt ? post.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-			</tr>
-			<tr>
 
-				{% if post.tags|length > 0  %}
-					<th>Catégorie :</th>
-					<td>
-						{% for tag in post.tags %}
-							{{tag.category}}
-						{% endfor %}
-					</td>
-				{% endif %}
-
-			</tr>
-			<tr>
-				<th>Nombre de repost :</th>
-				<td>{{ post.countRepost }}</td>
-			</tr>
-			<tr>
-				<th>Nombre de "j'aime" :</th>
-				<td>{{ post.countLike }}</td>
-			</tr>
-			<tr>
-				<th>Nombre de signalement :</th>
-				<td>{{ post.countFlag }}</td>
-			</tr>
-
+			<th>Auteur</th>
+			<td>{{ post.author }}</td>
 		</tbody>
-	</table>
+	</tr>
+	<tr>
+		<th>Title</th>
+		<td>{{ post.title }}</td>
+	</tr>
+	<tr>
+		<th>Contenu</th>
+		<td>{{ post.content }}</td>
+	</tr>
 
-	{% if is_granted('ROLE_ADMIN') or (app.user and post.creator and app.user.id == post.creator.id) %}
-		<a href="{{ path('app_post_edit', {'id': post.id}) }}">modifier le post</a>
-		{{ include('post/_delete_form.html.twig') }}
-	{% endif %}
-	{% if app.user and post not in app.user.flagPost %}
-		<form action={{ path('app_post_addflag', {'id': post.id} )}} method="post">
-			<input name="flag" id="flag" value="signaler" type="submit">
-		</form>
-	{% else %}
-		<form action={{ path('app_post_unflag', {'id': post.id} )}} method="post">
-			<input name="unflag" id="unflag" value="retirer le signalement" type="submit">
-		</form>
+
+	{% if post.image %}
+		<tr>
+			<th>Image</th>
+			<td>
+				<img src="{{ asset('uploads/posts/' ~ post.image) }}" alt="Image du post {{ post.title }}" style="max-width: 250px; max-height: 250px;">
+
+			</td>
+		</tr>
 	{% endif %}
 
-	<h2>Réponses</h2>
-	<table class="table">
-		{% if replies|length > 0 %}
-			{% for rep in replies %}
-				<tr>
-					<th>Contenu</th>
-					<td>{{ rep.content }}</td>
-				</tr>
-				<tr>
-					<th>Image</th>
-					<td>
-						{% if rep.image %}
-							<img src="{{ asset('uploads/replies/' ~ rep.image) }}" alt="Image de la reponse" style="max-width: 200px; max-height: 200px;">
-						{% else %}
-							Aucune image
-						{% endif %}
-					</td>
-				</tr>
-				<tr>
-					<th>Auteur</th>
-					<td>{{ rep.creator.userName }}</td>
-				</tr>
-				<tr>
-					<th>Créée le :</th>
-					<td>{{ rep.createdAt ? rep.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-				</tr>
-				<tr>
-					<th>Actions</th>
-					<td>
-						<a href="{{ path('app_reply_show', {'id': rep.id}) }}">détails de la réponse</a>
-						{% if is_granted('ROLE_ADMIN') or (app.user and rep.creator and app.user.id == rep.creator.id) %}
-							<a href="{{ path('app_reply_edit', {'id': rep.id}) }}">modifier la réponse</a>
-							<a href="{{ path('app_reply_delete', {'id': rep.id}) }}">supprimer la réponse</a>
-						{% endif %}
-						{% if app.user and post not in app.user.flagReply %}
-							<form action={{ path('app_reply_addflag', {'id': rep.id} )}} method="post">
-								<input name="flag" id="flag" value="signaler" type="submit">
-							</form>
-						{% else %}
-							<form action={{ path('app_reply_unflag', {'id': rep.id} )}} method="post">
-								<input name="unflag" id="unflag" value="retirer le signalement" type="submit">
-							</form>
-						{% endif %}
-					</td>
-				</tr>
-			{% endfor %}
-		{% else %}
-			<tr>
-				<td>Il n'y a pas de réponses à ce post</td>
-			</tr>
+
+	<tr>
+		<th>Créé le :</th>
+		<td>{{ post.createdAt ? post.createdAt|date('Y-m-d H:i') : '' }}</td>
+	</tr>
+	<tr>
+		<th>Modifié le :</th>
+		<td>{{ post.updatedAt ? post.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+	</tr>
+	<tr>
+
+		{% if post.tags|length > 0  %}
+			<th>Catégorie :</th>
+			<td>
+				{% for tag in post.tags %}
+					{{tag.category}}
+				{% endfor %}
+			</td>
 		{% endif %}
-	</table>
-	<h2>
-		<a href="{{ path('app_reply_new', {'id': post.id}) }}">Nouvelle réponse</a>
-	</h2>
-	<a href="{{ path('app_post_timeline') }}">Retour au fil d'actualité</a>
+	</tr>
+	<tr>
+		<th>Nombre de repost :</th>
+		<td>{{ post.countRepost }}</td>
+	</tr>
+	<tr>
+		<th>Nombre de "j'aime" :</th>
+		<td>{{ post.countLike }}</td>
+	</tr>
+	<tr>
+		<th>Nombre de signalement :</th>
+		<td>{{ post.countFlag }}</td>
+	</tr>
+	</tbody></table>
+	{% if post.idCitation !== null %}
+		<h3>Ce post contiens une citation du post numéro
+			{{post.idCitation.id}}</h3>
+			<table class="table">
+		<tr>
+			<th>Post cité créé le :
+			</th>
+			<td>{{ post.idCitation.createdAt ? post.idCitation.createdAt|date('Y-m-d H:i:s') : '' }}
+				par :
+				{{ post.idCitation.author }}</td>
+		</tr>
+		<tr>
+			<th>Contenu du post cité</th>
+			<td>{{ post.idCitation.content }}</td>
+		</tr></table>
+	{% endif %}
+{% if is_granted('ROLE_ADMIN') or (app.user and post.creator and app.user.id == post.creator.id) %}
+<a href="{{ path('app_post_edit', {'id': post.id}) }}">modifier le post</a>
+{{ include('post/_delete_form.html.twig') }}{% endif %}{% if app.user and post not in app.user.flagPost %}
+<form action={{ path('app_post_addflag', {'id': post.id} )}} method="post"><input name="flag" id="flag" value="signaler" type="submit"></form>{% else %}
+<form action={{ path('app_post_unflag', {'id': post.id} )}} method="post"><input name="unflag" id="unflag" value="retirer le signalement" type="submit"></form>{% endif %}
+
+<h2>Réponses</h2><table class="table">
 
 
-{% endblock %}
+{% if replies|length > 0 %}
+	{% for rep in replies %}
+		<tr>
+			<th>Contenu</th>
+			<td>{{ rep.content }}</td>
+		</tr>
+		<tr>
+			<th>Image</th>
+			<td>
+				{% if rep.image %}
+					<img src="{{ asset('uploads/replies/' ~ rep.image) }}" alt="Image de la reponse" style="max-width: 200px; max-height: 200px;">
+				{% else %}
+					Aucune image
+				{% endif %}
+			</td>
+		</tr>
+		<tr>
+			<th>Auteur</th>
+			<td>{{ rep.creator.userName }}</td>
+		</tr>
+		<tr>
+			<th>Créée le :</th>
+			<td>{{ rep.createdAt ? rep.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+		</tr>
+		<tr>
+			<th>Actions</th>
+			<td>
+				<a href="{{ path('app_reply_show', {'id': rep.id}) }}">détails de la réponse</a>
+				{% if is_granted('ROLE_ADMIN') or (app.user and rep.creator and app.user.id == rep.creator.id) %}
+					<a href="{{ path('app_reply_edit', {'id': rep.id}) }}">modifier la réponse</a>
+					<a href="{{ path('app_reply_delete', {'id': rep.id}) }}">supprimer la réponse</a>
+				{% endif %}
+				{% if app.user and post not in app.user.flagReply %}
+					<form action={{ path('app_reply_addflag', {'id': rep.id} )}} method="post">
+						<input name="flag" id="flag" value="signaler" type="submit">
+					</form>
+				{% else %}
+					<form action={{ path('app_reply_unflag', {'id': rep.id} )}} method="post">
+						<input name="unflag" id="unflag" value="retirer le signalement" type="submit">
+					</form>
+				{% endif %}
+			</td>
+		</tr>
+	{% endfor %}
+{% else %}
+	<tr>
+		<td>Il n'y a pas de réponses à ce post</td>
+	</tr>
+{% endif %}</table><h2>
+<a href="{{ path('app_reply_new', {'id': post.id}) }}">Nouvelle réponse</a></h2><a href="{{ path('app_post_timeline') }}">Retour au fil d'actualité</a>{% endblock %}
