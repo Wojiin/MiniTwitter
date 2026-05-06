@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ReplyRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -43,8 +45,16 @@ class Reply
     #[ORM\ManyToOne(inversedBy: 'flagReply')]
     private ?User $userFlag = null;
 
-    #[ORM\OneToOne(mappedBy: 'reply_notif', cascade: ['persist', 'remove'])]
-    private ?Notification $notification = null;
+    /**
+     * @var Collection<int, Notification>
+     */
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'reply_notif')]
+    private Collection $notifications;
+
+    public function __construct()
+    {
+        $this->notifications = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -159,24 +169,31 @@ class Reply
         return $this;
     }
 
-    public function getNotification(): ?Notification
+    /**
+     * @return Collection<int, Notification>
+     */
+    public function getNotifications(): Collection
     {
-        return $this->notification;
+        return $this->notifications;
     }
 
-    public function setNotification(?Notification $notification): static
+    public function addNotification(Notification $notification): static
     {
-        // unset the owning side of the relation if necessary
-        if ($notification === null && $this->notification !== null) {
-            $this->notification->setReplyNotif(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($notification !== null && $notification->getReplyNotif() !== $this) {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
             $notification->setReplyNotif($this);
         }
 
-        $this->notification = $notification;
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): static
+    {
+        if ($this->notifications->removeElement($notification)) {
+            if ($notification->getReplyNotif() === $this) {
+                $notification->setReplyNotif(null);
+            }
+        }
 
         return $this;
     }
