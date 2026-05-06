@@ -29,21 +29,21 @@
 					</tr>
 				</thead>
 				<tbody>
-				{% for user in users %}
-					{% if user.countFlag > 0 %}
-						<tr>
-							<td>{{ user.id }}</td>
-							<td>{{ user.email }}</td>
-							<td>{{ user.userName }}</td>
-							<td>{{ user.status }}</td>
-							<td>{{ user.countFlag }}</td>
-							<td>
-								<a href="{{ path('app_user_show', {'id': user.id}) }}">détail</a>
-								<a href="{{ path('app_user_edit', {'id': user.id}) }}">modifier</a>
-							</td>
-						</tr>
-					{% endif %}
-				{% endfor %}
+					{% for user in users %}
+						{% if user.countFlag > 0 %}
+							<tr>
+								<td>{{ user.id }}</td>
+								<td>{{ user.email }}</td>
+								<td>{{ user.userName }}</td>
+								<td>{{ user.status }}</td>
+								<td>{{ user.countFlag }}</td>
+								<td>
+									<a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
+									<a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
+								</td>
+							</tr>
+						{% endif %}
+					{% endfor %}
 				</tbody>
 			</table>
 		{% else %}
@@ -59,7 +59,8 @@
 				<th>Email</th>
 				<th>Statut</th>
 				<th>Role</th>
-				<th></th>
+				<th>Actions</th>
+				<th>Demande</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -75,17 +76,47 @@
 					<td>{{ user.userName }}</td>
 					<td>{{ user.email }}</td>
 					<td>{{ user.status }}</td>
-					<td>{% if 'ROLE_ADMIN' in user.roles %}
-					ADMIN
-					{% else %}
-						User
-					{% endif %}
+					<td>
+						{% if 'ROLE_ADMIN' in user.roles %}
+							ADMIN
+						{% else %}
+							User
+						{% endif %}
 					</td>
 					<td>
 						<a href="{{ path('app_user_show', {'id': user.id}) }}">details</a>
+						<button type="button" commandfor="mydialog" command="show-modal" data-user-id="{{ user.id }}" data-user-name="{{ user.userName }}" class="btn-add-contact">Ajouter au contact</button>
+						<dialog id="mydialog">
+							<div class="wrapper">
+								<form>
+									<fieldset>
+										<legend>
+											Souhaitez-vous ajouter {{ user.userName }} à votre liste de contact ?
+										</legend>
+										<div>
+											<button type="checkbox" id="no" name="close" value="no" checked/>
+											<label for="no">Oui</label>
+										</div>
+										<div>
+											<button type="checkbox" id="yes" name="close" value="yes"/>
+											<label for="yes">Non</label>
+										</div>
+									</fieldset>
+								</form>
+								<button commandfor="mydialog" command="request-close">
+									Fermer le fenêtre
+								</button>
+								<p class="warning" hidden>
+									Vous devez choisir «&nbsp;Oui&nbsp;» pour fermer cette boîte de dialogue.
+								</p>
+							</div>
+						</dialog>
 						{% if is_granted('ROLE_ADMIN') %}
 							<a href="{{ path('app_user_edit', {'id': user.id}) }}">modifier</a>
 						{% endif %}
+					</td>
+					<td>
+						<button type="button" commandfor="mydialog" command="show-modal">En cours</button>
 					</td>
 				</tr>
 			{% else %}
