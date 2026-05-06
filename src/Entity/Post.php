@@ -80,6 +80,11 @@ class Post
     #[ORM\OneToOne(mappedBy: 'post_notif', cascade: ['persist', 'remove'])]
     private ?Notification $notification = null;
 
+    #[ORM\OneToOne(targetEntity: self::class, cascade: ['persist', 'remove'])]
+    private ?self $id_citation = null;
+
+ 
+
     
 
     public function __construct()
@@ -370,5 +375,19 @@ class Post
         return $this;
     }
 
+    public function getIdCitation(): ?self
+    {
+        return $this->id_citation;
+    }
+
+    public function setIdCitation(?self $id_citation): static
+    {
+        $this->id_citation = $id_citation;
+
+        return $this;
+    }
+
+
+    
     
 }
