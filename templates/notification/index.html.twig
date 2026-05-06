@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block body %}
+    <h1>Notifications</h1>
+
+    {% if notifications is empty %}
+        <p>Vous n'avez aucune notification.</p>
+    {% else %}
+        <section>
+            {% for notification in notifications %}
+                <article>
+                    <h2>
+                        {{ notification.content }}
+                        {% if not notification.isRead %}
+                            <small>(non lue)</small>
+                        {% endif %}
+                    </h2>
+
+                    <p>
+                        Recue le {{ notification.createdAt ? notification.createdAt|date('Y-m-d H:i') : '' }}
+                    </p>
+
+                    {% if notification.messageNotif %}
+                        <p>
+                            Message : {{ notification.messageNotif.content }}
+                        </p>
+                    {% endif %}
+
+                    {% if notification.postNotif %}
+                        <p>
+                            Post : {{ notification.postNotif.title }}
+                        </p>
+                    {% endif %}
+
+                    {% if notification.replyNotif %}
+                        <p>
+                            Reponse : {{ notification.replyNotif.content }}
+                        </p>
+                    {% endif %}
+
+                    {% if notification.discussionNotif %}
+                        <p>
+                            Discussion : {{ notification.discussionNotif.title }}
+                        </p>
+                    {% endif %}
+
+                    <p>
+                        <a href="{{ path('app_notification_open', {'id': notification.id}) }}">Voir la nouveaute</a>
+                    </p>
+                </article>
+            {% endfor %}
+        </section>
+    {% endif %}
+{% endblock %}
