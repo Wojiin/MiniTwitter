@@ -143,6 +143,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'receive')]
     private Collection $notifications;
 
+    /**
+     * @var Collection<int, Contact>
+     */
+    #[ORM\OneToMany(targetEntity: Contact::class, mappedBy: 'sender')]
+    private Collection $contactsSent;
+
+    /**
+     * @var Collection<int, Contact>
+     */
+    #[ORM\OneToMany(targetEntity: Contact::class, mappedBy: 'receiver')]
+    private Collection $contactsReceived;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -157,6 +169,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->discussions = new ArrayCollection();
         $this->messages = new ArrayCollection();
         $this->notifications = new ArrayCollection();
+        $this->contactsSent = new ArrayCollection();
+        $this->contactsReceived = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -675,6 +689,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($notification->getReceive() === $this) {
                 $notification->setReceive(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Contact>
+     */
+    public function getContactsSent(): Collection
+    {
+        return $this->contactsSent;
+    }
+
+    public function addContactsSent(Contact $contactsSent): static
+    {
+        if (!$this->contactsSent->contains($contactsSent)) {
+            $this->contactsSent->add($contactsSent);
+            $contactsSent->setSender($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContactsSent(Contact $contactsSent): static
+    {
+        if ($this->contactsSent->removeElement($contactsSent)) {
+            // set the owning side to null (unless already changed)
+            if ($contactsSent->getSender() === $this) {
+                $contactsSent->setSender(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Contact>
+     */
+    public function getContactsReceived(): Collection
+    {
+        return $this->contactsReceived;
+    }
+
+    public function addContactsReceived(Contact $contactsReceived): static
+    {
+        if (!$this->contactsReceived->contains($contactsReceived)) {
+            $this->contactsReceived->add($contactsReceived);
+            $contactsReceived->setReceiver($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContactsReceived(Contact $contactsReceived): static
+    {
+        if ($this->contactsReceived->removeElement($contactsReceived)) {
+            // set the owning side to null (unless already changed)
+            if ($contactsReceived->getReceiver() === $this) {
+                $contactsReceived->setReceiver(null);
             }
         }
 
