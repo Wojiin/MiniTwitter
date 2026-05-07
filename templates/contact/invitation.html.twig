@@ -21,13 +21,13 @@
 						<td>
 							{# <a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
 																																	<a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a> #}
-							<div>
+							<div class="flex">
 								<form action="{{ path('app_contact_invitation_accept', {'id': contact.id}) }}" method="post">
-    <button type="submit">Oui</button>
+    <button class="btn-primary" type="submit">Oui</button>
 </form>
 
 <form action="{{ path('app_contact_invitation_refuse', {'id': contact.id}) }}" method="post">
-    <button type="submit">Non</button>
+    <button class="btn-soft-gray" type="submit">Non</button>
 </form>
 							</div>
 						</td>

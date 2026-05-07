@@ -99,12 +99,12 @@
 {% endfor %}
 {% if not alreadyContact and user != app.user %}
 					<form action="{{ path('app_contact_new', {'id': user.id}) }}" method="post">
-    <button type="submit">Ajouter au contact</button>
+    <button class="btn-primary" type="submit">Ajouter au contact</button>
 </form>
 {% elseif contactStatus == 'pending' and user != app.user %}
 <form action="{{ path('app_contact_delete', {'id': existingContact.id}) }}" method="post">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ existingContact.id) }}">
-    <button type="submit">Annuler la demande</button>
+    <button class="btn-primary" type="submit">Annuler la demande</button>
 </form>
 {% endif %}
 					</td>
