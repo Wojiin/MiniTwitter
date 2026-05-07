@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        <link href="./tailwind/output.css" rel="stylesheet">
-        {% block stylesheets %}
-        {% endblock %}
-
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
+	<head>
+		<meta charset="UTF-8">
+		<title>
+			{% block title %}Welcome!
+			{% endblock %}
+		</title>
+		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+		<link href="./tailwind/output.css" rel="stylesheet"> {% block stylesheets %}{% endblock %}
+		<script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"></script>
+		{% block javascripts %}
+			{% block importmap %}
+				{{ importmap('app') }}
+			{% endblock %}
+		{% endblock %}
 
 		{% set frankenphpHotReload = app.request.server.get('FRANKENPHP_HOT_RELOAD') %}
 		{% if frankenphpHotReload %}
@@ -27,6 +30,14 @@
 					{{ include('layout/_sidebar_left.html.twig') }}
 				{% endblock %}
 				<main class="page-content">
+					{% block flash %}
+						{% for message in app.flashes('error') %}
+							<div class="alert alert-danger">{{ message }}</div>
+						{% endfor %}
+						{% for message in app.flashes('succes') %}
+							<div class="succes">{{ message }}</div>
+						{% endfor %}
+					{% endblock %}
 					{% block body %}{% endblock %}
 				</main>
 				{% block sidebar_right %}
