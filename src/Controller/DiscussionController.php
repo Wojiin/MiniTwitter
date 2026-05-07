@@ -43,8 +43,7 @@ final class DiscussionController extends AbstractController
         EntityManagerInterface $entityManager,
         UploadService $uploadService,
         EventDispatcherInterface $eventDispatcher,
-    ): Response
-    {
+    ): Response {
         $user = $this->getUser();
 
         if (!$user instanceof User) {
@@ -82,7 +81,7 @@ final class DiscussionController extends AbstractController
                     $participantNames[] = $participant->getUserName();
                 }
 
-                $discussion->setTitle('discussion avec : '.implode(', ', $participantNames));
+                $discussion->setTitle('discussion avec : ' . implode(', ', $participantNames));
             }
 
             $discussion->setUpdatedAt($now);
@@ -101,7 +100,6 @@ final class DiscussionController extends AbstractController
                 }
 
                 $entityManager->persist($firstMessage);
-            
             }
             $entityManager->flush();
 
@@ -116,7 +114,7 @@ final class DiscussionController extends AbstractController
             if ($firstMessage instanceof Message) {
                 $eventDispatcher->dispatch(new DiscussionMessageCreatedEvent($firstMessage));
             }
-
+            $this->addFlash('success', 'Votre discussion a été créée avec succès !');
             return $this->redirectToRoute('app_discussion_show', [
                 'id' => $discussion->getId(),
             ], Response::HTTP_SEE_OTHER);
@@ -135,8 +133,7 @@ final class DiscussionController extends AbstractController
         EntityManagerInterface $entityManager,
         UploadService $uploadService,
         EventDispatcherInterface $eventDispatcher,
-    ): Response
-    {
+    ): Response {
         $user = $this->getUser();
 
         if (!$user instanceof User) {
@@ -227,7 +224,7 @@ final class DiscussionController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
-        if (!$this->isCsrfTokenValid('leave'.$discussion->getId(), $request->getPayload()->getString('_token'))) {
+        if (!$this->isCsrfTokenValid('leave' . $discussion->getId(), $request->getPayload()->getString('_token'))) {
             return $this->redirectToRoute('app_discussion_show', ['id' => $discussion->getId()], Response::HTTP_SEE_OTHER);
         }
 
@@ -244,7 +241,7 @@ final class DiscussionController extends AbstractController
         }
 
         $entityManager->flush();
-
+        $this->addFlash('success', 'Vous avez quitté la discussion avec succès !');
         return $this->redirectToRoute('app_discussion_index', [], Response::HTTP_SEE_OTHER);
     }
 
@@ -264,7 +261,7 @@ final class DiscussionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-
+            $this->addFlash('success', 'Votre discussion a été modifiée avec succès !');
             return $this->redirectToRoute('app_discussion_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -277,9 +274,10 @@ final class DiscussionController extends AbstractController
     #[Route('/{id}', name: 'app_discussion_delete', methods: ['POST'])]
     public function delete(Request $request, Discussion $discussion, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$discussion->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $discussion->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($discussion);
             $entityManager->flush();
+            $this->addFlash('success', 'Votre discussion a été supprimée avec succès !');
         }
 
         return $this->redirectToRoute('app_discussion_index', [], Response::HTTP_SEE_OTHER);

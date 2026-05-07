@@ -57,7 +57,7 @@ final class ReplyController extends AbstractController
             $entityManager->persist($reply);
             $entityManager->flush();
             $eventDispatcher->dispatch(new ReplyCreatedEvent($reply));
-
+            $this->addFlash('success', 'La réponse a été créée avec succès !');
             return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -96,7 +96,7 @@ final class ReplyController extends AbstractController
             }
 
             $entityManager->flush();
-
+            $this->addFlash('success', 'La réponse a été modifiée avec succès !');
             return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -117,7 +117,7 @@ final class ReplyController extends AbstractController
             $entityManager->remove($reply);
             $entityManager->flush();
         }
-
+        $this->addFlash('success', 'La réponse a été supprimée avec succès !');
         return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
     }
 
@@ -136,7 +136,7 @@ final class ReplyController extends AbstractController
         return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
     }
 
-     #[Route('/unflagrep/{id}', name: 'app_reply_unflag', methods: ['GET', 'POST'])]
+    #[Route('/unflagrep/{id}', name: 'app_reply_unflag', methods: ['GET', 'POST'])]
     public function removeFlagOnReply(Reply $reply, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();

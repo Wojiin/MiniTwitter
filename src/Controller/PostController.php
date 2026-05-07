@@ -60,7 +60,7 @@ final class PostController extends AbstractController
             $entityManager->persist($post);
             $entityManager->flush();
             $eventDispatcher->dispatch(new PostCreatedEvent($post));
-
+            $this->addFlash('success', 'Votre post a été créé avec succès !');
             return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -100,7 +100,7 @@ final class PostController extends AbstractController
             }
 
             $entityManager->flush();
-
+            $this->addFlash('success', 'Votre post a été modifié avec succès !');
             return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -120,6 +120,7 @@ final class PostController extends AbstractController
         if ($this->isCsrfTokenValid('delete' . $post->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($post);
             $entityManager->flush();
+            $this->addFlash('success', 'Le post a été supprimé avec succès !');
         }
 
         return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
@@ -255,7 +256,7 @@ final class PostController extends AbstractController
             $entityManager->persist($post);
             $entityManager->persist($repost);
             $entityManager->flush();
-
+$this->addFlash('success', 'Votre citation de post a été créée avec succès !');
             return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
         }
 
