@@ -14,7 +14,14 @@ class TagType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('category');
+            ->add('category', null, [
+                'label_attr' => [
+                    'class' => 'form-label',
+                ],
+                'attr' => [
+                    'class' => 'form-input',
+                ],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

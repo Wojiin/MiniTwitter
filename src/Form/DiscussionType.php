@@ -24,16 +24,34 @@ class DiscussionType extends AbstractType
         $builder
             ->add('title', null, [
                 'required' => false,
+                'label_attr' => [
+                    'class' => 'form-label',
+                ],
+                'attr' => [
+                    'class' => 'form-input',
+                ],
             ])
             ->add('first_message', TextareaType::class, [
                 'mapped' => false,
                 'label' => 'Premier message',
                 'required' => false,
+                'label_attr' => [
+                    'class' => 'form-label',
+                ],
+                'attr' => [
+                    'class' => 'form-textarea',
+                ],
             ])
             ->add('first_message_picture', FileType::class, [
                 'label' => 'Image du premier message',
                 'mapped' => false,
                 'required' => false,
+                'label_attr' => [
+                    'class' => 'form-label',
+                ],
+                'attr' => [
+                    'class' => 'form-file',
+                ],
                 'constraints' => [
                     new File(
                         maxSize: '5000k',
@@ -50,6 +68,12 @@ class DiscussionType extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
                 'label' => 'Choisir les participants',
+                'label_attr' => [
+                    'class' => 'form-label',
+                ],
+                'attr' => [
+                    'class' => 'form-choice-group',
+                ],
                 'query_builder' => static function (UserRepository $repository) use ($currentUser) {
                     $queryBuilder = $repository->createQueryBuilder('u')
                         ->orderBy('u.user_name', 'ASC');

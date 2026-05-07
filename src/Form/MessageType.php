@@ -18,6 +18,12 @@ class MessageType extends AbstractType
         $builder
             ->add('content', TextareaType::class, [
                 'label' => 'Message',
+                'label_attr' => [
+                    'class' => 'form-label',
+                ],
+                'attr' => [
+                    'class' => 'form-textarea',
+                ],
                 'constraints' => [
                     new NotBlank(
                         message: 'Le message ne peut pas etre vide.',
@@ -28,6 +34,12 @@ class MessageType extends AbstractType
                 'label' => 'Image',
                 'mapped' => false,
                 'required' => false,
+                'label_attr' => [
+                    'class' => 'form-label',
+                ],
+                'attr' => [
+                    'class' => 'form-file',
+                ],
                 'constraints' => [
                     new File(
                         maxSize: '5000k',

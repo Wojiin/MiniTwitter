@@ -18,8 +18,20 @@
         <script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
         {% endif %}
     </head>
-    <body class="bg-gray-100">
+    <body style="background-color: var(--color-neutral-50);">
         {{ include('layout/_nav.html.twig') }}
-        {% block body %}{% endblock %}
+        {% block page_layout %}
+            <div class="page-shell">
+                {% block sidebar_left %}
+                    {{ include('layout/_sidebar_left.html.twig') }}
+                {% endblock %}
+                <main class="page-content">
+                    {% block body %}{% endblock %}
+                </main>
+                {% block sidebar_right %}
+                    {{ include('layout/_sidebar_right.html.twig') }}
+                {% endblock %}
+            </div>
+        {% endblock %}
     </body>
 </html>

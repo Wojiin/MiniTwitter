@@ -3,59 +3,69 @@
 {% block title %}Discussion{% endblock %}
 
 {% block body %}
-    <h1>{{ discussion.title }}</h1>
+    <div class="page-stack-wide">
+        <section class="surface-card">
+            <div class="surface-card-body">
+            <h1 class="section-title-lg">{{ discussion.title }}</h1>
+            </div>
+        </section>
 
-    <section>
-        <h2>Participants</h2>
-        <ul>
-            {% for participant in participants %}
-                <li>{{ participant.userName }}</li>
+        <section class="form-card form-stack">
+            <h2 class="section-title">Participants</h2>
+            <ul class="info-list-compact text-gray-700">
+                {% for participant in participants %}
+                    <li>{{ participant.userName }}</li>
+                {% else %}
+                    <li class="text-gray-500">Aucun participant</li>
+                {% endfor %}
+            </ul>
+
+            {{ form_start(participants_form, {'attr': {'class': 'form-stack'}}) }}
+                {{ form_row(participants_form.participants) }}
+                <div class="form-actions">
+                    <button class="btn-primary">Ajouter</button>
+                </div>
+            {{ form_end(participants_form) }}
+
+            <form method="post" action="{{ path('app_discussion_leave', {'id': discussion.id}) }}" class="pt-2">
+                <input type="hidden" name="_token" value="{{ csrf_token('leave' ~ discussion.id) }}">
+                <button class="btn-danger" type="submit">Quitter la discussion</button>
+            </form>
+        </section>
+
+        <section class="form-card form-stack">
+            <h2 class="section-title">Messages</h2>
+            {% for message in messages %}
+                <article class="message-card">
+                    <p class="reply-meta mb-2"><strong class="text-gray-900">{{ message.send.userName }}</strong> {{ message.createdAt ? message.createdAt|date('d/m/Y H:i') : '' }}</p>
+                    <p class="post-text">{{ message.content }}</p>
+                    {% if message.picture %}
+                        <p class="mt-3">
+                            <img src="{{ asset('uploads/messages/' ~ message.picture) }}" alt="Image du message" class="message-image">
+                        </p>
+                    {% endif %}
+                    {% if app.user and message.send and app.user.id == message.send.id %}
+                        <p class="mt-3">
+                            <a class="simple-link" href="{{ path('app_message_edit', {'id': message.id}) }}">Modifier</a>
+                        </p>
+                    {% endif %}
+                </article>
             {% else %}
-                <li>Aucun participant</li>
+                <p class="muted-text">Aucun message pour le moment.</p>
             {% endfor %}
-        </ul>
+        </section>
 
-        {{ form_start(participants_form) }}
-            {{ form_row(participants_form.participants) }}
-            <button class="btn">Ajouter</button>
-        {{ form_end(participants_form) }}
+        <section class="form-card form-stack">
+            <h2 class="section-title">Nouveau message</h2>
+            {{ form_start(message_form, {'attr': {'class': 'form-stack'}}) }}
+                {{ form_row(message_form.content) }}
+                {{ form_row(message_form.picture) }}
+                <div class="form-actions">
+                    <button class="btn-primary">Envoyer</button>
+                </div>
+            {{ form_end(message_form) }}
+        </section>
 
-        <form method="post" action="{{ path('app_discussion_leave', {'id': discussion.id}) }}">
-            <input type="hidden" name="_token" value="{{ csrf_token('leave' ~ discussion.id) }}">
-            <button class="btn" type="submit">Quitter la discussion</button>
-        </form>
-    </section>
-
-    <section>
-        <h2>Messages</h2>
-        {% for message in messages %}
-            <article>
-                <p><strong>{{ message.send.userName }}</strong> <small>{{ message.createdAt ? message.createdAt|date('d/m/Y H:i') : '' }}</small></p>
-                <p>{{ message.content }}</p>
-                {% if message.picture %}
-                    <p>
-                        <img src="{{ asset('uploads/messages/' ~ message.picture) }}" alt="Image du message" style="max-width: 320px; height: auto;">
-                    </p>
-                {% endif %}
-                {% if app.user and message.send and app.user.id == message.send.id %}
-                    <p>
-                        <a href="{{ path('app_message_edit', {'id': message.id}) }}">Modifier</a>
-                    </p>
-                {% endif %}
-            </article>
-        {% else %}
-            <p>Aucun message pour le moment.</p>
-        {% endfor %}
-    </section>
-
-    <section>
-        <h2>Nouveau message</h2>
-        {{ form_start(message_form) }}
-            {{ form_row(message_form.content) }}
-            {{ form_row(message_form.picture) }}
-            <button class="btn">Envoyer</button>
-        {{ form_end(message_form) }}
-    </section>
-
-    <a href="{{ path('app_discussion_index') }}">back to list</a>
+        <a class="simple-link" href="{{ path('app_discussion_index') }}">Retour a la liste</a>
+    </div>
 {% endblock %}
