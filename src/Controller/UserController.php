@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\ProfileSettingsType;
 use App\Form\UserModerationType;
+use App\Repository\ContactRepository;
 use App\Repository\UserRepository;
 use App\Service\UploadService;
 use App\Service\UserStatusService;
@@ -77,10 +78,11 @@ public function editProfile(
 
     
     #[Route(name: 'app_user_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository): Response
+    public function index(UserRepository $userRepository, ContactRepository $contactRepository): Response
     {
         return $this->render('user/index.html.twig', [
             'users' => $userRepository->findAll(),
+            'contacts' => $contactRepository->findBy(['sender' => $this->getUser()]),
         ]);
     }
 
