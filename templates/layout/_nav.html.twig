@@ -1,4 +1,7 @@
-<nav>
+<nav class="bg-white shadow sticky top-0 z-50 px-4 py-2 flex items-center justify-between">
+    <div class="flex items-center space-x-4">
+        <div class="text-blue-600 text-2xl font-bold">Parrot</div>
+            <div class="flex items-center space-x-6">
     {% if app.user %}
         {% if is_granted('ROLE_ADMIN') %}
             <a href="{{ path('app_post_index') }}">Gazouillis</a>
@@ -14,4 +17,7 @@
         <a href="{{ path('app_user_profile_edit') }}">{{ app.user.userName }}</a>
         <a href="{{ path('app_logout') }}">Se deconnecter</a>
     {% endif %}
+            
+        </div>
+    </div>
 </nav>
