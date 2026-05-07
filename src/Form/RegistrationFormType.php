@@ -19,10 +19,30 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email')
-            ->add('user_name')
+            ->add('email', null, [
+                'label_attr' => [
+                    'class' => 'form-label',
+                ],
+                'attr' => [
+                    'class' => 'form-input',
+                ],
+            ])
+            ->add('user_name', null, [
+                'label_attr' => [
+                    'class' => 'form-label',
+                ],
+                'attr' => [
+                    'class' => 'form-input',
+                ],
+            ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
+                'label_attr' => [
+                    'class' => 'text-sm text-gray-700',
+                ],
+                'attr' => [
+                    'class' => 'form-checkbox',
+                ],
                 'constraints' => [
                     new IsTrue(
                         message: 'You should agree to our terms.',
@@ -37,11 +57,13 @@ class RegistrationFormType extends AbstractType
                 'mapped' => false,
                 'first_options' => [
                     'label' => 'Mot de passe',
-                    'attr' => ['autocomplete' => 'new-password'],
+                    'label_attr' => ['class' => 'form-label'],
+                    'attr' => ['autocomplete' => 'new-password', 'class' => 'form-input'],
                 ],
                 'second_options' => [
                     'label' => 'Confirmer le mot de passe',
-                    'attr' => ['autocomplete' => 'new-password'],
+                    'label_attr' => ['class' => 'form-label'],
+                    'attr' => ['autocomplete' => 'new-password', 'class' => 'form-input'],
                 ],
                 'constraints' => [
                     new NotBlank(

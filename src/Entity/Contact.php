@@ -12,9 +12,9 @@ class Contact
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
-    #[ORM\Column]
-    private ?bool $is_active = null;
+    
+    #[ORM\Column(length: 255)]
+    private ?string $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'contactsSent')]
     #[ORM\JoinColumn(nullable: false)]
@@ -24,22 +24,12 @@ class Contact
     #[ORM\JoinColumn(nullable: false)]
     private ?User $receiver = null;
 
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function isActive(): ?bool
-    {
-        return $this->is_active;
-    }
-
-    public function setIsActive(bool $is_active): static
-    {
-        $this->is_active = $is_active;
-
-        return $this;
-    }
 
     public function getSender(): ?User
     {
@@ -61,6 +51,18 @@ class Contact
     public function setReceiver(?User $receiver): static
     {
         $this->receiver = $receiver;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }

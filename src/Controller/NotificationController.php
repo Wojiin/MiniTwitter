@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Repository\NotificationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -40,11 +41,9 @@ final class NotificationController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
-        if (!$notification->isRead()) {
-            $notification->setIsRead(true);
-            $user->setCountNotification(max(0, ($user->getCountNotification() ?? 0) - 1));
-            $entityManager->flush();
-        }
+        $user->setCountNotification(max(0, ($user->getCountNotification() ?? 0) - 1));
+        $entityManager->remove($notification);
+        $entityManager->flush();
 
         if ($notification->getDiscussionNotif() !== null) {
             return $this->redirectToRoute('app_discussion_show', [
@@ -69,6 +68,30 @@ final class NotificationController extends AbstractController
                 'id' => $notification->getMessageNotif()->getDiscussion()->getId(),
             ]);
         }
+
+        return $this->redirectToRoute('app_notification_index');
+    }
+
+    #[Route('/{id}/seen', name: 'app_notification_seen', methods: ['POST'])]
+    public function seen(Request $request, Notification $notification, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
+        if ($notification->getReceive()?->getId() !== $user->getId()) {
+            throw $this->createAccessDeniedException();
+        }
+
+        if (!$this->isCsrfTokenValid('seen'.$notification->getId(), $request->getPayload()->getString('_token'))) {
+            return $this->redirectToRoute('app_notification_index');
+        }
+
+        $user->setCountNotification(max(0, ($user->getCountNotification() ?? 0) - 1));
+        $entityManager->remove($notification);
+        $entityManager->flush();
 
         return $this->redirectToRoute('app_notification_index');
     }

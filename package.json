@@ -1,15 +1,10 @@
 {
+  "scripts": {
+    "build:css": "npx @tailwindcss/cli -i ./tailwind/input.css -o ./assets/styles/output.css",
+    "watch:css": "npx @tailwindcss/cli -i ./tailwind/input.css -o ./assets/styles/output.css --watch"
+  },
   "dependencies": {
     "@tailwindcss/cli": "^4.2.4",
-    "@tailwindcss/postcss": "^4.2.4",
-    "postcss": "^8.5.14",
-    "postcss-loader": "^8.2.1",
     "tailwindcss": "^4.2.4"
-  },
-  "devDependencies": {
-    "@hotwired/stimulus": "^3.0.0",
-    "@hotwired/turbo": "^7.1.0 || ^8.0",
-    "@symfony/stimulus-bridge": "^3.2.0 || ^4.0.0",
-    "@symfony/ux-turbo": "file:vendor/symfony/ux-turbo/assets"
   }
 }

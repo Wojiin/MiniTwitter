@@ -48,6 +48,10 @@
 
                     <p>
                         <a href="{{ path('app_notification_open', {'id': notification.id}) }}">Voir la nouveaute</a>
+                        <form method="post" action="{{ path('app_notification_seen', {'id': notification.id}) }}" style="display: inline;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('seen' ~ notification.id) }}">
+                            <button type="submit">Marquer comme vue</button>
+                        </form>
                     </p>
                 </article>
             {% endfor %}

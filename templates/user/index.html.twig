@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block body %}
-	<h1>User index</h1>
+	<h1>Liste des utilisateurs</h1>
 
 	{% if is_granted('ROLE_ADMIN') %}
 		<h2>Utilisateurs signales</h2>
@@ -85,38 +85,28 @@
 					</td>
 					<td>
 						<a href="{{ path('app_user_show', {'id': user.id}) }}">details</a>
-						<button type="button" commandfor="mydialog" command="show-modal" data-user-id="{{ user.id }}" data-user-name="{{ user.userName }}" class="btn-add-contact">Ajouter au contact</button>
-						<dialog id="mydialog">
-							<div class="wrapper">
-								<form>
-									<fieldset>
-										<legend>
-											Souhaitez-vous ajouter {{ user.userName }} à votre liste de contact ?
-										</legend>
-										<div>
-											<button type="checkbox" id="no" name="close" value="no" checked/>
-											<label for="no">Oui</label>
-										</div>
-										<div>
-											<button type="checkbox" id="yes" name="close" value="yes"/>
-											<label for="yes">Non</label>
-										</div>
-									</fieldset>
-								</form>
-								<button commandfor="mydialog" command="request-close">
-									Fermer le fenêtre
-								</button>
-								<p class="warning" hidden>
-									Vous devez choisir «&nbsp;Oui&nbsp;» pour fermer cette boîte de dialogue.
-								</p>
-							</div>
-						</dialog>
-						{% if is_granted('ROLE_ADMIN') %}
-							<a href="{{ path('app_user_edit', {'id': user.id}) }}">modifier</a>
-						{% endif %}
 					</td>
 					<td>
-						<button type="button" commandfor="mydialog" command="show-modal">En cours</button>
+					{% set alreadyContact = false %}
+					{% set contactStatus = null %}
+					{% set existingContact = null %}
+					{% for contact in contacts %}
+					{% if contact.receiver === user %}
+						{% set alreadyContact = true %}
+						{% set contactStatus = contact.status %}
+						{% set existingContact = contact %}
+					{% endif %}
+{% endfor %}
+{% if not alreadyContact and user != app.user %}
+					<form action="{{ path('app_contact_new', {'id': user.id}) }}" method="post">
+    <button type="submit">Ajouter au contact</button>
+</form>
+{% elseif contactStatus == 'pending' and user != app.user %}
+<form action="{{ path('app_contact_delete', {'id': existingContact.id}) }}" method="post">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ existingContact.id) }}">
+    <button type="submit">Annuler la demande</button>
+</form>
+{% endif %}
 					</td>
 				</tr>
 			{% else %}
