@@ -12,27 +12,27 @@
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
 
-        {% set frankenphpHotReload = app.request.server.get('FRANKENPHP_HOT_RELOAD') %}
-        {% if frankenphpHotReload %}
-        <meta name="frankenphp-hot-reload:url" content="{{ frankenphpHotReload }}">
-        <script src="https://cdn.jsdelivr.net/npm/idiomorph"></script>
-        <script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
-        {% endif %}
-    </head>
-    <body style="background-color: var(--color-neutral-50);">
-        {{ include('layout/_nav.html.twig') }}
-        {% block page_layout %}
-            <div class="page-shell">
-                {% block sidebar_left %}
-                    {{ include('layout/_sidebar_left.html.twig') }}
-                {% endblock %}
-                <main class="page-content">
-                    {% block body %}{% endblock %}
-                </main>
-                {% block sidebar_right %}
-                    {{ include('layout/_sidebar_right.html.twig') }}
-                {% endblock %}
-            </div>
-        {% endblock %}
-    </body>
+		{% set frankenphpHotReload = app.request.server.get('FRANKENPHP_HOT_RELOAD') %}
+		{% if frankenphpHotReload %}
+			<meta name="frankenphp-hot-reload:url" content="{{ frankenphpHotReload }}">
+			<script src="https://cdn.jsdelivr.net/npm/idiomorph"></script>
+			<script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
+		{% endif %}
+	</head>
+	<body style="background-color: var(--color-neutral-50);">
+		{{ include('layout/_nav.html.twig') }}
+		{% block page_layout %}
+			<div class="page-shell">
+				{% block sidebar_left %}
+					{{ include('layout/_sidebar_left.html.twig') }}
+				{% endblock %}
+				<main class="page-content">
+					{% block body %}{% endblock %}
+				</main>
+				{% block sidebar_right %}
+					{{ include('layout/_sidebar_right.html.twig') }}
+				{% endblock %}
+			</div>
+		{% endblock %}
+	</body>
 </html>
