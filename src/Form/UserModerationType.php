@@ -16,6 +16,12 @@ class UserModerationType extends AbstractType
         $builder
             ->add('status', ChoiceType::class, [
                 'label' => 'Statut du compte',
+                'label_attr' => [
+                    'class' => 'form-label',
+                ],
+                'attr' => [
+                    'class' => 'form-select',
+                ],
                 'choices' => [
                     'Actif' => 'actif',
                     'Suspendu' => 'suspendu',
@@ -28,6 +34,15 @@ class UserModerationType extends AbstractType
                 'widget' => 'single_text',
                 'input' => 'datetime_immutable',
                 'help' => 'Renseignez une date si le compte est suspendu. Laissez vide pour lever la suspension ou pour une suspension sans date.',
+                'label_attr' => [
+                    'class' => 'form-label',
+                ],
+                'help_attr' => [
+                    'class' => 'form-help',
+                ],
+                'attr' => [
+                    'class' => 'form-input',
+                ],
             ]);
     }
 

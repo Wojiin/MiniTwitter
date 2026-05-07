@@ -18,11 +18,23 @@ class ProfileSettingsType extends AbstractType
         $builder
             ->add('user_name', null, [
                 'label' => 'Nom d\'utilisateur',
+                'label_attr' => [
+                    'class' => 'form-label',
+                ],
+                'attr' => [
+                    'class' => 'form-input',
+                ],
             ])
             ->add('profil_picture', FileType::class, [
                 'label' => 'Photo de profil',
                 'mapped' => false,
                 'required' => false,
+                'label_attr' => [
+                    'class' => 'form-label',
+                ],
+                'attr' => [
+                    'class' => 'form-file',
+                ],
                 'constraints' => [
                     new File(
                         maxSize: '5000k',
@@ -37,7 +49,10 @@ class ProfileSettingsType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'label' => 'Mot de passe actuel',
-                'attr' => ['autocomplete' => 'current-password'],
+                'label_attr' => [
+                    'class' => 'form-label',
+                ],
+                'attr' => ['autocomplete' => 'current-password', 'class' => 'form-input'],
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
@@ -46,11 +61,13 @@ class ProfileSettingsType extends AbstractType
                 'invalid_message' => 'Les mots de passe doivent etre identiques.',
                 'first_options' => [
                     'label' => 'Nouveau mot de passe',
-                    'attr' => ['autocomplete' => 'new-password'],
+                    'label_attr' => ['class' => 'form-label'],
+                    'attr' => ['autocomplete' => 'new-password', 'class' => 'form-input'],
                 ],
                 'second_options' => [
                     'label' => 'Confirmer le nouveau mot de passe',
-                    'attr' => ['autocomplete' => 'new-password'],
+                    'label_attr' => ['class' => 'form-label'],
+                    'attr' => ['autocomplete' => 'new-password', 'class' => 'form-input'],
                 ],
             ])
         ;

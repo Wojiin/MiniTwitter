@@ -1,0 +1,22 @@
+<aside class="sidebar-left">
+    <div class="sidebar-nav">
+        <a href="{{ path('app_user_profile_edit') }}" class="sidebar-link">
+            <div class="sidebar-icon bg-blue-100 text-blue-700">
+                {{ app.user ? app.user.userName|first|upper : 'P' }}
+            </div>
+            <span>{{ app.user ? app.user.userName : 'Profil' }}</span>
+        </a>
+        <a href="{{ path('app_user_index') }}" class="sidebar-link">
+            <span class="sidebar-icon bg-sky-100 text-sky-700">U</span>
+            <span>Utilisateurs</span>
+        </a>
+        <a href="{{ path('app_discussion_index') }}" class="sidebar-link">
+            <span class="sidebar-icon bg-emerald-100 text-emerald-700">D</span>
+            <span>Discussions</span>
+        </a>
+        <a href="{{ path('app_notification_index') }}" class="sidebar-link">
+            <span class="sidebar-icon bg-amber-100 text-amber-700">N</span>
+            <span>Notifications</span>
+        </a>
+    </div>
+</aside>
