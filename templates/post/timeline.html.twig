@@ -8,6 +8,7 @@
 	<a href="{{ path('app_post_new') }}">Créer un nouveau post</a>
 	<section>
 		{% for post in posts |reverse %}
+		{% if post.status !== "supprime" %}
 			<article>
 				<h2>{{ post.title }}</h2>
 				<p>Créé le :
@@ -21,6 +22,24 @@
 						<img src="{{ asset('uploads/posts/' ~ post.image) }}" alt="Image du post {{ post.title }}" style="max-width: 250px; max-height: 250px;">
 					{% endif %}
 				</p>
+				{% if post.idCitation !== null %}
+				{% if post.idCitation.status !== "supprime" %}
+				
+					<div>
+						<h3>Ce post inclus la citation du post numéro
+							{{post.idCitation.id}}</h3>
+						<p>Post créé le :
+							{{ post.idCitation.createdAt ? post.idCitation.createdAt|date('Y-m-d H:i:s') : '' }}
+							par :
+							{{ post.idCitation.author }}</p>
+						<p>Contenu : {{ post.idCitation.content }}</p>
+					</div>
+					{% else %}
+					<p>Le post cité a été supprimé</p>
+				
+				{% endif %}
+				  			
+				{% endif %}
 				<tr>
 					<td>Nombre de "j'aime" :
 						{{ post.countLike }}
@@ -135,6 +154,7 @@
 					{% endfor %}
 				{% endif %}
 			</article>
+			{% endif %}
 		{% endfor %}
 	</section>
 

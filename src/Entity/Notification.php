@@ -26,16 +26,20 @@ class Notification
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'notifications')]
-    private ?user $receive = null;
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $receive = null;
 
-    #[ORM\OneToOne(inversedBy: 'notification', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'notifications')]
     private ?Reply $reply_notif = null;
 
-    #[ORM\OneToOne(inversedBy: 'notification', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'notifications')]
     private ?Message $message_notif = null;
 
-    #[ORM\OneToOne(inversedBy: 'notification', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'notifications')]
     private ?Post $post_notif = null;
+
+    #[ORM\ManyToOne(inversedBy: 'notifications')]
+    private ?Discussion $discussion_notif = null;
 
     public function getId(): ?int
     {
@@ -97,12 +101,12 @@ class Notification
         return $this;
     }
 
-    public function getReceive(): ?user
+    public function getReceive(): ?User
     {
         return $this->receive;
     }
 
-    public function setReceive(?user $receive): static
+    public function setReceive(?User $receive): static
     {
         $this->receive = $receive;
 
@@ -141,6 +145,18 @@ class Notification
     public function setPostNotif(?Post $post_notif): static
     {
         $this->post_notif = $post_notif;
+
+        return $this;
+    }
+
+    public function getDiscussionNotif(): ?Discussion
+    {
+        return $this->discussion_notif;
+    }
+
+    public function setDiscussionNotif(?Discussion $discussion_notif): static
+    {
+        $this->discussion_notif = $discussion_notif;
 
         return $this;
     }

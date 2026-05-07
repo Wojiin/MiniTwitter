@@ -14,31 +14,47 @@
 
 	<ul>
 		<h2>Infos</h2>
-		<li>Email : {{ user.email }}</li>
-		<li>Nom d'utilisateur : {{ user.userName }}</li>
-		<li>Statut : {{ user.status }}</li>
-		<li>Fin de suspension : {{ user.suspendedUntil ? user.suspendedUntil|date('d/m/Y H:i') : 'Aucune' }}</li>
-		<li>Nombre de signalements : {{ user.countFlag }}</li>
-		<li>Compte cree le : {{ user.createdAt|date('d/m/Y H:i') }}</li>
+		<li>Email :
+			{{ user.email }}</li>
+		<li>Nom d'utilisateur :
+			{{ user.userName }}</li>
+		<li>Statut :
+			{{ user.status }}</li>
+		<li>Fin de suspension :
+			{{ user.suspendedUntil ? user.suspendedUntil|date('d/m/Y H:i') : 'Aucune' }}</li>
+		<li>Nombre de signalements :
+			{{ user.countFlag }}</li>
+		<li>Compte cree le :
+			{{ user.createdAt|date('d/m/Y H:i') }}</li>
 	</ul>
 
 	<ul>
 		<h2>Gazouillis</h2>
+
 		{% for post in user.posts %}
-			<li>
-				<a href="{{ path('app_post_show', {id: post.id}) }}">{{ post.title }}</a>
-			</li>
+			{% if post.status !== "supprime" %}
+				<li>
+					<a href="{{ path('app_post_show', {id: post.id}) }}">{{ post.title }}</a>
+				</li>
+			{% endif %}
 		{% else %}
 			<li>Aucun gazouillis pour le moment.</li>
+
 		{% endfor %}
+
 	</ul>
 
 	<ul>
 		<h2>Reposts</h2>
 		{% for repost in user.repost %}
-			<li>
-				<a href="{{ path('app_post_show', {id: repost.id}) }}">{{ repost.title }}</a>
-			</li>
+			{% if repost.status !== "supprime" %}
+				<li>
+					<a href="{{ path('app_post_show', {id: repost.id}) }}">{{ repost.title }}</a>
+				</li>
+			{% else %}
+				<li>Repost d'un post supprimé</li>
+			{% endif %}
+
 		{% else %}
 			<li>Aucun repost pour le moment.</li>
 		{% endfor %}

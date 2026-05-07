@@ -27,9 +27,11 @@
 	<ul>
 		<h2>Mes gazouillis</h2>
 		{% for post in user.posts %}
-			<li>
-				<a href="{{ path('app_post_show', {id: post.id}) }}">{{ post.title }}</a>
-			</li>
+			{% if post.status !== "supprime" %}
+				<li>
+					<a href="{{ path('app_post_show', {id: post.id}) }}">{{ post.title }}</a>
+				</li>
+			{% endif %}
 		{% else %}
 			<li>Aucun gazouillis pour le moment.</li>
 		{% endfor %}
@@ -38,10 +40,15 @@
 	<ul>
 		<h2>Mes reposts</h2>
 		{% for repost in user.repost %}
-			<li>
-				<a href="{{ path('app_post_show', {id: repost.id}) }}">{{ repost.title }}</a>
-			</li>
+			{% if repost.status !== "supprime" %}
+				<li>
+					<a href="{{ path('app_post_show', {id: repost.id}) }}">{{ repost.title }}</a>
+				</li>
+			{% else %}
+				<li>Repost d'un post supprimé</li>
+			{% endif %}
 		{% else %}
+
 			<li>Aucun repost pour le moment.</li>
 		{% endfor %}
 	</ul>

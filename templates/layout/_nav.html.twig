@@ -10,6 +10,9 @@
         <a href="{{ path('app_contact_index') }}">Amis</a>
         <a href="{{ path('app_post_timeline') }}">Fil d'actualite</a>
         <a href="{{ path('app_discussion_index') }}">Discussions</a>
+        <a href="{{ path('app_notification_index') }}">
+            Notifications{% if app.user.countNotification > 0 %} ({{ app.user.countNotification }}){% endif %}
+        </a>
         <a href="{{ path('app_user_profile_edit') }}">{{ app.user.userName }}</a>
         <a href="{{ path('app_logout') }}">Se deconnecter</a>
     {% endif %}

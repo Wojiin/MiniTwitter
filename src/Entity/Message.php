@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use App\Repository\MessageRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -34,8 +36,16 @@ class Message
     #[ORM\JoinColumn(nullable: false)]
     private ?Discussion $discussion = null;
 
-    #[ORM\OneToOne(mappedBy: 'message_notif', cascade: ['persist', 'remove'])]
-    private ?Notification $notification = null;
+    /**
+     * @var Collection<int, Notification>
+     */
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'message_notif')]
+    private Collection $notifications;
+
+    public function __construct()
+    {
+        $this->notifications = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -121,24 +131,31 @@ class Message
         return $this;
     }
 
-    public function getNotification(): ?Notification
+    /**
+     * @return Collection<int, Notification>
+     */
+    public function getNotifications(): Collection
     {
-        return $this->notification;
+        return $this->notifications;
     }
 
-    public function setNotification(?Notification $notification): static
+    public function addNotification(Notification $notification): static
     {
-        // unset the owning side of the relation if necessary
-        if ($notification === null && $this->notification !== null) {
-            $this->notification->setMessageNotif(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($notification !== null && $notification->getMessageNotif() !== $this) {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
             $notification->setMessageNotif($this);
         }
 
-        $this->notification = $notification;
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): static
+    {
+        if ($this->notifications->removeElement($notification)) {
+            if ($notification->getMessageNotif() === $this) {
+                $notification->setMessageNotif(null);
+            }
+        }
 
         return $this;
     }

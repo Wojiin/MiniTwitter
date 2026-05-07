@@ -34,7 +34,7 @@ final class TagController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($tag);
             $entityManager->flush();
-
+            $this->addFlash('success', 'Le nouveau tag a été ajouté avec succès !');
             return $this->redirectToRoute('app_tag_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -62,7 +62,7 @@ final class TagController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-
+            $this->addFlash('success', 'Le tag a été modifié avec succès !');
             return $this->redirectToRoute('app_tag_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -80,6 +80,7 @@ final class TagController extends AbstractController
         if ($this->isCsrfTokenValid('delete' . $tag->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($tag);
             $entityManager->flush();
+            $this->addFlash('success', 'Le tag a été supprimé avec succès !');
         }
 
         return $this->redirectToRoute('app_tag_index', [], Response::HTTP_SEE_OTHER);
