@@ -130,6 +130,7 @@ final class DiscussionController extends AbstractController
     public function show(
         Request $request,
         Discussion $discussion,
+        DiscussionRepository $discussionRepository,
         EntityManagerInterface $entityManager,
         UploadService $uploadService,
         EventDispatcherInterface $eventDispatcher,
@@ -205,6 +206,7 @@ final class DiscussionController extends AbstractController
 
         return $this->render('discussion/show.html.twig', [
             'discussion' => $discussion,
+            'discussions' => $discussionRepository->findForParticipant($user),
             'participants' => $discussion->getDiscuss(),
             'messages' => $messages,
             'message_form' => $messageForm->createView(),

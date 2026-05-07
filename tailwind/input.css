@@ -90,7 +90,7 @@
 
 @layer components {
   .page-shell {
-    @apply mx-auto flex max-w-7xl gap-4 px-4 py-4 md:px-6;
+    @apply mx-auto flex w-full max-w-[110rem] items-start gap-4 px-4 py-4 md:px-6;
   }
 
   .page-content {
@@ -106,15 +106,15 @@
   }
 
   .page-stack-wide {
-    @apply mx-auto max-w-4xl space-y-6 px-4 py-6;
+    @apply w-full space-y-6 px-4 py-6;
   }
 
   .sidebar-left {
-    @apply hidden w-64 shrink-0 lg:block;
+    @apply hidden w-52 shrink lg:block xl:w-56;
   }
 
   .sidebar-right {
-    @apply hidden w-72 shrink-0 xl:block;
+    @apply hidden w-56 shrink xl:block 2xl:w-64;
   }
 
   .sidebar-sticky {
@@ -129,6 +129,122 @@
     @apply rounded-2xl shadow-sm ring-1;
     background-color: var(--color-neutral-0);
     --tw-ring-color: var(--color-neutral-200);
+  }
+
+  .table-shell {
+    @apply overflow-x-auto rounded-2xl shadow-sm ring-1;
+    background-color: var(--color-neutral-0);
+    --tw-ring-color: var(--color-neutral-200);
+  }
+
+  .table {
+    @apply min-w-full text-left;
+  }
+
+  .table thead {
+    background-color: var(--color-neutral-50);
+  }
+
+  .table thead tr {
+    border-bottom: 1px solid var(--color-neutral-200);
+  }
+
+  .table th {
+    @apply px-5 py-3 text-xs font-semibold uppercase tracking-wide;
+    color: var(--color-neutral-500);
+  }
+
+  .table tbody tr {
+    border-top: 1px solid var(--color-neutral-100);
+    transition: background-color 150ms ease;
+  }
+
+  .table tbody tr:hover {
+    background-color: var(--color-neutral-50);
+  }
+
+  .table td {
+    @apply px-5 py-4 align-top text-sm;
+    color: var(--color-neutral-700);
+  }
+
+  .table-empty {
+    @apply py-8 text-center text-sm;
+    color: var(--color-neutral-500);
+  }
+
+  .table-muted {
+    color: var(--color-neutral-500);
+  }
+
+  .table-strong {
+    @apply font-semibold;
+    color: var(--color-neutral-900);
+  }
+
+  .table-actions {
+    @apply flex flex-wrap items-center gap-2;
+  }
+
+  .table-link {
+    @apply inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold transition;
+    background-color: var(--color-success-50);
+    color: var(--color-success-600);
+  }
+
+  .table-link:hover {
+    background-color: var(--color-success-100);
+  }
+
+  .table-link-danger {
+    @apply inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold transition;
+    background-color: var(--color-secondary-50);
+    color: var(--color-secondary-600);
+  }
+
+  .table-link-danger:hover {
+    background-color: var(--color-secondary-100);
+  }
+
+  .table-avatar {
+    @apply h-10 w-10 rounded-full object-cover;
+  }
+
+  .table-identity {
+    @apply flex items-center gap-3;
+  }
+
+  .table-identity-copy {
+    @apply space-y-1;
+  }
+
+  .status-badge {
+    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
+  }
+
+  .status-badge-success {
+    background-color: var(--color-primary-100);
+    color: var(--color-primary-700);
+  }
+
+  .status-badge-info {
+    background-color: var(--color-success-100);
+    color: var(--color-success-700);
+  }
+
+  .status-badge-warning {
+    background-color: var(--color-accent-100);
+    color: var(--color-accent-700);
+  }
+
+  .status-badge-danger {
+    background-color: var(--color-secondary-100);
+    color: var(--color-secondary-700);
+  }
+
+  .status-badge-neutral {
+    background-color: var(--color-neutral-100);
+    color: var(--color-neutral-700);
   }
 
   .surface-card-body {
@@ -182,13 +298,47 @@
   }
 
   .profile-avatar {
-    @apply flex h-11 w-11 items-center justify-center rounded-full text-sm font-semibold;
-    background-color: var(--color-primary-100);
-    color: var(--color-primary-600);
-  }
+      @apply flex h-11 w-11 items-center justify-center rounded-full text-sm font-semibold;
+      background-color: var(--color-primary-100);
+      color: var(--color-primary-600);
+    }
+
+    .profile-avatar-image {
+      @apply h-full w-full rounded-full object-cover;
+    }
 
   .composer-header {
     @apply mb-4 flex items-center gap-3;
+  }
+
+  .composer-disclosure {
+    @apply border-t pt-4;
+    border-color: var(--color-neutral-100);
+  }
+
+  .composer-disclosure-summary {
+    @apply inline-flex cursor-pointer items-center justify-center rounded-full px-5 py-3 text-sm font-semibold;
+  }
+
+  .composer-disclosure-panel {
+    overflow: hidden;
+    transition:
+      max-height 700ms ease,
+      opacity 700ms ease,
+      margin-top 700ms ease;
+    opacity: 0;
+    margin-top: 0;
+    max-height: 0;
+  }
+
+  .composer-disclosure-panel.open {
+    opacity: 1;
+    margin-top: 1rem;
+    max-height: 120rem;
+  }
+
+  .composer-disclosure-panel-inner {
+    @apply min-h-0;
   }
 
   .composer-title {
@@ -320,7 +470,7 @@
   }
 
   .btn-danger {
-    @apply inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold text-white transition;
+    @apply inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition;
     background-color: var(--color-secondary-500);
   }
 
@@ -330,78 +480,78 @@
 
   .btn-soft-blue {
     @apply w-full cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold transition;
-    background-color: var(--color-success-50);
-    color: var(--color-success-600);
+    background-color: color-mix(in srgb, var(--color-success-500) 18%, white);
+    color: var(--color-success-700);
   }
 
   .btn-soft-blue:hover {
-    background-color: var(--color-success-100);
+    background-color: color-mix(in srgb, var(--color-success-500) 28%, white);
   }
 
   .btn-soft-gray {
     @apply w-full cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold transition;
-    background-color: var(--color-neutral-100);
+    background-color: color-mix(in srgb, var(--color-neutral-500) 18%, white);
     color: var(--color-neutral-700);
   }
 
   .btn-soft-gray:hover {
-    background-color: var(--color-neutral-200);
+    background-color: color-mix(in srgb, var(--color-neutral-500) 28%, white);
   }
 
   .btn-soft-emerald {
     @apply w-full cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold transition;
-    background-color: var(--color-success-50);
-    color: var(--color-success-600);
+    background-color: color-mix(in srgb, var(--color-primary-500) 18%, white);
+    color: var(--color-primary-700);
   }
 
   .btn-soft-emerald:hover {
-    background-color: var(--color-success-100);
+    background-color: color-mix(in srgb, var(--color-primary-500) 28%, white);
   }
 
   .btn-soft-violet {
     @apply inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold transition;
-    background-color: var(--color-secondary-50);
-    color: var(--color-secondary-600);
+    background-color: color-mix(in srgb, var(--color-secondary-500) 18%, white);
+    color: var(--color-secondary-700);
   }
 
   .btn-soft-violet:hover {
-    background-color: var(--color-secondary-100);
+    background-color: color-mix(in srgb, var(--color-secondary-500) 28%, white);
   }
 
   .btn-soft-rose {
     @apply w-full cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold transition;
-    background-color: var(--color-secondary-50);
-    color: var(--color-secondary-600);
+    background-color: color-mix(in srgb, var(--color-secondary-500) 18%, white);
+    color: var(--color-secondary-700);
   }
 
   .btn-soft-rose:hover {
-    background-color: var(--color-secondary-100);
+    background-color: color-mix(in srgb, var(--color-secondary-500) 28%, white);
   }
 
   .btn-soft-amber {
     @apply inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold transition;
-    background-color: var(--color-accent-50);
+    background-color: color-mix(in srgb, var(--color-accent-500) 24%, white);
     color: var(--color-accent-700);
   }
 
   .btn-soft-amber:hover {
-    background-color: var(--color-accent-100);
+    background-color: color-mix(in srgb, var(--color-accent-500) 34%, white);
   }
 
   .btn-soft-blue-link {
     @apply inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold transition;
-    background-color: var(--color-success-50);
-    color: var(--color-success-600);
+    background-color: color-mix(in srgb, var(--color-success-500) 18%, white);
+    color: var(--color-success-700);
   }
 
   .btn-soft-blue-link:hover {
-    background-color: var(--color-success-100);
+    background-color: color-mix(in srgb, var(--color-success-500) 28%, white);
   }
 
   .reply-section {
     @apply border-t px-5 py-4;
     border-color: var(--color-neutral-100);
-    background-color: color-mix(in srgb, var(--color-neutral-50) 70%, transparent);
+    background-color: var(--color-neutral-100);
   }
 
   .reply-section-title {
@@ -600,13 +750,237 @@
   }
 
   .message-card {
-    @apply rounded-2xl border p-4;
+    @apply mb-3 w-fit max-w-[85%] rounded-2xl border p-4;
     border-color: var(--color-neutral-200);
     background-color: var(--color-neutral-50);
   }
 
+  .discussion-layout {
+    @apply grid w-full gap-4 xl:grid-cols-[22rem_minmax(0,1fr)];
+  }
+
+  .discussion-sidebar-panel {
+    @apply overflow-hidden rounded-2xl shadow-sm ring-1;
+    background-color: var(--color-neutral-0);
+    --tw-ring-color: var(--color-neutral-200);
+  }
+
+  .discussion-main-panel {
+    @apply flex min-h-[44rem] flex-col overflow-hidden rounded-2xl shadow-sm ring-1;
+    background-color: var(--color-neutral-0);
+    --tw-ring-color: var(--color-neutral-200);
+  }
+
+  .discussion-panel-header {
+    @apply flex items-center justify-between border-b px-4 py-4;
+    border-color: var(--color-neutral-100);
+  }
+
+  .discussion-panel-title {
+    @apply text-xl font-bold;
+    color: var(--color-neutral-900);
+  }
+
+  .discussion-header-actions {
+    @apply flex items-center gap-2;
+  }
+
+  .discussion-icon-button {
+    @apply inline-flex h-10 w-10 items-center justify-center rounded-full transition;
+    background-color: var(--color-neutral-100);
+    color: var(--color-neutral-500);
+  }
+
+  .discussion-icon-button:hover {
+    background-color: var(--color-neutral-200);
+    color: var(--color-neutral-700);
+  }
+
+  .discussion-search {
+    @apply border-b p-3;
+    border-color: var(--color-neutral-100);
+  }
+
+  .discussion-search-input {
+    @apply w-full rounded-full border px-4 py-2.5 text-sm outline-none transition;
+    border-color: var(--color-neutral-200);
+    background-color: var(--color-neutral-50);
+    color: var(--color-neutral-900);
+  }
+
+  .discussion-search-input::placeholder {
+    color: var(--color-neutral-400);
+  }
+
+  .discussion-search-input:focus {
+    border-color: var(--color-primary-500);
+    box-shadow: 0 0 0 2px var(--color-primary-100);
+  }
+
+  .discussion-list {
+    @apply max-h-[38rem] overflow-y-auto;
+  }
+
+  .discussion-item {
+    @apply flex items-center gap-3 border-b px-4 py-3 transition;
+    border-color: var(--color-neutral-100);
+  }
+
+  .discussion-item:hover {
+    background-color: var(--color-neutral-50);
+  }
+
+  .discussion-item-active {
+    background-color: var(--color-success-50);
+  }
+
+  .discussion-item-copy {
+    @apply min-w-0 flex-1;
+  }
+
+  .discussion-item-title {
+    @apply truncate text-sm font-semibold;
+    color: var(--color-neutral-900);
+  }
+
+  .discussion-item-meta {
+    @apply text-xs;
+    color: var(--color-neutral-500);
+  }
+
+  .discussion-item-preview {
+    @apply truncate text-sm;
+    color: var(--color-neutral-500);
+  }
+
+  .discussion-chat-header {
+    @apply flex items-center gap-3 border-b px-5 py-4;
+    border-color: var(--color-neutral-100);
+  }
+
+  .discussion-chat-meta {
+    @apply text-xs;
+    color: var(--color-neutral-500);
+  }
+
+  .discussion-chat-body {
+    @apply flex-1 overflow-y-auto px-5 py-4;
+    background-color: var(--color-neutral-50);
+  }
+
+  .discussion-thread {
+    @apply space-y-4;
+  }
+
+  .discussion-message-row {
+    @apply flex items-end gap-3;
+  }
+
+  .discussion-message-row-own {
+    @apply justify-end;
+  }
+
+  .discussion-message-avatar {
+    @apply h-8 w-8 shrink-0 rounded-full object-cover;
+  }
+
+  .discussion-message-stack {
+    @apply max-w-[80%];
+  }
+
+  .discussion-message-stack-own {
+    @apply text-right;
+  }
+
+  .discussion-message-bubble {
+    @apply rounded-2xl rounded-tl-sm border px-4 py-3 shadow-sm;
+    border-color: var(--color-neutral-200);
+    background-color: var(--color-neutral-0);
+  }
+
+  .discussion-message-bubble-own {
+    @apply rounded-2xl rounded-tr-sm border-0;
+    background-color: var(--color-success-500);
+    color: var(--color-neutral-0);
+  }
+
+  .discussion-message-text {
+    @apply text-sm leading-6;
+    color: var(--color-neutral-700);
+  }
+
+  .discussion-message-bubble-own .discussion-message-text {
+    color: var(--color-neutral-0);
+  }
+
+  .discussion-message-time {
+    @apply mt-1 text-xs;
+    color: var(--color-neutral-500);
+  }
+
+  .discussion-message-actions {
+    @apply mt-2 flex justify-end;
+  }
+
+  .discussion-message-actions-own {
+    @apply justify-end;
+  }
+
+  .discussion-compose {
+    @apply border-t px-4 py-3;
+    border-color: var(--color-neutral-100);
+    background-color: var(--color-neutral-0);
+  }
+
+  .discussion-compose-form {
+    @apply space-y-3;
+  }
+
+  .discussion-compose-row {
+    @apply flex items-center gap-2;
+  }
+
+  .discussion-compose-input {
+    @apply min-h-0 flex-1 resize-none rounded-full border px-4 py-3 text-sm outline-none transition;
+    border-color: var(--color-neutral-200);
+    background-color: var(--color-neutral-50);
+    color: var(--color-neutral-900);
+  }
+
+  .discussion-compose-input::placeholder {
+    color: var(--color-neutral-400);
+  }
+
+  .discussion-compose-input:focus {
+    border-color: var(--color-primary-500);
+    box-shadow: 0 0 0 2px var(--color-primary-100);
+  }
+
+  .discussion-compose-submit {
+    @apply inline-flex h-11 w-11 items-center justify-center rounded-full text-white transition;
+    background-color: var(--color-success-500);
+  }
+
+  .discussion-compose-submit:hover {
+    background-color: var(--color-success-600);
+  }
+
+  .discussion-side-section {
+    @apply border-t px-4 py-4;
+    border-color: var(--color-neutral-100);
+  }
+
+  .discussion-participant-list {
+    @apply space-y-2;
+  }
+
+  .discussion-participant-item {
+    @apply flex items-center gap-3 text-sm;
+    color: var(--color-neutral-700);
+  }
+
   .message-image {
-    @apply max-h-80 rounded-2xl object-cover;
+    @apply max-h-80 max-w-full rounded-2xl object-cover;
   }
 
   .simple-link {

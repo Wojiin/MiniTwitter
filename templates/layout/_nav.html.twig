@@ -14,7 +14,16 @@
         <a class="nav-link" href="{{ path('app_notification_index') }}">
             Notifications{% if app.user.countNotification > 0 %} ({{ app.user.countNotification }}){% endif %}
         </a>
-        <a class="nav-link" href="{{ path('app_user_profile_edit') }}">{{ app.user.userName }}</a>
+        <a class="nav-link inline-flex items-center gap-2" href="{{ path('app_user_profile_edit') }}">
+            <span class="profile-avatar !h-8 !w-8 overflow-hidden text-xs">
+                {% if app.user.profilPicture %}
+                    <img src="{{ asset('uploads/profile_pictures/' ~ app.user.profilPicture) }}" alt="Photo de profil de {{ app.user.userName }}" class="profile-avatar-image">
+                {% else %}
+                    {{ app.user.userName|first|upper }}
+                {% endif %}
+            </span>
+            <span>{{ app.user.userName }}</span>
+        </a>
         <a class="nav-link" href="{{ path('app_logout') }}">Se deconnecter</a>
     {% endif %}
         </div>

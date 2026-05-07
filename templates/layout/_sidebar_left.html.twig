@@ -2,7 +2,11 @@
     <div class="sidebar-nav">
         <a href="{{ path('app_user_profile_edit') }}" class="sidebar-link">
             <div class="sidebar-icon bg-blue-100 text-blue-700">
-                {{ app.user ? app.user.userName|first|upper : 'P' }}
+                {% if app.user and app.user.profilPicture %}
+                    <img src="{{ asset('uploads/profile_pictures/' ~ app.user.profilPicture) }}" alt="Photo de profil de {{ app.user.userName }}" class="profile-avatar-image">
+                {% else %}
+                    {{ app.user ? app.user.userName|first|upper : 'P' }}
+                {% endif %}
             </div>
             <span>{{ app.user ? app.user.userName : 'Profil' }}</span>
         </a>

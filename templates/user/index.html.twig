@@ -4,116 +4,126 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Liste des utilisateurs</h1>
+	<div class="page-stack-wide">
+		<h1 class="section-title-lg">Liste des utilisateurs</h1>
 
-	{% if is_granted('ROLE_ADMIN') %}
-		<h2>Utilisateurs signales</h2>
+		{% if is_granted('ROLE_ADMIN') %}
+			<h2 class="section-title">Utilisateurs signales</h2>
 
-		{% set has_flagged_users = false %}
-		{% for user in users %}
-			{% if user.countFlag > 0 %}
-				{% set has_flagged_users = true %}
+			{% set has_flagged_users = false %}
+			{% for user in users %}
+				{% if user.countFlag > 0 %}
+					{% set has_flagged_users = true %}
+				{% endif %}
+			{% endfor %}
+
+			{% if has_flagged_users %}
+				<div class="table-shell">
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Email</th>
+								<th>Nom d'utilisateur</th>
+								<th>Statut</th>
+								<th>Compteur de flags</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for user in users %}
+								{% if user.countFlag > 0 %}
+									<tr>
+										<td>{{ user.email }}</td>
+										<td class="table-strong">{{ user.userName }}</td>
+										<td><span class="status-badge status-badge-danger">{{ user.status }}</span></td>
+										<td>{{ user.countFlag }}</td>
+										<td class="table-actions">
+											<a class="table-link" href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
+											<a class="table-link" href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
+										</td>
+									</tr>
+								{% endif %}
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			{% else %}
+				<p class="muted-text">aucun utilisateur n'a de signalement</p>
 			{% endif %}
-		{% endfor %}
+		{% endif %}
 
-		{% if has_flagged_users %}
+		<div class="table-shell">
 			<table class="table">
 				<thead>
 					<tr>
-						<th>Id</th>
-						<th>Email</th>
+						<th>Photo de profil</th>
 						<th>Nom d'utilisateur</th>
+						<th>Email</th>
 						<th>Statut</th>
-						<th>Compteur de flags</th>
-						<th>actions</th>
+						<th>Role</th>
+						<th>Actions</th>
+						<th>Demande</th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for user in users %}
-						{% if user.countFlag > 0 %}
-							<tr>
-								<td>{{ user.id }}</td>
-								<td>{{ user.email }}</td>
-								<td>{{ user.userName }}</td>
-								<td>{{ user.status }}</td>
-								<td>{{ user.countFlag }}</td>
-								<td>
-									<a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
-									<a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
-								</td>
-							</tr>
-						{% endif %}
+						<tr>
+							<td>
+								{% if user.profilPicture %}
+									<img src="{{ asset('uploads/profile_pictures/' ~ user.profilPicture) }}" alt="Photo de profil de {{ user.userName }}" class="table-avatar">
+								{% else %}
+									<span class="status-badge status-badge-neutral">Aucune</span>
+								{% endif %}
+							</td>
+							<td class="table-strong">{{ user.userName }}</td>
+							<td>{{ user.email }}</td>
+							<td>
+								<span class="status-badge {{ user.status == 'actif' ? 'status-badge-success' : (user.status == 'suspendu' ? 'status-badge-warning' : (user.status == 'banni' ? 'status-badge-danger' : 'status-badge-neutral')) }}">{{ user.status }}</span>
+							</td>
+							<td>
+								{% if 'ROLE_ADMIN' in user.roles %}
+									<span class="status-badge status-badge-info">ADMIN</span>
+								{% else %}
+									<span class="status-badge status-badge-neutral">User</span>
+								{% endif %}
+							</td>
+							<td class="table-actions">
+								<a class="table-link" href="{{ path('app_user_show', {'id': user.id}) }}">details</a>
+							</td>
+							<td>
+								{% set alreadyContact = false %}
+								{% set contactStatus = null %}
+								{% set existingContact = null %}
+								{% for contact in contacts %}
+									{% if contact.receiver === user %}
+										{% set alreadyContact = true %}
+										{% set contactStatus = contact.status %}
+										{% set existingContact = contact %}
+									{% endif %}
+								{% endfor %}
+								<div class="table-actions">
+									{% if not alreadyContact and user != app.user %}
+										<form action="{{ path('app_contact_new', {'id': user.id}) }}" method="post">
+											<button type="submit" class="btn-soft-emerald">Ajouter au contact</button>
+										</form>
+									{% elseif contactStatus == 'pending' and user != app.user %}
+										<form action="{{ path('app_contact_delete', {'id': existingContact.id}) }}" method="post">
+											<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ existingContact.id) }}">
+											<button type="submit" class="btn-soft-gray">Annuler la demande</button>
+										</form>
+									{% elseif user == app.user %}
+										<span class="status-badge status-badge-neutral">Vous</span>
+									{% endif %}
+								</div>
+							</td>
+						</tr>
+					{% else %}
+						<tr>
+							<td colspan="7" class="table-empty">aucun utilisateur enregistre</td>
+						</tr>
 					{% endfor %}
 				</tbody>
 			</table>
-		{% else %}
-			<p>aucun utilisateur n'a de signalement</p>
-		{% endif %}
-	{% endif %}
-
-	<table class="table">
-		<thead>
-			<tr>
-				<th>Photo de profil</th>
-				<th>Nom d'utilisateur</th>
-				<th>Email</th>
-				<th>Statut</th>
-				<th>Role</th>
-				<th>Actions</th>
-				<th>Demande</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for user in users %}
-				<tr>
-					<td>
-						{% if user.profilPicture %}
-							<img src="{{ asset('uploads/profile_pictures/' ~ user.profilPicture) }}" alt="Photo de profil de {{ user.userName }}" style="max-width: 80px; max-height: 80px;">
-						{% else %}
-							Aucune
-						{% endif %}
-					</td>
-					<td>{{ user.userName }}</td>
-					<td>{{ user.email }}</td>
-					<td>{{ user.status }}</td>
-					<td>
-						{% if 'ROLE_ADMIN' in user.roles %}
-							ADMIN
-						{% else %}
-							User
-						{% endif %}
-					</td>
-					<td>
-						<a href="{{ path('app_user_show', {'id': user.id}) }}">details</a>
-					</td>
-					<td>
-					{% set alreadyContact = false %}
-					{% set contactStatus = null %}
-					{% set existingContact = null %}
-					{% for contact in contacts %}
-					{% if contact.receiver === user %}
-						{% set alreadyContact = true %}
-						{% set contactStatus = contact.status %}
-						{% set existingContact = contact %}
-					{% endif %}
-{% endfor %}
-{% if not alreadyContact and user != app.user %}
-					<form action="{{ path('app_contact_new', {'id': user.id}) }}" method="post">
-    <button type="submit">Ajouter au contact</button>
-</form>
-{% elseif contactStatus == 'pending' and user != app.user %}
-<form action="{{ path('app_contact_delete', {'id': existingContact.id}) }}" method="post">
-    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ existingContact.id) }}">
-    <button type="submit">Annuler la demande</button>
-</form>
-{% endif %}
-					</td>
-				</tr>
-			{% else %}
-				<tr>
-					<td colspan="6">aucun utilisateur enregistré</td>
-				</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+		</div>
+	</div>
 {% endblock %}
