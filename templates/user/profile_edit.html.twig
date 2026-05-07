@@ -45,10 +45,10 @@
 					<a href="{{ path('app_post_show', {id: repost.id}) }}">{{ repost.title }}</a>
 				</li>
 			{% else %}
-								<li>Repost d'un post supprimé</li>
+				<li>Repost d'un post supprimé</li>
 			{% endif %}
 		{% else %}
-			
+
 			<li>Aucun repost pour le moment.</li>
 		{% endfor %}
 	</ul>

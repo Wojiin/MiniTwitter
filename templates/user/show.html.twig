@@ -54,27 +54,28 @@
 			{% else %}
 				<li>Repost d'un post supprimé</li>
 			{% endif %}
-		
-	{% else %}
-		<li>Aucun repost pour le moment.</li>
-	{% endfor %}
-</ul>
 
-<a href="{{ path('app_user_index') }}">retour à la liste des utilisateurs</a>
+		{% else %}
+			<li>Aucun repost pour le moment.</li>
+		{% endfor %}
+	</ul>
 
-{% if app.user and app.user.id != user.id %}
-	{% if user not in app.user.flagUser %}
-		<form action="{{ path('app_user_addflag', {'id': user.id}) }}" method="post">
-			<input name="flag" id="flag" value="signaler" type="submit">
-		</form>
-	{% else %}
-		<form action="{{ path('app_user_unflag', {'id': user.id}) }}" method="post">
-			<input name="unflag" id="unflag" value="retirer le signalement" type="submit">
-		</form>
+	<a href="{{ path('app_user_index') }}">retour à la liste des utilisateurs</a>
+
+	{% if app.user and app.user.id != user.id %}
+		{% if user not in app.user.flagUser %}
+			<form action="{{ path('app_user_addflag', {'id': user.id}) }}" method="post">
+				<input name="flag" id="flag" value="signaler" type="submit">
+			</form>
+		{% else %}
+			<form action="{{ path('app_user_unflag', {'id': user.id}) }}" method="post">
+				<input name="unflag" id="unflag" value="retirer le signalement" type="submit">
+			</form>
+		{% endif %}
 	{% endif %}
-{% endif %}
 
-{% if is_granted('ROLE_ADMIN') %}
-	<a href="{{ path('app_user_edit', {'id': user.id}) }}">modifier</a>
-	{{ include('user/_delete_form.html.twig') }}
-{% endif %}{% endblock %}
+	{% if is_granted('ROLE_ADMIN') %}
+		<a href="{{ path('app_user_edit', {'id': user.id}) }}">modifier</a>
+		{{ include('user/_delete_form.html.twig') }}
+	{% endif %}
+{% endblock %}
