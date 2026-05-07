@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact index{% endblock %}
+
+{% block body %}
+    <h1>Liste des contacts favoris</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Vos amies</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr>
+<td>
+        {% for contact in contacts %}
+            {% if contact.status === 'accepted'%}
+            {% if contact.sender == app.user %}
+                {{contact.receiver.userName}}
+            {% else %}
+            {{contact.sender.userName}}
+            {% endif %}
+            
+            </td>
+            <td>
+            <form action="{{ path('app_contact_delete', {'id': contact.id}) }}" method="post">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ contact.id) }}">
+    <button type="submit">Supprimer cet ami</button></form>
+            </td>
+         </tr>
+            {% endif %}
+        {% else %}
+            <tr>
+                <td colspan="3">aucun amis</td>
+            </tr>
+            
+    
+</form>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_contact_new', {'id': app.user.id}) }}">Create new</a>
+{% endblock %}
