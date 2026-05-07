@@ -20,62 +20,62 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 final class UserController extends AbstractController
 {
     #[Route('/profile/edit', name: 'app_user_profile_edit', methods: ['GET', 'POST'])]
-public function editProfile(
-    Request $request,
-    EntityManagerInterface $entityManager,
-    UserPasswordHasherInterface $userPasswordHasher,
-    UploadService $uploadService
-): Response {
-    $user = $this->getUser();
+    public function editProfile(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        UserPasswordHasherInterface $userPasswordHasher,
+        UploadService $uploadService
+    ): Response {
+        $user = $this->getUser();
 
-    if (!$user instanceof User) {
-        throw $this->createAccessDeniedException();
-    }
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
 
-    $form = $this->createForm(ProfileSettingsType::class, $user);
-    $form->handleRequest($request);
+        $form = $this->createForm(ProfileSettingsType::class, $user);
+        $form->handleRequest($request);
 
-    if ($form->isSubmitted()) {
-        $currentPassword = $form->get('currentPassword')->getData();
-        $plainPassword = $form->get('plainPassword')->getData();
+        if ($form->isSubmitted()) {
+            $currentPassword = $form->get('currentPassword')->getData();
+            $plainPassword = $form->get('plainPassword')->getData();
 
-        if (!empty($plainPassword)) {
-            if (empty($currentPassword)) {
-                $form->get('currentPassword')->addError(
-                    new FormError('Veuillez renseigner votre mot de passe actuel pour le modifier.')
-                );
-            } elseif (!$userPasswordHasher->isPasswordValid($user, $currentPassword)) {
-                $form->get('currentPassword')->addError(
-                    new FormError('Le mot de passe actuel est incorrect.')
-                );
-            } else {
-                $user->setPassword(
-                    $userPasswordHasher->hashPassword($user, $plainPassword)
-                );
+            if (!empty($plainPassword)) {
+                if (empty($currentPassword)) {
+                    $form->get('currentPassword')->addError(
+                        new FormError('Veuillez renseigner votre mot de passe actuel pour le modifier.')
+                    );
+                } elseif (!$userPasswordHasher->isPasswordValid($user, $currentPassword)) {
+                    $form->get('currentPassword')->addError(
+                        new FormError('Le mot de passe actuel est incorrect.')
+                    );
+                } else {
+                    $user->setPassword(
+                        $userPasswordHasher->hashPassword($user, $plainPassword)
+                    );
+                }
+            }
+
+            if ($form->isValid()) {
+                $imageFile = $form->get('profil_picture')->getData();
+
+                if ($imageFile) {
+                    $fileName = $uploadService->upload($imageFile, 'uploads/profile_pictures');
+                    $user->setProfilPicture($fileName);
+                }
+
+                $entityManager->flush();
+                $this->addFlash('success', 'Votre profil a été modifié avec succès !');
+                return $this->redirectToRoute('app_user_profile_edit');
             }
         }
 
-        if ($form->isValid()) {
-            $imageFile = $form->get('profil_picture')->getData();
-
-            if ($imageFile) {
-                $fileName = $uploadService->upload($imageFile, 'uploads/profile_pictures');
-                $user->setProfilPicture($fileName);
-            }
-
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_user_profile_edit');
-        }
+        return $this->render('user/profile_edit.html.twig', [
+            'form' => $form,
+            'user' => $user,
+        ]);
     }
 
-    return $this->render('user/profile_edit.html.twig', [
-        'form' => $form,
-        'user' => $user,
-    ]);
-}
 
-    
     #[Route(name: 'app_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
@@ -128,7 +128,7 @@ public function editProfile(
             }
 
             $entityManager->flush();
-
+            $this->addFlash('success', 'Le profil a été modifié avec succès !');
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -143,9 +143,10 @@ public function editProfile(
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($user);
             $entityManager->flush();
+            $this->addFlash('success', 'Le profil a été supprimé avec succès !');
         }
 
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
@@ -165,7 +166,7 @@ public function editProfile(
         return $this->redirectToRoute('app_user_show', ['id' => $userFlag->getId()], Response::HTTP_SEE_OTHER);
     }
 
-     #[Route('/unflaguser/{id}', name: 'app_user_unflag', methods: ['GET', 'POST'])]
+    #[Route('/unflaguser/{id}', name: 'app_user_unflag', methods: ['GET', 'POST'])]
     public function removeFlagOnUser(User $userFlag, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
