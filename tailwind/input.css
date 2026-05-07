@@ -110,19 +110,19 @@
   }
 
   .sidebar-left {
-    @apply hidden w-52 shrink lg:block xl:w-56;
+    @apply hidden shrink self-start lg:sticky lg:top-24 lg:block lg:w-52 xl:w-56;
   }
 
   .sidebar-right {
-    @apply hidden w-56 shrink xl:block 2xl:w-64;
+    @apply hidden shrink self-start xl:sticky xl:top-24 xl:block xl:w-56 2xl:w-64;
   }
 
   .sidebar-sticky {
-    @apply sticky top-24 space-y-4;
+    @apply space-y-4;
   }
 
   .sidebar-nav {
-    @apply sticky top-24 space-y-2;
+    @apply space-y-2;
   }
 
   .surface-card {
