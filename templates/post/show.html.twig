@@ -6,7 +6,9 @@
 {% block body %}
 
 	<h1>Détail du post</h1>
-	<h3><a href="{{ path('app_post_postrepost', {'id': post.id}) }}">Créer un nouveau repost</a></h3>
+	<h3>
+		<a href="{{ path('app_post_postrepost', {'id': post.id}) }}">Créer un nouveau repost</a>
+	</h3>
 	<table class="table">
 		<tbody>
 
@@ -33,8 +35,6 @@
 			</td>
 		</tr>
 	{% endif %}
-
-
 	<tr>
 		<th>Créé le :</th>
 		<td>{{ post.createdAt ? post.createdAt|date('Y-m-d H:i') : '' }}</td>
@@ -44,7 +44,6 @@
 		<td>{{ post.updatedAt ? post.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
 	</tr>
 	<tr>
-
 		{% if post.tags|length > 0  %}
 			<th>Catégorie :</th>
 			<td>
@@ -66,11 +65,12 @@
 		<th>Nombre de signalement :</th>
 		<td>{{ post.countFlag }}</td>
 	</tr>
-	</tbody></table>
-	{% if post.idCitation !== null %}
-		<h3>Ce post contiens une citation du post numéro
-			{{post.idCitation.id}}</h3>
-			<table class="table">
+</tbody></table>
+{% if post.idCitation !== null %}
+{% if post.idCitation.status !== "supprime" %}
+	<h3>Ce post contiens une citation du post numéro
+		{{post.idCitation.id}}</h3>
+	<table class="table">
 		<tr>
 			<th>Post cité créé le :
 			</th>
@@ -81,15 +81,24 @@
 		<tr>
 			<th>Contenu du post cité</th>
 			<td>{{ post.idCitation.content }}</td>
-		</tr></table>
-	{% endif %}
+		</tr>
+	</table>
+{% else %}
+	<h3>Ce post cité un post aujourd'hui supprimé</h3>
+{% endif %}
+{% endif %}
 {% if is_granted('ROLE_ADMIN') or (app.user and post.creator and app.user.id == post.creator.id) %}
 <a href="{{ path('app_post_edit', {'id': post.id}) }}">modifier le post</a>
-{{ include('post/_delete_form.html.twig') }}{% endif %}{% if app.user and post not in app.user.flagPost %}
-<form action={{ path('app_post_addflag', {'id': post.id} )}} method="post"><input name="flag" id="flag" value="signaler" type="submit"></form>{% else %}
-<form action={{ path('app_post_unflag', {'id': post.id} )}} method="post"><input name="unflag" id="unflag" value="retirer le signalement" type="submit"></form>{% endif %}
+{{ include('post/_delete_form.html.twig') }}
+{% endif %}
+{% if app.user and post not in app.user.flagPost %}
+<form action={{ path('app_post_addflag', {'id': post.id} )}} method="post"><input name="flag" id="flag" value="signaler" type="submit"></form>
+{% else %}
+<form action={{ path('app_post_unflag', {'id': post.id} )}} method="post"><input name="unflag" id="unflag" value="retirer le signalement" type="submit"></form>
+{% endif %}
 
-<h2>Réponses</h2><table class="table">
+<h2>Réponses</h2>
+<table class="table">
 
 
 {% if replies|length > 0 %}
