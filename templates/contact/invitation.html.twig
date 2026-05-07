@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des invitations
+{% endblock %}
+
+{% block body %}
+	<h1>Liste des invitations</h1>
+	{% for contact in contacts %}
+		{% if contact %}
+			<table class="table">
+				<thead>
+					<tr>
+						<th></th>
+						<th>Accepter la demande d'invitation ?</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{{ contact.sender.userName }}
+							vous as envoyer une demande d'invitation</td>
+						<td>
+							{# <a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
+																																	<a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a> #}
+							<div>
+								<form action="{{ path('app_contact_invitation_accept', {'id': contact.id}) }}" method="post">
+    <button type="submit">Oui</button>
+</form>
+
+<form action="{{ path('app_contact_invitation_refuse', {'id': contact.id}) }}" method="post">
+    <button type="submit">Non</button>
+</form>
+							</div>
+						</td>
+					</tr>
+
+
+				</tbody>
+			</table>
+		{% else %}
+			<p>aucun utilisateur n'a de signalement</p>
+		{% endif %}
+	{% endfor %}
+{% endblock %}
