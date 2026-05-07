@@ -1,5 +1,5 @@
-<form id="suppr" method="post" action="{{ path('app_post_delete', {'id': post.id}) }}" >
+<form id="suppr" method="post" action="{{ path('app_post_delete', {'id': post.id}) }}" class="w-full">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
-    <button class="btn" data-toggle="modal" data-target="#deleteModal">supprimer</button>
+    <button class="btn-danger w-full" data-toggle="modal" data-target="#deleteModal">Supprimer</button>
 </form>
 {# {% include "_modal.html.twig" %} #}

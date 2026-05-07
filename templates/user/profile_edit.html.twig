@@ -1,70 +1,79 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mon profil
-{% endblock %}
+{% block title %}Mon profil{% endblock %}
 
 {% block body %}
-	<ul>
-		<h2>Mes Infos</h2>
-		<li>Email :
-			{{ user.email }}</li>
-		<li>Nom d'utilisateur :
-			{{ user.userName }}</li>
-		<li>
-			Photo de profil :
-			{% if user.profilPicture %}
-				<img src="{{ asset('uploads/profile_pictures/' ~ user.profilPicture) }}" alt="Photo de profil de {{ user.userName }}" style="max-width: 120px; max-height: 120px;">
-			{% else %}
-				Non renseignee
-			{% endif %}
-		</li>
-		<li>Statut :
-			{{ user.status }}</li>
-		<li>Compte créé le :
-			{{ user.createdAt|date('d/m/Y H:i') }}</li>
-	</ul>
+    <div class="page-stack-wide">
+        <section class="surface-card">
+            <div class="surface-card-body">
+            <h2 class="section-title">Mes infos</h2>
+            <ul class="info-list">
+                <li><span class="font-semibold text-gray-900">Email :</span> {{ user.email }}</li>
+                <li><span class="font-semibold text-gray-900">Nom d'utilisateur :</span> {{ user.userName }}</li>
+                <li>
+                    <span class="font-semibold text-gray-900">Photo de profil :</span>
+                    {% if user.profilPicture %}
+                        <img src="{{ asset('uploads/profile_pictures/' ~ user.profilPicture) }}" alt="Photo de profil de {{ user.userName }}" class="message-image mt-2">
+                    {% else %}
+                        <span class="text-gray-500">Non renseignee</span>
+                    {% endif %}
+                </li>
+                <li><span class="font-semibold text-gray-900">Statut :</span> {{ user.status }}</li>
+                <li><span class="font-semibold text-gray-900">Compte cree le :</span> {{ user.createdAt|date('d/m/Y H:i') }}</li>
+            </ul>
+            </div>
+        </section>
 
-	<ul>
-		<h2>Mes gazouillis</h2>
-		{% for post in user.posts %}
-			{% if post.status !== "supprime" %}
-				<li>
-					<a href="{{ path('app_post_show', {id: post.id}) }}">{{ post.title }}</a>
-				</li>
-			{% endif %}
-		{% else %}
-			<li>Aucun gazouillis pour le moment.</li>
-		{% endfor %}
-	</ul>
+        <section class="surface-card">
+            <div class="surface-card-body">
+            <h2 class="section-title">Mes gazouillis</h2>
+            <ul class="info-list-compact">
+                {% for post in user.posts %}
+                    {% if post.status != 'supprime' %}
+                        <li><a class="simple-link" href="{{ path('app_post_show', {id: post.id}) }}">{{ post.title }}</a></li>
+                    {% endif %}
+                {% else %}
+                    <li class="text-gray-500">Aucun gazouillis pour le moment.</li>
+                {% endfor %}
+            </ul>
+            </div>
+        </section>
 
-	<ul>
-		<h2>Mes reposts</h2>
-		{% for repost in user.repost %}
-			{% if repost.status !== "supprime" %}
-				<li>
-					<a href="{{ path('app_post_show', {id: repost.id}) }}">{{ repost.title }}</a>
-				</li>
-			{% else %}
-				<li>Repost d'un post supprimé</li>
-			{% endif %}
-		{% else %}
+        <section class="surface-card">
+            <div class="surface-card-body">
+            <h2 class="section-title">Mes reposts</h2>
+            <ul class="info-list-compact">
+                {% for repost in user.repost %}
+                    {% if repost.status != 'supprime' %}
+                        <li><a class="simple-link" href="{{ path('app_post_show', {id: repost.id}) }}">{{ repost.title }}</a></li>
+                    {% else %}
+                        <li class="text-gray-500">Repost d'un post supprime</li>
+                    {% endif %}
+                {% else %}
+                    <li class="text-gray-500">Aucun repost pour le moment.</li>
+                {% endfor %}
+            </ul>
+            </div>
+        </section>
 
-			<li>Aucun repost pour le moment.</li>
-		{% endfor %}
-	</ul>
+        <section class="form-card form-stack">
+            <div>
+                <h2 class="section-title">Modifier mon profil</h2>
+                <p class="section-subtitle">Tu peux changer ici ton nom d'utilisateur, ton mot de passe et ta photo de profil.</p>
+            </div>
 
+            {{ form_start(form, {'attr': {'class': 'form-stack'}}) }}
+                {{ form_row(form.user_name) }}
+                {{ form_row(form.profil_picture) }}
+                <p class="muted-text">Le mot de passe actuel est obligatoire si tu veux definir un nouveau mot de passe.</p>
+                {{ form_row(form.currentPassword) }}
+                {{ form_row(form.plainPassword.first) }}
+                {{ form_row(form.plainPassword.second) }}
 
-	<h2>Modifier mon profil</h2>
-	<p>Tu peux changer ici ton nom d'utilisateur, ton mot de passe et ta photo de profil.</p>
-
-	{{ form_start(form) }}
-	{{ form_row(form.user_name) }}
-	{{ form_row(form.profil_picture) }}
-	<p>Le mot de passe actuel est obligatoire si tu veux definir un nouveau mot de passe.</p>
-	{{ form_row(form.currentPassword) }}
-	{{ form_row(form.plainPassword.first) }}
-	{{ form_row(form.plainPassword.second) }}
-
-	<button type="submit" class="btn">Enregistrer</button>
-	{{ form_end(form) }}
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Enregistrer</button>
+                </div>
+            {{ form_end(form) }}
+        </section>
+    </div>
 {% endblock %}

@@ -1,4 +1,45 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Sauvegarder') }}</button>
+{{ form_start(form, {'attr': {'class': 'form-stack'}}) }}
+    <div class="form-grid">
+        <div>
+            {{ form_label(form.title, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.title) }}
+            <div class="form-errors">{{ form_errors(form.title) }}</div>
+        </div>
+
+        <div>
+            {{ form_label(form.content, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.content) }}
+            <div class="form-errors">{{ form_errors(form.content) }}</div>
+        </div>
+
+        <div class="form-grid-two">
+            <div>
+                {{ form_label(form.image, null, {'label_attr': {'class': 'form-label'}}) }}
+                <div class="form-field-card">
+                    {{ form_widget(form.image, {
+                        attr: {
+                            class: 'form-file',
+                            accept: 'image/*'
+                        }
+                    }) }}
+                </div>
+                <div class="form-errors">{{ form_errors(form.image) }}</div>
+            </div>
+
+            <div>
+                {{ form_label(form.tags, null, {'label_attr': {'class': 'form-label'}}) }}
+                <div class="form-field-card">
+                    {{ form_widget(form.tags) }}
+                </div>
+                <p class="form-help">Maintenez `Ctrl` ou `Cmd` pour selectionner plusieurs tags.</p>
+                <div class="form-errors">{{ form_errors(form.tags) }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button class="btn-primary">
+            {{ button_label|default('Publier') }}
+        </button>
+    </div>
 {{ form_end(form) }}

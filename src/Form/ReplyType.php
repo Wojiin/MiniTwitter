@@ -17,11 +17,24 @@ class ReplyType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('content')
+            ->add('content', null, [
+                'label_attr' => [
+                    'class' => 'form-label',
+                ],
+                'attr' => [
+                    'class' => 'form-textarea',
+                ],
+            ])
             ->add('image', FileType::class, [
                 'label' => 'Photo de la reponse',
                 'mapped' => false,
                 'required' => false,
+                'attr' => [
+                    'class' => 'form-file',
+                ],
+                'label_attr' => [
+                    'class' => 'form-label',
+                ],
                 'constraints' => [
                     new File(
                         maxSize: '5000k',

@@ -26,11 +26,40 @@ final class PostController extends AbstractController
             'posts' => $postRepository->findAll(),
         ]);
     }
-    #[Route('/timeline', name: 'app_post_timeline', methods: ['GET'])]
-    public function timeline(PostRepository $postRepository): Response
+    #[Route('/timeline', name: 'app_post_timeline', methods: ['GET', 'POST'])]
+    public function timeline(Request $request, PostRepository $postRepository, EntityManagerInterface $entityManager, UploadService $uploadService, EventDispatcherInterface $eventDispatcher): Response
     {
+        $now = new \DateTimeImmutable();
+        $post = new Post();
+        $form = $this->createForm(PostType::class, $post);
+        $form->handleRequest($request);
+        $post->setCreatedAt($now);
+        $post->setStatus('actif');
+        $post->setCountFlag(0);
+        $post->setCountLike(0);
+        $post->setCountRepost(0);
+        $post->setAuthor($this->getUser()->getUserName());
+        $post->setCreator($this->getUser());
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('image')->getData();
+
+            if ($imageFile) {
+                $fileName = $uploadService->upload($imageFile, 'uploads/posts');
+                $post->setImage($fileName);
+            }
+
+            $entityManager->persist($post);
+            $entityManager->flush();
+            $eventDispatcher->dispatch(new PostCreatedEvent($post));
+            $this->addFlash('success', 'Votre post a Ã©tÃ© crÃ©Ã© avec succÃ¨s !');
+
+            return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
+        }
+
         return $this->render('post/timeline.html.twig', [
             'posts' => $postRepository->findAll(),
+            'form' => $form->createView(),
         ]);
     }
 
