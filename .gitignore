@@ -20,3 +20,5 @@
 ###< symfony/asset-mapper ###
 config/reference.php
 /node_modules
+/assets/styles/output.css
+/tailwind/output.css
