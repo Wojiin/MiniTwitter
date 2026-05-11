@@ -307,6 +307,9 @@
   .gap-3 {
     gap: calc(var(--spacing) * 3);
   }
+  .gap-4 {
+    gap: calc(var(--spacing) * 4);
+  }
   .space-y-2 {
     :where(& > :not(:last-child)) {
       --tw-space-y-reverse: 0;
@@ -1586,14 +1589,6 @@
     border-color: var(--color-neutral-200);
     background-color: var(--color-neutral-50);
   }
-  .discussion-layout {
-    display: grid;
-    width: 100%;
-    gap: calc(var(--spacing) * 4);
-    @media (width >= 80rem) {
-      grid-template-columns: 22rem minmax(0,1fr);
-    }
-  }
   .discussion-sidebar-panel {
     overflow: hidden;
     border-radius: var(--radius-2xl);
@@ -2075,6 +2070,22 @@
   }
   .modal-button-danger:hover {
     background-color: var(--color-danger-700);
+  }
+  .flash-succes {
+    font-size: var(--text-base);
+    line-height: var(--tw-leading, var(--text-base--line-height));
+    --tw-font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-semibold);
+    background-color: var(--color-success-300);
+    color: var(--color-neutral-900);
+  }
+  .flash-alert {
+    font-size: var(--text-base);
+    line-height: var(--tw-leading, var(--text-base--line-height));
+    --tw-font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-semibold);
+    background-color: var(--color-danger-300);
+    color: var(--color-neutral-900);
   }
 }
 @property --tw-space-y-reverse {

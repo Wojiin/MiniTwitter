@@ -3,11 +3,11 @@
 {% block title %}Modification des tags{% endblock %}
 
 {% block body %}
-    <h1>Modification d'un tag</h1>
+    <h1 class="section-title-lg">Modification d'un tag</h1>
 
     {{ include('tag/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
 
-    <a href="{{ path('app_tag_index') }}">Retour à la liste des tags</a>
+    <a class="table-link" href="{{ path('app_tag_index') }}">Retour à la liste des tags</a>
 
     {{ include('tag/_delete_form.html.twig') }}
 {% endblock %}

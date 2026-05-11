@@ -3,11 +3,11 @@
 {% block title %}Modification Message{% endblock %}
 
 {% block body %}
-    <h1>Modifier un message</h1>
+    <h1 class="section-title-lg">Modifier un message</h1>
 
     {{ include('message/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
 
     {% if message.discussion %}
-        <a href="{{ path('app_discussion_show', {'id': message.discussion.id}) }}">Retourner à la discussion</a>
+        <a class="table-link" href="{{ path('app_discussion_show', {'id': message.discussion.id}) }}">Retourner à la discussion</a>
     {% endif %}
 {% endblock %}
