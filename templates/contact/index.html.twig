@@ -1,42 +1,50 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Contact index{% endblock %}
+{% block title %}Contact index
+{% endblock %}
 
 {% block body %}
-    <h1>Liste des contacts favoris</h1>
+	<h1>Liste des contacts favoris</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Vos amies</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        
-        {% for contact in contacts %}
-            {% if contact.status === 'accepted'%}
-            <tr>
-            <td>
-            {% if contact.sender == app.user %}
-                {{contact.receiver.userName}}
-            {% else %}
-            {{contact.sender.userName}}
-            {% endif %}
-            </td>
-            <td>
-            <form action="{{ path('app_contact_delete', {'id': contact.id}) }}" method="post">
-    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ contact.id) }}">
-    <button class="btn-danger" type="submit">Supprimer cet ami</button></form>
-            </td>
-         </tr>
-            {% endif %}
-        {% else %}
-            <tr>
-                <td colspan="3">aucun amis</td>
-            </tr>
+<h1 class="text-3xl font-bold underline text-red-500">Test Tailwind</h1>
+	<div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
+		<table class="w-full text-sm text-left rtl:text-right text-body">
+			<thead class="text-sm text-body bg-neutral-secondary-soft border-b rounded-base border-default">
+				<tr>
+					<th scope="col" class="px-6 py-3 font-medium">Vos amies</th>
+					<th scope="col" class="px-6 py-3 font-medium">Actions</th>
+				</tr>
+			</thead>
+			<tbody>
 
-        {% endfor %}
-        </tbody>
-    </table>
+				{% for contact in contacts %}
+					{% if contact.status === 'accepted'%}
+						<tr class="bg-neutral-primary border-b border-default">
+							<td class="px-6 py-4">
+								{% if contact.sender == app.user %}
+									{{contact.receiver.userName}}
+								{% else %}
+									{{contact.sender.userName}}
+								{% endif %}
+							</td>
+							<td class="px-6 py-4">
+								<form action="{{ path('app_contact_delete', {'id': contact.id}) }}" method="post">
+									<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ contact.id) }}">
+									<button class="border border-blue-600 text-blue-600 px-5 py-2 rounded-lg font-medium hover:bg-blue-50"" type="submit">Supprimer cet ami</button>
+								</form>
+							</td>
+						</tr>
+					{% endif %}
+				{% else %}
+					<tr>
+						<td colspan="3">aucun amis</td>
+					</tr>
+
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+
+
+    
 {% endblock %}

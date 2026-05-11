@@ -5,6 +5,7 @@
   },
   "dependencies": {
     "@tailwindcss/cli": "^4.2.4",
+    "flowbite": "^4.0.1",
     "tailwindcss": "^4.2.4"
   }
 }
