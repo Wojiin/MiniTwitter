@@ -2,6 +2,7 @@
 
 namespace App\EventSubscriber;
 
+use App\Event\ContactRequestCreatedEvent;
 use App\Event\DiscussionMessageCreatedEvent;
 use App\Event\PostCreatedEvent;
 use App\Event\ReplyCreatedEvent;
@@ -19,11 +20,17 @@ final class NotificationSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
+            ContactRequestCreatedEvent::class => 'onContactRequestCreated',
             DiscussionMessageCreatedEvent::class => 'onDiscussionMessageCreated',
             PostCreatedEvent::class => 'onPostCreated',
             ReplyCreatedEvent::class => 'onReplyCreated',
             UserAddedToDiscussionEvent::class => 'onUserAddedToDiscussion',
         ];
+    }
+
+    public function onContactRequestCreated(ContactRequestCreatedEvent $event): void
+    {
+        $this->notificationService->notifyContactRequest($event->getContact());
     }
 
     public function onDiscussionMessageCreated(DiscussionMessageCreatedEvent $event): void

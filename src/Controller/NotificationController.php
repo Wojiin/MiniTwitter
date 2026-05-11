@@ -51,6 +51,10 @@ final class NotificationController extends AbstractController
             ]);
         }
 
+        if ($notification->getType() === 'contact_request') {
+            return $this->redirectToRoute('app_contact_invitation');
+        }
+
         if ($notification->getReplyNotif() !== null) {
             return $this->redirectToRoute('app_reply_show', [
                 'id' => $notification->getReplyNotif()->getId(),

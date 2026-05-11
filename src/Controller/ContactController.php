@@ -3,11 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Contact;
+use App\Event\ContactRequestCreatedEvent;
 use App\Form\ContactType;
 use App\Repository\ContactRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -24,7 +26,13 @@ final class ContactController extends AbstractController
     }
 
     #[Route('/new/{id}', name: 'app_contact_new', methods: ['POST'])]
-    public function new(EntityManagerInterface $entityManager, UserRepository $userRepository, int $id, ContactRepository $contactRepository): Response
+    public function new(
+        EntityManagerInterface $entityManager,
+        UserRepository $userRepository,
+        int $id,
+        ContactRepository $contactRepository,
+        EventDispatcherInterface $eventDispatcher,
+    ): Response
     {
         $receiver = $userRepository->find($id);
         $existingContact = $contactRepository->findBy(['sender' => $this->getUser(), 'receiver' => $receiver]);
@@ -36,6 +44,7 @@ final class ContactController extends AbstractController
 
             $entityManager->persist($contact);
             $entityManager->flush();
+            $eventDispatcher->dispatch(new ContactRequestCreatedEvent($contact));
         }
 
         return $this->redirectToRoute('app_user_index');

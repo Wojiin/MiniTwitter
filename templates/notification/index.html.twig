@@ -64,6 +64,13 @@
                                         <p class="quote-text">{{ notification.discussionNotif.title }}</p>
                                     </div>
                                 {% endif %}
+
+                                {% if notification.type == 'contact_request' %}
+                                    <div class="quote-card">
+                                        <h3 class="quote-title">Invitation</h3>
+                                        <p class="quote-text">Ouvrez cette notification pour acceder a votre liste d'invitations.</p>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
 
