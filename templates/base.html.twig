@@ -37,10 +37,10 @@
 				<main class="page-content">
 					{% block flash %}
 						{% for message in app.flashes('error') %}
-							<div class="alert alert-danger">{{ message }}</div>
+							<div class="flash-alert flex justify-center"><p class="text-center">{{ message }}</p></div>
 						{% endfor %}
 						{% for message in app.flashes('success') %}
-							<div class="succes">{{ message }}</div>
+							<div class="flash-succes flex justify-center"><p class="text-center">{{ message }}</p></div>
 						{% endfor %}
 					{% endblock %}
 					{% block body %}{% endblock %}

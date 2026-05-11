@@ -1,1077 +1,1156 @@
 @import "tailwindcss";
 
 @theme {
-  --color-*: initial;
+    --color-*: initial;
 
-  --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    "Liberation Mono", "Courier New", monospace;
+    --font-sans:
+        ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+        "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-mono:
+        ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
 
-  --spacing: 0.25rem;
-  --container-xl: 36rem;
-  --container-2xl: 42rem;
-  --container-4xl: 56rem;
-  --container-7xl: 80rem;
+    --spacing: 0.25rem;
+    --container-xl: 36rem;
+    --container-2xl: 42rem;
+    --container-4xl: 56rem;
+    --container-7xl: 80rem;
 
-  --text-xs: 0.75rem;
-  --text-xs--line-height: calc(1 / 0.75);
-  --text-sm: 0.875rem;
-  --text-sm--line-height: calc(1.25 / 0.875);
-  --text-base: 1rem;
-  --text-base--line-height: calc(1.5 / 1);
-  --text-lg: 1.125rem;
-  --text-lg--line-height: calc(1.75 / 1.125);
-  --text-xl: 1.25rem;
-  --text-xl--line-height: calc(1.75 / 1.25);
-  --text-2xl: 1.5rem;
-  --text-2xl--line-height: calc(2 / 1.5);
+    --text-xs: 0.75rem;
+    --text-xs--line-height: calc(1 / 0.75);
+    --text-sm: 0.875rem;
+    --text-sm--line-height: calc(1.25 / 0.875);
+    --text-base: 1rem;
+    --text-base--line-height: calc(1.5 / 1);
+    --text-lg: 1.125rem;
+    --text-lg--line-height: calc(1.75 / 1.125);
+    --text-xl: 1.25rem;
+    --text-xl--line-height: calc(1.75 / 1.25);
+    --text-2xl: 1.5rem;
+    --text-2xl--line-height: calc(2 / 1.5);
 
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
-  --tracking-wide: 0.025em;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --tracking-wide: 0.025em;
 
-  --radius-xl: 0.75rem;
-  --radius-2xl: 1rem;
+    --radius-xl: 0.75rem;
+    --radius-2xl: 1rem;
 
-  --default-transition-duration: 150ms;
-  --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    --default-transition-duration: 150ms;
+    --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 
-  --color-primary-50: #edf9f2;
-  --color-primary-100: #d2f0df;
-  --color-primary-500: #22a962;
-  --color-primary-600: #1d9557;
-  --color-primary-700: #177244;
+    --color-primary-50: #edf9f2;
+    --color-primary-100: #d2f0df;
+    --color-primary-500: #22a962;
+    --color-primary-600: #1d9557;
+    --color-primary-700: #177244;
 
-  --color-success-50: #eef3fb;
-  --color-success-100: #d5e0f4;
-  --color-success-500: #224da9;
-  --color-success-600: #1d4394;
-  --color-success-700: #163370;
+    --color-success-50: #eef3fb;
+    --color-success-100: #d5e0f4;
+    --color-success-500: #224da9;
+    --color-success-600: #1d4394;
+    --color-success-700: #163370;
 
-  --color-neutral-0: #ffffff;
-  --color-neutral-50: #f7f8fa;
-  --color-neutral-100: #eceff3;
-  --color-neutral-200: #d9dde5;
-  --color-neutral-300: #c5cad5;
-  --color-neutral-400: #8e96a6;
-  --color-neutral-500: #616978;
-  --color-neutral-700: #252a33;
-  --color-neutral-900: #000000;
+    --color-neutral-0: #ffffff;
+    --color-neutral-50: #f7f8fa;
+    --color-neutral-100: #eceff3;
+    --color-neutral-200: #d9dde5;
+    --color-neutral-300: #c5cad5;
+    --color-neutral-400: #8e96a6;
+    --color-neutral-500: #616978;
+    --color-neutral-700: #252a33;
+    --color-neutral-900: #000000;
 
-  --color-accent-50: #fff9e7;
-  --color-accent-100: #feefbc;
-  --color-accent-500: #f7ce28;
-  --color-accent-600: #ddb515;
-  --color-accent-700: #a9880f;
+    --color-accent-50: #fff9e7;
+    --color-accent-100: #feefbc;
+    --color-accent-500: #f7ce28;
+    --color-accent-600: #ddb515;
+    --color-accent-700: #a9880f;
 
-  --color-secondary-50: #f8eef8;
-  --color-secondary-100: #edcfec;
-  --color-secondary-500: #a922a7;
-  --color-secondary-600: #951d93;
-  --color-secondary-700: #721671;
+    --color-secondary-50: #f8eef8;
+    --color-secondary-100: #edcfec;
+    --color-secondary-500: #a922a7;
+    --color-secondary-600: #951d93;
+    --color-secondary-700: #721671;
 
-  --color-danger-50: #fef2f2;
-  --color-danger-100: #fee2e2;
-  --color-danger-500: #ef4444;
-  --color-danger-600: #dc2626;
-  --color-danger-700: #b91c1c;
+    --color-danger-50: #fef2f2;
+    --color-danger-100: #fee2e2;
+    --color-danger-500: #ef4444;
+    --color-danger-600: #dc2626;
+    --color-danger-700: #b91c1c;
 
-  --color-blue-100: #d5e0f4;
-  --color-blue-700: #163370;
-  --color-sky-100: #d5e0f4;
-  --color-sky-700: #1d4394;
-  --color-emerald-100: #d2f0df;
-  --color-emerald-700: #177244;
-  --color-amber-100: #feefbc;
-  --color-amber-700: #a9880f;
-  --color-gray-50: #f7f8fa;
-  --color-gray-100: #eceff3;
-  --color-gray-500: #616978;
-  --color-gray-700: #252a33;
-  --color-gray-900: #000000;
-  --color-white: #ffffff;
+    --color-blue-100: #d5e0f4;
+    --color-blue-700: #163370;
+    --color-sky-100: #d5e0f4;
+    --color-sky-700: #1d4394;
+    --color-emerald-100: #d2f0df;
+    --color-emerald-700: #177244;
+    --color-amber-100: #feefbc;
+    --color-amber-700: #a9880f;
+    --color-gray-50: #f7f8fa;
+    --color-gray-100: #eceff3;
+    --color-gray-500: #616978;
+    --color-gray-700: #252a33;
+    --color-gray-900: #000000;
+    --color-white: #ffffff;
 }
 
 @layer components {
-  .page-shell {
-    @apply mx-auto flex w-full max-w-[110rem] items-start gap-4 px-4 py-4 md:px-6;
-  }
+    .page-shell {
+        @apply mx-auto flex w-full max-w-[110rem] items-start gap-4 px-4 py-4 md:px-6;
+    }
 
-  .page-content {
-    @apply min-w-0 flex-1;
-  }
+    .page-content {
+        @apply min-w-0 flex-1;
+    }
 
-  .page-column {
-    @apply mx-auto max-w-2xl space-y-4;
-  }
+    .page-column {
+        @apply mx-auto max-w-2xl space-y-4;
+    }
 
-  .page-stack {
-    @apply mx-auto max-w-xl space-y-6 px-4 py-6;
-  }
+    .page-stack {
+        @apply mx-auto max-w-xl space-y-6 px-4 py-6;
+    }
 
-  .page-stack-wide {
-    @apply w-full space-y-6 px-4 py-6;
-  }
+    .page-stack-wide {
+        @apply w-full space-y-6 px-4 py-6;
+    }
 
-  .sidebar-left {
-    @apply hidden shrink self-start lg:sticky lg:top-24 lg:block lg:w-52 xl:w-56;
-  }
+    .sidebar-left {
+        @apply hidden shrink self-start lg:sticky lg:top-24 lg:block lg:w-52 xl:w-56;
+    }
 
-  .sidebar-right {
-    @apply hidden shrink self-start xl:sticky xl:top-24 xl:block xl:w-56 2xl:w-64;
-  }
+    .sidebar-right {
+        @apply hidden shrink self-start xl:sticky xl:top-24 xl:block xl:w-56 2xl:w-64;
+    }
 
-  .sidebar-sticky {
-    @apply space-y-4;
-  }
+    .sidebar-sticky {
+        @apply space-y-4;
+    }
 
-  .sidebar-nav {
-    @apply space-y-2;
-  }
+    .sidebar-nav {
+        @apply space-y-2;
+    }
 
-  .surface-card {
-    @apply rounded-2xl shadow-sm ring-1;
-    background-color: var(--color-neutral-0);
-    --tw-ring-color: var(--color-neutral-200);
-  }
+    .surface-card {
+        @apply rounded-2xl shadow-sm ring-1;
+        background-color: var(--color-neutral-0);
+        --tw-ring-color: var(--color-neutral-200);
+    }
 
-  .table-shell {
-    @apply overflow-x-auto rounded-2xl shadow-sm ring-1;
-    background-color: var(--color-neutral-0);
-    --tw-ring-color: var(--color-neutral-200);
-  }
+    .table-shell {
+        @apply overflow-x-auto rounded-2xl shadow-sm ring-1;
+        background-color: var(--color-neutral-0);
+        --tw-ring-color: var(--color-neutral-200);
+    }
 
-  .table {
-    @apply min-w-full text-left;
-  }
+    .table {
+        @apply min-w-full text-left;
+    }
 
-  .table thead {
-    background-color: var(--color-neutral-50);
-  }
+    .table thead {
+        background-color: var(--color-neutral-50);
+    }
 
-  .table thead tr {
-    border-bottom: 1px solid var(--color-neutral-200);
-  }
+    .table thead tr {
+        border-bottom: 1px solid var(--color-neutral-200);
+    }
 
-  .table th {
-    @apply px-5 py-3 text-xs font-semibold uppercase tracking-wide;
-    color: var(--color-neutral-500);
-  }
+    .table th {
+        @apply px-5 py-3 text-xs font-semibold uppercase tracking-wide;
+        color: var(--color-neutral-500);
+    }
 
-  .table tbody tr {
-    border-top: 1px solid var(--color-neutral-100);
-    transition: background-color 150ms ease;
-  }
+    .table tbody tr {
+        border-top: 1px solid var(--color-neutral-100);
+        transition: background-color 150ms ease;
+    }
 
-  .table tbody tr:hover {
-    background-color: var(--color-neutral-50);
-  }
+    .table tbody tr:hover {
+        background-color: var(--color-neutral-50);
+    }
 
-  .table td {
-    @apply px-5 py-4 align-top text-sm;
-    color: var(--color-neutral-700);
-  }
+    .table td {
+        @apply px-5 py-4 align-top text-sm;
+        color: var(--color-neutral-700);
+    }
 
-  .table-empty {
-    @apply py-8 text-center text-sm;
-    color: var(--color-neutral-500);
-  }
+    .table-empty {
+        @apply py-8 text-center text-sm;
+        color: var(--color-neutral-500);
+    }
 
-  .table-muted {
-    color: var(--color-neutral-500);
-  }
+    .table-muted {
+        color: var(--color-neutral-500);
+    }
 
-  .table-strong {
-    @apply font-semibold;
-    color: var(--color-neutral-900);
-  }
+    .table-strong {
+        @apply font-semibold;
+        color: var(--color-neutral-900);
+    }
 
-  .table-actions {
-    @apply flex flex-wrap items-center gap-2;
-  }
+    .table-actions {
+        @apply flex flex-wrap items-center gap-2;
+    }
 
-  .table-link {
-    @apply inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold transition;
-    background-color: var(--color-success-50);
-    color: var(--color-success-600);
-  }
+    .table-link {
+        @apply inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold transition;
+        background-color: var(--color-success-50);
+        color: var(--color-success-600);
+    }
 
-  .table-link:hover {
-    background-color: var(--color-success-100);
-  }
+    .table-link:hover {
+        background-color: var(--color-success-100);
+    }
 
-  .table-link-danger {
-    @apply inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold transition;
-    background-color: var(--color-secondary-50);
-    color: var(--color-secondary-600);
-  }
+    .table-link-danger {
+        @apply inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold transition;
+        background-color: var(--color-secondary-50);
+        color: var(--color-secondary-600);
+    }
 
-  .table-link-danger:hover {
-    background-color: var(--color-secondary-100);
-  }
+    .table-link-danger:hover {
+        background-color: var(--color-secondary-100);
+    }
 
-  .table-avatar {
-    @apply h-10 w-10 rounded-full object-cover;
-  }
+    .table-avatar {
+        @apply h-10 w-10 rounded-full object-cover;
+    }
 
-  .table-identity {
-    @apply flex items-center gap-3;
-  }
+    .table-identity {
+        @apply flex items-center gap-3;
+    }
 
-  .table-identity-copy {
-    @apply space-y-1;
-  }
+    .table-identity-copy {
+        @apply space-y-1;
+    }
 
-  .status-badge {
-    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
-  }
+    .status-badge {
+        @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
+    }
 
-  .status-badge-success {
-    background-color: var(--color-primary-100);
-    color: var(--color-primary-700);
-  }
+    .status-badge-success {
+        background-color: var(--color-primary-100);
+        color: var(--color-primary-700);
+    }
 
-  .status-badge-info {
-    background-color: var(--color-success-100);
-    color: var(--color-success-700);
-  }
+    .status-badge-info {
+        background-color: var(--color-success-100);
+        color: var(--color-success-700);
+    }
 
-  .status-badge-warning {
-    background-color: var(--color-accent-100);
-    color: var(--color-accent-700);
-  }
+    .status-badge-warning {
+        background-color: var(--color-accent-100);
+        color: var(--color-accent-700);
+    }
 
-  .status-badge-danger {
-    background-color: var(--color-secondary-100);
-    color: var(--color-secondary-700);
-  }
+    .status-badge-danger {
+        background-color: var(--color-secondary-100);
+        color: var(--color-secondary-700);
+    }
 
-  .status-badge-neutral {
-    background-color: var(--color-neutral-100);
-    color: var(--color-neutral-700);
-  }
+    .status-badge-neutral {
+        background-color: var(--color-neutral-100);
+        color: var(--color-neutral-700);
+    }
 
-  .surface-card-body {
-    @apply p-5;
-  }
+    .surface-card-body {
+        @apply p-5;
+    }
 
-  .surface-card-section {
-    @apply border-t px-5 py-4;
-    border-color: var(--color-neutral-100);
-  }
+    .surface-card-section {
+        @apply border-t px-5 py-4;
+        border-color: var(--color-neutral-100);
+    }
 
-  .nav-shell {
-    @apply sticky top-0 z-50 flex items-center justify-between px-4 py-2 shadow;
-    background-color: var(--color-neutral-0);
-  }
+    .nav-shell {
+        @apply sticky top-0 z-50 flex items-center justify-between px-4 py-2 shadow;
+        background-color: var(--color-neutral-0);
+    }
 
-  .nav-group {
-    @apply flex items-center space-x-4;
-  }
+    .nav-group {
+        @apply flex items-center space-x-4;
+    }
 
-  .nav-links {
-    @apply flex items-center space-x-6;
-  }
+    .nav-links {
+        @apply flex items-center space-x-6;
+    }
 
-  .nav-brand {
-    @apply text-2xl font-bold;
-    color: var(--color-primary-500);
-  }
+    .nav-brand {
+        @apply text-2xl font-bold;
+        color: var(--color-primary-500);
+    }
 
-  .nav-link {
-    @apply text-sm font-medium transition;
-    color: var(--color-neutral-700);
-  }
+    .nav-link {
+        @apply text-sm font-medium transition;
+        color: var(--color-neutral-700);
+    }
 
-  .nav-link:hover {
-    color: var(--color-primary-500);
-  }
+    .nav-link:hover {
+        color: var(--color-primary-500);
+    }
 
-  .sidebar-link {
-    @apply flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition;
-    color: var(--color-neutral-700);
-  }
+    .sidebar-link {
+        @apply flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition;
+        color: var(--color-neutral-700);
+    }
 
-  .sidebar-link:hover {
-    background-color: var(--color-neutral-0);
-    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  }
+    .sidebar-link:hover {
+        background-color: var(--color-neutral-0);
+        box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    }
 
-  .sidebar-icon {
-    @apply flex h-10 w-10 items-center justify-center rounded-full;
-  }
+    .sidebar-icon {
+        @apply flex h-10 w-10 items-center justify-center rounded-full;
+    }
 
-  .profile-avatar {
-      @apply flex h-11 w-11 items-center justify-center rounded-full text-sm font-semibold;
-      background-color: var(--color-primary-100);
-      color: var(--color-primary-600);
+    .profile-avatar {
+        @apply flex h-11 w-11 items-center justify-center rounded-full text-sm font-semibold;
+        background-color: var(--color-primary-100);
+        color: var(--color-primary-600);
     }
 
     .profile-avatar-image {
-      @apply h-full w-full rounded-full object-cover;
+        @apply h-full w-full rounded-full object-cover;
     }
 
-  .composer-header {
-    @apply mb-4 flex items-center gap-3;
-  }
-
-  .composer-disclosure {
-    @apply border-t pt-4;
-    border-color: var(--color-neutral-100);
-  }
-
-  .composer-disclosure-summary {
-    @apply inline-flex cursor-pointer items-center justify-center rounded-full px-5 py-3 text-sm font-semibold;
-  }
-
-  .composer-disclosure-panel {
-    overflow: hidden;
-    transition:
-      max-height 700ms ease,
-      opacity 700ms ease,
-      margin-top 700ms ease;
-    opacity: 0;
-    margin-top: 0;
-    max-height: 0;
-  }
-
-  .composer-disclosure-panel.open {
-    opacity: 1;
-    margin-top: 1rem;
-    max-height: 120rem;
-  }
-
-  .composer-disclosure-panel-inner {
-    @apply min-h-0;
-  }
-
-  .composer-title {
-    @apply text-lg font-semibold;
-    color: var(--color-neutral-900);
-  }
-
-  .composer-subtitle {
-    @apply text-sm;
-    color: var(--color-neutral-500);
-  }
-
-  .divider-top {
-    @apply border-t pt-4;
-    border-color: var(--color-neutral-100);
-  }
-
-  .post-list {
-    @apply space-y-4;
-  }
-
-  .post-card {
-    @apply overflow-hidden rounded-2xl shadow-sm ring-1;
-    background-color: var(--color-neutral-0);
-    --tw-ring-color: var(--color-neutral-200);
-  }
-
-  .post-header {
-    @apply mb-4 flex items-start justify-between gap-4;
-  }
-
-  .post-author {
-    @apply flex items-center gap-3;
-  }
-
-  .post-title {
-    @apply text-base font-semibold;
-    color: var(--color-neutral-900);
-  }
-
-  .post-meta {
-    @apply text-sm;
-    color: var(--color-neutral-500);
-  }
-
-  .post-detail-link {
-    @apply shrink-0 rounded-full px-3 py-1 text-xs font-medium transition;
-    background-color: var(--color-neutral-100);
-    color: var(--color-neutral-500);
-  }
-
-  .post-detail-link:hover {
-    background-color: var(--color-neutral-200);
-    color: var(--color-neutral-900);
-  }
-
-  .post-content {
-    @apply space-y-4;
-  }
-
-  .post-text {
-    @apply whitespace-pre-line text-sm leading-6;
-    color: var(--color-neutral-700);
-  }
-
-  .post-image {
-    @apply max-h-[28rem] w-full rounded-2xl object-cover;
-  }
-
-  .tag-list {
-    @apply flex flex-wrap items-center gap-2;
-  }
-
-  .tag-pill {
-    @apply rounded-full px-3 py-1 text-xs font-medium;
-    background-color: var(--color-primary-50);
-    color: var(--color-primary-600);
-  }
-
-  .quote-card {
-    @apply rounded-2xl border p-4;
-    border-color: var(--color-neutral-200);
-    background-color: var(--color-neutral-50);
-  }
-
-  .quote-empty {
-    @apply rounded-2xl border border-dashed p-4 text-sm;
-    border-color: var(--color-neutral-300);
-    background-color: var(--color-neutral-50);
-    color: var(--color-neutral-500);
-  }
-
-  .quote-title {
-    @apply mb-2 text-sm font-semibold;
-    color: var(--color-neutral-900);
-  }
-
-  .quote-meta {
-    @apply mb-1 text-xs;
-    color: var(--color-neutral-500);
-  }
-
-  .quote-text {
-    @apply text-sm leading-6;
-    color: var(--color-neutral-700);
-  }
-
-  .stat-list {
-    @apply mb-4 flex flex-wrap gap-2 text-xs font-medium;
-    color: var(--color-neutral-500);
-  }
-
-  .stat-pill {
-    @apply rounded-full px-3 py-1;
-    background-color: var(--color-neutral-100);
-  }
-
-  .action-grid {
-    @apply grid gap-2 sm:grid-cols-2 xl:grid-cols-3;
-  }
-
-  .btn-primary {
-    @apply inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold text-white transition;
-    background-color: var(--color-primary-500);
-  }
-
-  .btn-primary:hover {
-    background-color: var(--color-primary-600);
-  }
-
-  .btn-danger {
-    @apply inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition;
-    background-color: var(--color-secondary-500);
-  }
-
-  .btn-danger:hover {
-    background-color: var(--color-secondary-600);
-  }
-
-  .btn-soft-blue {
-    @apply w-full cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold transition;
-    background-color: color-mix(in srgb, var(--color-success-500) 18%, white);
-    color: var(--color-success-700);
-  }
-
-  .btn-soft-blue:hover {
-    background-color: color-mix(in srgb, var(--color-success-500) 28%, white);
-  }
-
-  .btn-soft-gray {
-    @apply w-full cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold transition;
-    background-color: color-mix(in srgb, var(--color-neutral-500) 18%, white);
-    color: var(--color-neutral-700);
-  }
-
-  .btn-soft-gray:hover {
-    background-color: color-mix(in srgb, var(--color-neutral-500) 28%, white);
-  }
-
-  .btn-soft-emerald {
-    @apply w-full cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold transition;
-    background-color: color-mix(in srgb, var(--color-primary-500) 18%, white);
-    color: var(--color-primary-700);
-  }
-
-  .btn-soft-emerald:hover {
-    background-color: color-mix(in srgb, var(--color-primary-500) 28%, white);
-  }
-
-  .btn-soft-violet {
-    @apply inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold transition;
-    background-color: color-mix(in srgb, var(--color-secondary-500) 18%, white);
-    color: var(--color-secondary-700);
-  }
-
-  .btn-soft-violet:hover {
-    background-color: color-mix(in srgb, var(--color-secondary-500) 28%, white);
-  }
-
-  .btn-soft-rose {
-    @apply w-full cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold transition;
-    background-color: color-mix(in srgb, var(--color-secondary-500) 18%, white);
-    color: var(--color-secondary-700);
-  }
-
-  .btn-soft-rose:hover {
-    background-color: color-mix(in srgb, var(--color-secondary-500) 28%, white);
-  }
-
-  .btn-soft-amber {
-    @apply inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold transition;
-    background-color: color-mix(in srgb, var(--color-accent-500) 24%, white);
-    color: var(--color-accent-700);
-  }
-
-  .btn-soft-amber:hover {
-    background-color: color-mix(in srgb, var(--color-accent-500) 34%, white);
-  }
-
-  .btn-soft-blue-link {
-    @apply inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold transition;
-    background-color: color-mix(in srgb, var(--color-success-500) 18%, white);
-    color: var(--color-success-700);
-  }
-
-  .btn-soft-blue-link:hover {
-    background-color: color-mix(in srgb, var(--color-success-500) 28%, white);
-  }
-
-  .reply-section {
-    @apply border-t px-5 py-4;
-    border-color: var(--color-neutral-100);
-    background-color: var(--color-neutral-100);
-  }
-
-  .reply-section-title {
-    @apply mb-4 text-sm font-semibold uppercase tracking-wide;
-    color: var(--color-neutral-500);
-  }
-
-  .reply-list {
-    @apply space-y-3;
-  }
-
-  .reply-card {
-    @apply rounded-2xl p-4 ring-1;
-    background-color: var(--color-neutral-0);
-    --tw-ring-color: var(--color-neutral-200);
-  }
-
-  .reply-header {
-    @apply mb-3 flex items-start justify-between gap-3;
-  }
-
-  .reply-author {
-    @apply text-sm font-semibold;
-    color: var(--color-neutral-900);
-  }
-
-  .reply-meta {
-    @apply text-xs;
-    color: var(--color-neutral-500);
-  }
-
-  .reply-flag-count {
-    @apply rounded-full px-3 py-1 text-xs font-medium;
-    background-color: var(--color-neutral-100);
-    color: var(--color-neutral-500);
-  }
-
-  .reply-image {
-    @apply mb-3 max-h-72 w-full rounded-2xl object-cover;
-  }
-
-  .form-card {
-    @apply rounded-2xl p-5 shadow-sm ring-1;
-    background-color: var(--color-neutral-0);
-    --tw-ring-color: var(--color-neutral-200);
-  }
-
-  .form-stack {
-    @apply space-y-4;
-  }
-
-  .form-grid {
-    @apply grid gap-4;
-  }
-
-  .form-grid-two {
-    @apply grid gap-4 md:grid-cols-2;
-  }
-
-  .form-field-card {
-    @apply rounded-2xl border p-2 shadow-sm;
-    background-color: var(--color-neutral-0);
-    border-color: var(--color-neutral-200);
-  }
-
-  .form-label {
-    @apply mb-2 block text-sm font-semibold;
-    color: var(--color-neutral-700);
-  }
-
-  .form-input {
-    @apply w-full rounded-2xl border px-4 py-3 text-sm shadow-sm outline-none transition;
-    border-color: var(--color-neutral-200);
-    background-color: var(--color-neutral-0);
-    color: var(--color-neutral-900);
-  }
-
-  .form-input::placeholder {
-    color: var(--color-neutral-400);
-  }
-
-  .form-input:focus {
-    border-color: var(--color-primary-500);
-    box-shadow: 0 0 0 2px var(--color-primary-100);
-  }
-
-  .form-textarea {
-    @apply min-h-32 w-full rounded-2xl border px-4 py-3 text-sm shadow-sm outline-none transition;
-    border-color: var(--color-neutral-200);
-    background-color: var(--color-neutral-0);
-    color: var(--color-neutral-900);
-  }
-
-  .form-textarea::placeholder {
-    color: var(--color-neutral-400);
-  }
-
-  .form-textarea:focus {
-    border-color: var(--color-primary-500);
-    box-shadow: 0 0 0 2px var(--color-primary-100);
-  }
-
-  .form-select {
-    @apply w-full rounded-2xl border px-4 py-3 text-sm shadow-sm outline-none transition;
-    border-color: var(--color-neutral-200);
-    background-color: var(--color-neutral-0);
-    color: var(--color-neutral-900);
-  }
-
-  .form-select:focus {
-    border-color: var(--color-primary-500);
-    box-shadow: 0 0 0 2px var(--color-primary-100);
-  }
-
-  .form-select-multiple {
-    @apply w-full rounded-2xl border px-4 py-3 text-sm shadow-sm outline-none transition;
-    border-color: var(--color-neutral-200);
-    background-color: var(--color-neutral-0);
-    color: var(--color-neutral-900);
-  }
-
-  .form-select-multiple:focus {
-    border-color: var(--color-primary-500);
-    box-shadow: 0 0 0 2px var(--color-primary-100);
-  }
-
-  .form-file {
-    @apply block min-h-[168px] w-full rounded-xl border border-dashed px-4 py-3 text-sm file:mr-4 file:rounded-full file:border-0 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white;
-    border-color: var(--color-neutral-300);
-    background-color: var(--color-neutral-50);
-    color: var(--color-neutral-500);
-  }
-
-  .form-file::file-selector-button {
-    background-color: var(--color-primary-500);
-  }
-
-  .form-file::file-selector-button:hover {
-    background-color: var(--color-primary-600);
-  }
-
-  .form-choice-group {
-    @apply rounded-2xl border p-3 shadow-sm;
-    border-color: var(--color-neutral-200);
-    background-color: var(--color-neutral-0);
-  }
-
-  .form-checkbox {
-    @apply h-4 w-4 rounded border;
-    border-color: var(--color-neutral-300);
-    accent-color: var(--color-primary-500);
-  }
-
-  .form-help {
-    @apply mt-2 text-xs;
-    color: var(--color-neutral-500);
-  }
-
-  .form-errors {
-    @apply mt-2 space-y-1 text-sm;
-    color: var(--color-secondary-600);
-  }
-
-  .form-actions {
-    @apply flex items-center justify-end border-t pt-2;
-    border-color: var(--color-neutral-100);
-  }
-
-  .section-title {
-    @apply text-xl font-bold;
-    color: var(--color-neutral-900);
-  }
-
-  .section-subtitle {
-    @apply mt-1 text-sm;
-    color: var(--color-neutral-500);
-  }
-
-  .section-title-lg {
-    @apply text-2xl font-bold;
-    color: var(--color-neutral-900);
-  }
-
-  .info-list {
-    @apply space-y-3 text-sm;
-    color: var(--color-neutral-700);
-  }
-
-  .info-list-compact {
-    @apply space-y-2 text-sm;
-  }
-
-  .muted-text {
-    @apply text-sm;
-    color: var(--color-neutral-500);
-  }
-
-  .message-card {
-    @apply mb-3 w-fit max-w-[85%] rounded-2xl border p-4;
-    border-color: var(--color-neutral-200);
-    background-color: var(--color-neutral-50);
-  }
-
-  .discussion-layout {
-    @apply grid w-full gap-4 xl:grid-cols-[22rem_minmax(0,1fr)];
-  }
-
-  .discussion-sidebar-panel {
-    @apply overflow-hidden rounded-2xl shadow-sm ring-1;
-    background-color: var(--color-neutral-0);
-    --tw-ring-color: var(--color-neutral-200);
-  }
-
-  .discussion-main-panel {
-    @apply flex min-h-[44rem] flex-col overflow-hidden rounded-2xl shadow-sm ring-1;
-    background-color: var(--color-neutral-0);
-    --tw-ring-color: var(--color-neutral-200);
-  }
-
-  .discussion-panel-header {
-    @apply flex items-center justify-between border-b px-4 py-4;
-    border-color: var(--color-neutral-100);
-  }
-
-  .discussion-panel-title {
-    @apply text-xl font-bold;
-    color: var(--color-neutral-900);
-  }
-
-  .discussion-header-actions {
-    @apply flex items-center gap-2;
-  }
-
-  .discussion-icon-button {
-    @apply inline-flex h-10 w-10 items-center justify-center rounded-full transition;
-    background-color: var(--color-neutral-100);
-    color: var(--color-neutral-500);
-  }
-
-  .discussion-icon-button:hover {
-    background-color: var(--color-neutral-200);
-    color: var(--color-neutral-700);
-  }
-
-  .discussion-search {
-    @apply border-b p-3;
-    border-color: var(--color-neutral-100);
-  }
-
-  .discussion-search-input {
-    @apply w-full rounded-full border px-4 py-2.5 text-sm outline-none transition;
-    border-color: var(--color-neutral-200);
-    background-color: var(--color-neutral-50);
-    color: var(--color-neutral-900);
-  }
-
-  .discussion-search-input::placeholder {
-    color: var(--color-neutral-400);
-  }
-
-  .discussion-search-input:focus {
-    border-color: var(--color-primary-500);
-    box-shadow: 0 0 0 2px var(--color-primary-100);
-  }
-
-  .discussion-list {
-    @apply max-h-[38rem] overflow-y-auto;
-  }
-
-  .discussion-item {
-    @apply flex items-center gap-3 border-b px-4 py-3 transition;
-    border-color: var(--color-neutral-100);
-  }
-
-  .discussion-item:hover {
-    background-color: var(--color-neutral-50);
-  }
-
-  .discussion-item-active {
-    background-color: var(--color-success-50);
-  }
-
-  .discussion-item-copy {
-    @apply min-w-0 flex-1;
-  }
-
-  .discussion-item-title {
-    @apply truncate text-sm font-semibold;
-    color: var(--color-neutral-900);
-  }
-
-  .discussion-item-meta {
-    @apply text-xs;
-    color: var(--color-neutral-500);
-  }
-
-  .discussion-item-preview {
-    @apply truncate text-sm;
-    color: var(--color-neutral-500);
-  }
-
-  .discussion-chat-header {
-    @apply flex items-center gap-3 border-b px-5 py-4;
-    border-color: var(--color-neutral-100);
-  }
-
-  .discussion-chat-meta {
-    @apply text-xs;
-    color: var(--color-neutral-500);
-  }
-
-  .discussion-chat-body {
-    @apply flex-1 overflow-y-auto px-5 py-4;
-    background-color: var(--color-neutral-50);
-  }
-
-  .discussion-thread {
-    @apply space-y-4;
-  }
-
-  .discussion-message-row {
-    @apply flex items-end gap-3;
-  }
-
-  .discussion-message-row-own {
-    @apply justify-end;
-  }
-
-  .discussion-message-avatar {
-    @apply h-8 w-8 shrink-0 rounded-full object-cover;
-  }
-
-  .discussion-message-stack {
-    @apply max-w-[80%];
-  }
-
-  .discussion-message-stack-own {
-    @apply text-right;
-  }
-
-  .discussion-message-bubble {
-    @apply rounded-2xl rounded-tl-sm border px-4 py-3 shadow-sm;
-    border-color: var(--color-neutral-200);
-    background-color: var(--color-neutral-0);
-  }
-
-  .discussion-message-bubble-own {
-    @apply rounded-2xl rounded-tr-sm border-0;
-    background-color: var(--color-success-500);
-    color: var(--color-neutral-0);
-  }
-
-  .discussion-message-text {
-    @apply text-sm leading-6;
-    color: var(--color-neutral-700);
-  }
-
-  .discussion-message-bubble-own .discussion-message-text {
-    color: var(--color-neutral-0);
-  }
-
-  .discussion-message-time {
-    @apply mt-1 text-xs;
-    color: var(--color-neutral-500);
-  }
-
-  .discussion-message-actions {
-    @apply mt-2 flex justify-end;
-  }
-
-  .discussion-message-actions-own {
-    @apply justify-end;
-  }
-
-  .discussion-compose {
-    @apply border-t px-4 py-3;
-    border-color: var(--color-neutral-100);
-    background-color: var(--color-neutral-0);
-  }
-
-  .discussion-compose-form {
-    @apply space-y-3;
-  }
-
-  .discussion-compose-row {
-    @apply flex items-center gap-2;
-  }
-
-  .discussion-compose-input {
-    @apply min-h-0 flex-1 resize-none rounded-full border px-4 py-3 text-sm outline-none transition;
-    border-color: var(--color-neutral-200);
-    background-color: var(--color-neutral-50);
-    color: var(--color-neutral-900);
-  }
-
-  .discussion-compose-input::placeholder {
-    color: var(--color-neutral-400);
-  }
-
-  .discussion-compose-input:focus {
-    border-color: var(--color-primary-500);
-    box-shadow: 0 0 0 2px var(--color-primary-100);
-  }
-
-  .discussion-compose-submit {
-    @apply inline-flex h-11 w-11 items-center justify-center rounded-full text-white transition;
-    background-color: var(--color-success-500);
-  }
-
-  .discussion-compose-submit:hover {
-    background-color: var(--color-success-600);
-  }
-
-  .discussion-side-section {
-    @apply border-t px-4 py-4;
-    border-color: var(--color-neutral-100);
-  }
-
-  .discussion-participant-list {
-    @apply space-y-2;
-  }
-
-  .discussion-participant-item {
-    @apply flex items-center gap-3 text-sm;
-    color: var(--color-neutral-700);
-  }
-
-  .message-image {
-    @apply max-h-80 max-w-full rounded-2xl object-cover;
-  }
-
-  .simple-link {
-    @apply text-sm font-medium;
-    color: var(--color-success-500);
-  }
-
-  .simple-link:hover {
-    color: var(--color-success-600);
-  }
-
-  .modal-overlay {
-    @apply fixed inset-0 z-50 hidden items-center justify-center p-4;
-    background-color: color-mix(in srgb, var(--color-neutral-900) 45%, transparent);
-  }
-
-  .modal-card {
-    @apply relative w-full max-w-md rounded-2xl shadow-sm ring-1;
-    background-color: var(--color-neutral-0);
-    --tw-ring-color: var(--color-neutral-200);
-  }
-
-  .modal-header {
-    @apply flex items-start justify-between gap-4 border-b px-6 py-4;
-    border-color: var(--color-neutral-100);
-  }
-
-  .modal-title {
-    @apply text-lg font-semibold;
-    color: var(--color-neutral-900);
-  }
-
-  .modal-subtitle {
-    @apply mt-1 text-sm;
-    color: var(--color-neutral-500);
-  }
-
-  .modal-close {
-    @apply inline-flex h-10 w-10 items-center justify-center rounded-full transition;
-    background-color: var(--color-neutral-100);
-    color: var(--color-neutral-500);
-  }
-
-  .modal-close:hover {
-    background-color: var(--color-neutral-200);
-    color: var(--color-neutral-700);
-  }
-
-  .modal-body {
-    @apply px-6 py-5;
-  }
-
-  .modal-icon {
-    @apply mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full;
-    background-color: var(--color-danger-100);
-    color: var(--color-danger-700);
-  }
-
-  .modal-message {
-    @apply text-center text-sm leading-6;
-    color: var(--color-neutral-700);
-  }
-
-  .modal-actions {
-    @apply flex items-center justify-center gap-3 border-t px-6 py-4;
-    border-color: var(--color-neutral-100);
-  }
-
-  .modal-button-secondary {
-    @apply inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold transition;
-    background-color: var(--color-neutral-100);
-    color: var(--color-neutral-700);
-  }
-
-  .modal-button-secondary:hover {
-    background-color: var(--color-neutral-200);
-  }
-
-  .modal-button-danger {
-    @apply inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold transition;
-    background-color: var(--color-danger-600);
-    color: var(--color-neutral-0);
-  }
-
-  .modal-button-danger:hover {
-    background-color: var(--color-danger-700);
-  }
+    .composer-header {
+        @apply mb-4 flex items-center gap-3;
+    }
+
+    .composer-disclosure {
+        @apply border-t pt-4;
+        border-color: var(--color-neutral-100);
+    }
+
+    .composer-disclosure-summary {
+        @apply inline-flex cursor-pointer items-center justify-center rounded-full px-5 py-3 text-sm font-semibold;
+    }
+
+    .composer-disclosure-panel {
+        overflow: hidden;
+        transition:
+            max-height 700ms ease,
+            opacity 700ms ease,
+            margin-top 700ms ease;
+        opacity: 0;
+        margin-top: 0;
+        max-height: 0;
+    }
+
+    .composer-disclosure-panel.open {
+        opacity: 1;
+        margin-top: 1rem;
+        max-height: 120rem;
+    }
+
+    .composer-disclosure-panel-inner {
+        @apply min-h-0;
+    }
+
+    .composer-title {
+        @apply text-lg font-semibold;
+        color: var(--color-neutral-900);
+    }
+
+    .composer-subtitle {
+        @apply text-sm;
+        color: var(--color-neutral-500);
+    }
+
+    .divider-top {
+        @apply border-t pt-4;
+        border-color: var(--color-neutral-100);
+    }
+
+    .post-list {
+        @apply space-y-4;
+    }
+
+    .post-card {
+        @apply overflow-hidden rounded-2xl shadow-sm ring-1;
+        background-color: var(--color-neutral-0);
+        --tw-ring-color: var(--color-neutral-200);
+    }
+
+    .post-header {
+        @apply mb-4 flex items-start justify-between gap-4;
+    }
+
+    .post-author {
+        @apply flex items-center gap-3;
+    }
+
+    .post-title {
+        @apply text-base font-semibold;
+        color: var(--color-neutral-900);
+    }
+
+    .post-meta {
+        @apply text-sm;
+        color: var(--color-neutral-500);
+    }
+
+    .post-detail-link {
+        @apply shrink-0 rounded-full px-3 py-1 text-xs font-medium transition;
+        background-color: var(--color-neutral-100);
+        color: var(--color-neutral-500);
+    }
+
+    .post-detail-link:hover {
+        background-color: var(--color-neutral-200);
+        color: var(--color-neutral-900);
+    }
+
+    .post-content {
+        @apply space-y-4;
+    }
+
+    .post-text {
+        @apply whitespace-pre-line text-sm leading-6;
+        color: var(--color-neutral-700);
+    }
+
+    .post-image {
+        @apply max-h-[28rem] w-full rounded-2xl object-cover;
+    }
+
+    .tag-list {
+        @apply flex flex-wrap items-center gap-2;
+    }
+
+    .tag-pill {
+        @apply rounded-full px-3 py-1 text-xs font-medium;
+        background-color: var(--color-primary-50);
+        color: var(--color-primary-600);
+    }
+
+    .quote-card {
+        @apply rounded-2xl border p-4;
+        border-color: var(--color-neutral-200);
+        background-color: var(--color-neutral-50);
+    }
+
+    .quote-empty {
+        @apply rounded-2xl border border-dashed p-4 text-sm;
+        border-color: var(--color-neutral-300);
+        background-color: var(--color-neutral-50);
+        color: var(--color-neutral-500);
+    }
+
+    .quote-title {
+        @apply mb-2 text-sm font-semibold;
+        color: var(--color-neutral-900);
+    }
+
+    .quote-meta {
+        @apply mb-1 text-xs;
+        color: var(--color-neutral-500);
+    }
+
+    .quote-text {
+        @apply text-sm leading-6;
+        color: var(--color-neutral-700);
+    }
+
+    .stat-list {
+        @apply mb-4 flex flex-wrap gap-2 text-xs font-medium;
+        color: var(--color-neutral-500);
+    }
+
+    .stat-pill {
+        @apply rounded-full px-3 py-1;
+        background-color: var(--color-neutral-100);
+    }
+
+    .action-grid {
+        @apply grid gap-2 sm:grid-cols-2 xl:grid-cols-3;
+    }
+
+    .btn-primary {
+        @apply inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold text-white transition;
+        background-color: var(--color-primary-500);
+    }
+
+    .btn-primary:hover {
+        background-color: var(--color-primary-600);
+    }
+
+    .btn-danger {
+        @apply inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition;
+        background-color: var(--color-secondary-500);
+    }
+
+    .btn-danger:hover {
+        background-color: var(--color-secondary-600);
+    }
+
+    .btn-soft-blue {
+        @apply w-full cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold transition;
+        background-color: color-mix(
+            in srgb,
+            var(--color-success-500) 18%,
+            white
+        );
+        color: var(--color-success-700);
+    }
+
+    .btn-soft-blue:hover {
+        background-color: color-mix(
+            in srgb,
+            var(--color-success-500) 28%,
+            white
+        );
+    }
+
+    .btn-soft-gray {
+        @apply w-full cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold transition;
+        background-color: color-mix(
+            in srgb,
+            var(--color-neutral-500) 18%,
+            white
+        );
+        color: var(--color-neutral-700);
+    }
+
+    .btn-soft-gray:hover {
+        background-color: color-mix(
+            in srgb,
+            var(--color-neutral-500) 28%,
+            white
+        );
+    }
+
+    .btn-soft-emerald {
+        @apply w-full cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold transition;
+        background-color: color-mix(
+            in srgb,
+            var(--color-primary-500) 18%,
+            white
+        );
+        color: var(--color-primary-700);
+    }
+
+    .btn-soft-emerald:hover {
+        background-color: color-mix(
+            in srgb,
+            var(--color-primary-500) 28%,
+            white
+        );
+    }
+
+    .btn-soft-violet {
+        @apply w-full cursor-pointer inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold transition;
+        background-color: color-mix(
+            in srgb,
+            var(--color-secondary-500) 18%,
+            white
+        );
+        color: var(--color-secondary-700);
+    }
+
+    .btn-soft-violet:hover {
+        background-color: color-mix(
+            in srgb,
+            var(--color-secondary-500) 28%,
+            white
+        );
+    }
+
+    .btn-soft-rose {
+        @apply w-full cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold transition;
+        background-color: color-mix(
+            in srgb,
+            var(--color-secondary-500) 18%,
+            white
+        );
+        color: var(--color-secondary-700);
+    }
+
+    .btn-soft-rose:hover {
+        background-color: color-mix(
+            in srgb,
+            var(--color-secondary-500) 28%,
+            white
+        );
+    }
+
+    .btn-soft-amber {
+        @apply inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold transition;
+        background-color: color-mix(
+            in srgb,
+            var(--color-accent-500) 24%,
+            white
+        );
+        color: var(--color-accent-700);
+    }
+
+    .btn-soft-amber:hover {
+        background-color: color-mix(
+            in srgb,
+            var(--color-accent-500) 34%,
+            white
+        );
+    }
+
+    .btn-soft-blue-link {
+        @apply inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold transition;
+        background-color: color-mix(
+            in srgb,
+            var(--color-success-500) 18%,
+            white
+        );
+        color: var(--color-success-700);
+    }
+
+    .btn-soft-blue-link:hover {
+        background-color: color-mix(
+            in srgb,
+            var(--color-success-500) 28%,
+            white
+        );
+    }
+
+    .reply-section {
+        @apply border-t px-5 py-4;
+        border-color: var(--color-neutral-100);
+        background-color: var(--color-neutral-100);
+    }
+
+    .reply-section-title {
+        @apply mb-4 text-sm font-semibold uppercase tracking-wide;
+        color: var(--color-neutral-500);
+    }
+
+    .reply-list {
+        @apply space-y-3;
+    }
+
+    .reply-card {
+        @apply rounded-2xl p-4 ring-1;
+        background-color: var(--color-neutral-0);
+        --tw-ring-color: var(--color-neutral-200);
+    }
+
+    .reply-header {
+        @apply mb-3 flex items-start justify-between gap-3;
+    }
+
+    .reply-author {
+        @apply text-sm font-semibold;
+        color: var(--color-neutral-900);
+    }
+
+    .reply-meta {
+        @apply text-xs;
+        color: var(--color-neutral-500);
+    }
+
+    .reply-flag-count {
+        @apply rounded-full px-3 py-1 text-xs font-medium;
+        background-color: var(--color-neutral-100);
+        color: var(--color-neutral-500);
+    }
+
+    .reply-image {
+        @apply mb-3 max-h-72 w-full rounded-2xl object-cover;
+    }
+
+    .form-card {
+        @apply rounded-2xl p-5 shadow-sm ring-1;
+        background-color: var(--color-neutral-0);
+        --tw-ring-color: var(--color-neutral-200);
+    }
+
+    .form-stack {
+        @apply space-y-4;
+    }
+
+    .form-grid {
+        @apply grid gap-4;
+    }
+
+    .form-grid-two {
+        @apply grid gap-4 md:grid-cols-2;
+    }
+
+    .form-field-card {
+        @apply rounded-2xl border p-2 shadow-sm;
+        background-color: var(--color-neutral-0);
+        border-color: var(--color-neutral-200);
+    }
+
+    .form-label {
+        @apply mb-2 block text-sm font-semibold;
+        color: var(--color-neutral-700);
+    }
+
+    .form-input {
+        @apply w-full rounded-2xl border px-4 py-3 text-sm shadow-sm outline-none transition;
+        border-color: var(--color-neutral-200);
+        background-color: var(--color-neutral-0);
+        color: var(--color-neutral-900);
+    }
+
+    .form-input::placeholder {
+        color: var(--color-neutral-400);
+    }
+
+    .form-input:focus {
+        border-color: var(--color-primary-500);
+        box-shadow: 0 0 0 2px var(--color-primary-100);
+    }
+
+    .form-textarea {
+        @apply min-h-32 w-full rounded-2xl border px-4 py-3 text-sm shadow-sm outline-none transition;
+        border-color: var(--color-neutral-200);
+        background-color: var(--color-neutral-0);
+        color: var(--color-neutral-900);
+    }
+
+    .form-textarea::placeholder {
+        color: var(--color-neutral-400);
+    }
+
+    .form-textarea:focus {
+        border-color: var(--color-primary-500);
+        box-shadow: 0 0 0 2px var(--color-primary-100);
+    }
+
+    .form-select {
+        @apply w-full rounded-2xl border px-4 py-3 text-sm shadow-sm outline-none transition;
+        border-color: var(--color-neutral-200);
+        background-color: var(--color-neutral-0);
+        color: var(--color-neutral-900);
+    }
+
+    .form-select:focus {
+        border-color: var(--color-primary-500);
+        box-shadow: 0 0 0 2px var(--color-primary-100);
+    }
+
+    .form-select-multiple {
+        @apply w-full rounded-2xl border px-4 py-3 text-sm shadow-sm outline-none transition;
+        border-color: var(--color-neutral-200);
+        background-color: var(--color-neutral-0);
+        color: var(--color-neutral-900);
+    }
+
+    .form-select-multiple:focus {
+        border-color: var(--color-primary-500);
+        box-shadow: 0 0 0 2px var(--color-primary-100);
+    }
+
+    .form-file {
+        @apply block min-h-[168px] w-full rounded-xl border border-dashed px-4 py-3 text-sm file:mr-4 file:rounded-full file:border-0 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white;
+        border-color: var(--color-neutral-300);
+        background-color: var(--color-neutral-50);
+        color: var(--color-neutral-500);
+    }
+
+    .form-file::file-selector-button {
+        background-color: var(--color-primary-500);
+    }
+
+    .form-file::file-selector-button:hover {
+        background-color: var(--color-primary-600);
+    }
+
+    .form-choice-group {
+        @apply rounded-2xl border p-3 shadow-sm;
+        border-color: var(--color-neutral-200);
+        background-color: var(--color-neutral-0);
+    }
+
+    .form-checkbox {
+        @apply h-4 w-4 rounded border;
+        border-color: var(--color-neutral-300);
+        accent-color: var(--color-primary-500);
+    }
+
+    .form-help {
+        @apply mt-2 text-xs;
+        color: var(--color-neutral-500);
+    }
+
+    .form-errors {
+        @apply mt-2 space-y-1 text-sm;
+        color: var(--color-secondary-600);
+    }
+
+    .form-actions {
+        @apply flex items-center justify-end border-t pt-2;
+        border-color: var(--color-neutral-100);
+    }
+
+    .section-title {
+        @apply text-xl font-bold;
+        color: var(--color-neutral-900);
+    }
+
+    .section-subtitle {
+        @apply mt-1 text-sm;
+        color: var(--color-neutral-500);
+    }
+
+    .section-title-lg {
+        @apply text-2xl font-bold;
+        color: var(--color-neutral-900);
+    }
+
+    .info-list {
+        @apply space-y-3 text-sm;
+        color: var(--color-neutral-700);
+    }
+
+    .info-list-compact {
+        @apply space-y-2 text-sm;
+    }
+
+    .muted-text {
+        @apply text-sm;
+        color: var(--color-neutral-500);
+    }
+
+    .message-card {
+        @apply mb-3 w-fit max-w-[85%] rounded-2xl border p-4;
+        border-color: var(--color-neutral-200);
+        background-color: var(--color-neutral-50);
+    }
+
+    .discussion-layout {
+        @apply grid w-full gap-4;
+    }
+
+    .discussion-sidebar-panel {
+        @apply overflow-hidden rounded-2xl shadow-sm ring-1;
+        background-color: var(--color-neutral-0);
+        --tw-ring-color: var(--color-neutral-200);
+    }
+
+    .discussion-main-panel {
+        @apply flex min-h-[44rem] flex-col overflow-hidden rounded-2xl shadow-sm ring-1;
+        background-color: var(--color-neutral-0);
+        --tw-ring-color: var(--color-neutral-200);
+    }
+
+    .discussion-panel-header {
+        @apply flex items-center justify-between border-b px-4 py-4;
+        border-color: var(--color-neutral-100);
+    }
+
+    .discussion-panel-title {
+        @apply text-xl font-bold;
+        color: var(--color-neutral-900);
+    }
+
+    .discussion-header-actions {
+        @apply flex items-center gap-2;
+    }
+
+    .discussion-icon-button {
+        @apply inline-flex h-10 w-10 items-center justify-center rounded-full transition;
+        background-color: var(--color-neutral-100);
+        color: var(--color-neutral-500);
+    }
+
+    .discussion-icon-button:hover {
+        background-color: var(--color-neutral-200);
+        color: var(--color-neutral-700);
+    }
+
+    .discussion-search {
+        @apply border-b p-3;
+        border-color: var(--color-neutral-100);
+    }
+
+    .discussion-search-input {
+        @apply w-full rounded-full border px-4 py-2.5 text-sm outline-none transition;
+        border-color: var(--color-neutral-200);
+        background-color: var(--color-neutral-50);
+        color: var(--color-neutral-900);
+    }
+
+    .discussion-search-input::placeholder {
+        color: var(--color-neutral-400);
+    }
+
+    .discussion-search-input:focus {
+        border-color: var(--color-primary-500);
+        box-shadow: 0 0 0 2px var(--color-primary-100);
+    }
+
+    .discussion-list {
+        @apply max-h-[38rem] overflow-y-auto;
+    }
+
+    .discussion-item {
+        @apply flex items-center gap-3 border-b px-4 py-3 transition;
+        border-color: var(--color-neutral-100);
+    }
+
+    .discussion-item:hover {
+        background-color: var(--color-neutral-50);
+    }
+
+    .discussion-item-active {
+        background-color: var(--color-success-50);
+    }
+
+    .discussion-item-copy {
+        @apply min-w-0 flex-1;
+    }
+
+    .discussion-item-title {
+        @apply truncate text-sm font-semibold;
+        color: var(--color-neutral-900);
+    }
+
+    .discussion-item-meta {
+        @apply text-xs;
+        color: var(--color-neutral-500);
+    }
+
+    .discussion-item-preview {
+        @apply truncate text-sm;
+        color: var(--color-neutral-500);
+    }
+
+    .discussion-chat-header {
+        @apply flex items-center gap-3 border-b px-5 py-4;
+        border-color: var(--color-neutral-100);
+    }
+
+    .discussion-chat-meta {
+        @apply text-xs;
+        color: var(--color-neutral-500);
+    }
+
+    .discussion-chat-body {
+        @apply flex-1 overflow-y-auto px-5 py-4;
+        background-color: var(--color-neutral-50);
+    }
+
+    .discussion-thread {
+        @apply space-y-4;
+    }
+
+    .discussion-message-row {
+        @apply flex items-end gap-3;
+    }
+
+    .discussion-message-row-own {
+        @apply justify-end;
+    }
+
+    .discussion-message-avatar {
+        @apply h-8 w-8 shrink-0 rounded-full object-cover;
+    }
+
+    .discussion-message-stack {
+        @apply max-w-[80%];
+    }
+
+    .discussion-message-stack-own {
+        @apply text-right;
+    }
+
+    .discussion-message-bubble {
+        @apply rounded-2xl rounded-tl-sm border px-4 py-3 shadow-sm;
+        border-color: var(--color-neutral-200);
+        background-color: var(--color-neutral-0);
+    }
+
+    .discussion-message-bubble-own {
+        @apply rounded-2xl rounded-tr-sm border-0;
+        background-color: var(--color-success-500);
+        color: var(--color-neutral-0);
+    }
+
+    .discussion-message-text {
+        @apply text-sm leading-6;
+        color: var(--color-neutral-700);
+    }
+
+    .discussion-message-bubble-own .discussion-message-text {
+        color: var(--color-neutral-0);
+    }
+
+    .discussion-message-time {
+        @apply mt-1 text-xs;
+        color: var(--color-neutral-500);
+    }
+
+    .discussion-message-actions {
+        @apply mt-2 flex justify-end;
+    }
+
+    .discussion-message-actions-own {
+        @apply justify-end;
+    }
+
+    .discussion-compose {
+        @apply border-t px-4 py-3;
+        border-color: var(--color-neutral-100);
+        background-color: var(--color-neutral-0);
+    }
+
+    .discussion-compose-form {
+        @apply space-y-3;
+    }
+
+    .discussion-compose-row {
+        @apply flex items-center gap-2;
+    }
+
+    .discussion-compose-input {
+        @apply min-h-0 flex-1 resize-none rounded-full border px-4 py-3 text-sm outline-none transition;
+        border-color: var(--color-neutral-200);
+        background-color: var(--color-neutral-50);
+        color: var(--color-neutral-900);
+    }
+
+    .discussion-compose-input::placeholder {
+        color: var(--color-neutral-400);
+    }
+
+    .discussion-compose-input:focus {
+        border-color: var(--color-primary-500);
+        box-shadow: 0 0 0 2px var(--color-primary-100);
+    }
+
+    .discussion-compose-submit {
+        @apply inline-flex h-11 w-11 items-center justify-center rounded-full text-white transition;
+        background-color: var(--color-success-500);
+    }
+
+    .discussion-compose-submit:hover {
+        background-color: var(--color-success-600);
+    }
+
+    .discussion-side-section {
+        @apply border-t px-4 py-4;
+        border-color: var(--color-neutral-100);
+    }
+
+    .discussion-participant-list {
+        @apply space-y-2;
+    }
+
+    .discussion-participant-item {
+        @apply flex items-center gap-3 text-sm;
+        color: var(--color-neutral-700);
+    }
+
+    .message-image {
+        @apply max-h-80 max-w-full rounded-2xl object-cover;
+    }
+
+    .simple-link {
+        @apply text-sm font-medium;
+        color: var(--color-success-500);
+    }
+
+    .simple-link:hover {
+        color: var(--color-success-600);
+    }
+
+    .modal-overlay {
+        @apply fixed inset-0 z-50 hidden items-center justify-center p-4;
+        background-color: color-mix(
+            in srgb,
+            var(--color-neutral-900) 45%,
+            transparent
+        );
+    }
+
+    .modal-card {
+        @apply relative w-full max-w-md rounded-2xl shadow-sm ring-1;
+        background-color: var(--color-neutral-0);
+        --tw-ring-color: transparent;
+    }
+
+    .modal-header {
+        @apply rounded-t-2xl flex items-start justify-between gap-4 border-b px-6 py-4;
+        border-color: var(--color-neutral-100);
+        background-color: color-mix(
+            in srgb,
+            var(--color-danger-600) 50%,
+            transparent
+        );
+    }
+
+    .modal-title {
+        @apply text-lg font-semibold;
+        color: var(--color-neutral-900);
+    }
+
+    .modal-subtitle {
+        @apply mt-1 text-sm;
+        color: var(--color-neutral-500);
+    }
+
+    .modal-close {
+        @apply inline-flex h-10 w-10 items-center justify-center rounded-full transition;
+        background-color: var(--color-neutral-100);
+        color: var(--color-neutral-500);
+    }
+
+    .modal-close:hover {
+        background-color: var(--color-neutral-200);
+        color: var(--color-neutral-700);
+    }
+
+    .modal-body {
+        @apply px-6 py-5;
+    }
+
+    .modal-icon {
+        @apply mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full;
+        background-color: var(--color-danger-100);
+        color: var(--color-danger-700);
+    }
+
+    .modal-message {
+        @apply text-center text-sm leading-6;
+        color: var(--color-neutral-700);
+    }
+
+    .modal-actions {
+        @apply flex items-center justify-center gap-3 border-t px-6 py-4;
+        border-color: var(--color-neutral-100);
+    }
+
+    .modal-button-secondary {
+        @apply inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold transition;
+        background-color: var(--color-neutral-100);
+        color: var(--color-neutral-700);
+    }
+
+    .modal-button-secondary:hover {
+        background-color: var(--color-neutral-200);
+    }
+
+    .modal-button-danger {
+        @apply inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold transition;
+        background-color: var(--color-danger-600);
+        color: var(--color-neutral-0);
+    }
+
+    .modal-button-danger:hover {
+        background-color: var(--color-danger-700);
+    }
+
+    .flash-succes {
+        @apply text-base font-semibold;
+        background-color: var(--color-success-100);
+        color: var(--color-neutral-700);
+    }
+
+    .flash-alert {
+        @apply text-base font-semibold;
+        background-color: var(--color-danger-100);
+        color: var(--color-neutral-700);
+    }
 }
