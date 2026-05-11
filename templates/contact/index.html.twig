@@ -6,7 +6,7 @@
 {% block body %}
 	<h1>Liste des contacts favoris</h1>
 
-<h1 class="text-3xl font-bold underline text-red-500">Test Tailwind</h1>
+	<h1 class="text-3xl font-bold underline text-red-500">Test Tailwind</h1>
 	<div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
 		<table class="w-full text-sm text-left rtl:text-right text-body">
 			<thead class="text-sm text-body bg-neutral-secondary-soft border-b rounded-base border-default">
@@ -30,7 +30,7 @@
 							<td class="px-6 py-4">
 								<form action="{{ path('app_contact_delete', {'id': contact.id}) }}" method="post">
 									<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ contact.id) }}">
-									<button class="border border-blue-600 text-blue-600 px-5 py-2 rounded-lg font-medium hover:bg-blue-50"" type="submit">Supprimer cet ami</button>
+									<button class="border border-blue-600 text-blue-600 px-5 py-2 rounded-lg font-medium hover:bg-blue-50" type="submit">Supprimer cet ami</button>
 								</form>
 							</td>
 						</tr>
@@ -45,6 +45,4 @@
 		</table>
 	</div>
 
-
-    
 {% endblock %}
