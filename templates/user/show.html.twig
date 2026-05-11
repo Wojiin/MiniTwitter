@@ -78,4 +78,5 @@
 		<a href="{{ path('app_user_edit', {'id': user.id}) }}">modifier</a>
 		{{ include('user/_delete_form.html.twig') }}
 	{% endif %}
+	{% include "_modal.html.twig" %}
 {% endblock %}
