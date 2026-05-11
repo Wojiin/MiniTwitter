@@ -88,13 +88,13 @@
 {% endif %}
 {% endif %}
 {% if is_granted('ROLE_ADMIN') or (app.user and post.creator and app.user.id == post.creator.id) %}
-<a href="{{ path('app_post_edit', {'id': post.id}) }}">modifier le post</a>
+<a href="{{ path('app_post_edit', {'id': post.id}) }}">Modifier le post</a>
 {{ include('post/_delete_form.html.twig') }}
 {% endif %}
 {% if app.user and post not in app.user.flagPost %}
-<form action={{ path('app_post_addflag', {'id': post.id} )}} method="post"><input name="flag" id="flag" value="signaler" type="submit"></form>
+<form action={{ path('app_post_addflag', {'id': post.id} )}} method="post"><input name="flag" id="flag" value="Signaler" type="submit"></form>
 {% else %}
-<form action={{ path('app_post_unflag', {'id': post.id} )}} method="post"><input name="unflag" id="unflag" value="retirer le signalement" type="submit"></form>
+<form action={{ path('app_post_unflag', {'id': post.id} )}} method="post"><input name="unflag" id="unflag" value="Retirer le signalement" type="submit"></form>
 {% endif %}
 
 <h2>Réponses</h2>
@@ -128,18 +128,18 @@
 		<tr>
 			<th>Actions</th>
 			<td>
-				<a href="{{ path('app_reply_show', {'id': rep.id}) }}">détails de la réponse</a>
+				<a href="{{ path('app_reply_show', {'id': rep.id}) }}">Détails de la réponse</a>
 				{% if is_granted('ROLE_ADMIN') or (app.user and rep.creator and app.user.id == rep.creator.id) %}
-					<a href="{{ path('app_reply_edit', {'id': rep.id}) }}">modifier la réponse</a>
-					<a href="{{ path('app_reply_delete', {'id': rep.id}) }}">supprimer la réponse</a>
+					<a href="{{ path('app_reply_edit', {'id': rep.id}) }}">Modifier la réponse</a>
+					<a href="{{ path('app_reply_delete', {'id': rep.id}) }}">Supprimer la réponse</a>
 				{% endif %}
 				{% if app.user and post not in app.user.flagReply %}
 					<form action={{ path('app_reply_addflag', {'id': rep.id} )}} method="post">
-						<input name="flag" id="flag" value="signaler" type="submit">
+						<input name="flag" id="flag" value="Signaler" type="submit">
 					</form>
 				{% else %}
 					<form action={{ path('app_reply_unflag', {'id': rep.id} )}} method="post">
-						<input name="unflag" id="unflag" value="retirer le signalement" type="submit">
+						<input name="unflag" id="unflag" value="Retirer le signalement" type="submit">
 					</form>
 				{% endif %}
 			</td>

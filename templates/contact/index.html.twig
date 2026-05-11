@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Contact index{% endblock %}
+{% block title %}Liste des contacts{% endblock %}
 
 {% block body %}
     <h1>Liste des contacts favoris</h1>
@@ -8,7 +8,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Vos amies</th>
+                <th>Vos amis</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -42,5 +42,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_contact_new', {'id': app.user.id}) }}">Create new</a>
+    <a href="{{ path('app_contact_new', {'id': app.user.id}) }}">Créer un nouveau contact</a>
 {% endblock %}

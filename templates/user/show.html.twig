@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Details de l'utilisateur</h1>
+	<h1>Détails de l'utilisateur</h1>
 
 	{% if user.profilPicture %}
 		<p>Photo de profil :
@@ -24,7 +24,7 @@
 			{{ user.suspendedUntil ? user.suspendedUntil|date('d/m/Y H:i') : 'Aucune' }}</li>
 		<li>Nombre de signalements :
 			{{ user.countFlag }}</li>
-		<li>Compte cree le :
+		<li>Compte créé le :
 			{{ user.createdAt|date('d/m/Y H:i') }}</li>
 	</ul>
 
@@ -60,22 +60,22 @@
 		{% endfor %}
 	</ul>
 
-	<a href="{{ path('app_user_index') }}">retour à la liste des utilisateurs</a>
+	<a href="{{ path('app_user_index') }}">Retour à la liste des utilisateurs</a>
 
 	{% if app.user and app.user.id != user.id %}
 		{% if user not in app.user.flagUser %}
 			<form action="{{ path('app_user_addflag', {'id': user.id}) }}" method="post">
-				<input name="flag" id="flag" value="signaler" type="submit">
+				<input name="flag" id="flag" value="Signaler" type="submit">
 			</form>
 		{% else %}
 			<form action="{{ path('app_user_unflag', {'id': user.id}) }}" method="post">
-				<input name="unflag" id="unflag" value="retirer le signalement" type="submit">
+				<input name="unflag" id="unflag" value="Retirer le signalement" type="submit">
 			</form>
 		{% endif %}
 	{% endif %}
 
 	{% if is_granted('ROLE_ADMIN') %}
-		<a href="{{ path('app_user_edit', {'id': user.id}) }}">modifier</a>
+		<a href="{{ path('app_user_edit', {'id': user.id}) }}">Modifier</a>
 		{{ include('user/_delete_form.html.twig') }}
 	{% endif %}
 	{% include "_modal.html.twig" %}

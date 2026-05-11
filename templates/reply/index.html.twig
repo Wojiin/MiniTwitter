@@ -17,7 +17,6 @@
 		<table class="table">
 			<thead>
 				<tr>
-					<th>Id</th>
 					<th>Contenu</th>
 					<th>Image</th>
 					<th>Creée le:</th>
@@ -31,7 +30,6 @@
 				{% for reply in replies %}
 					{% if reply.countFlag > 0 %}
 						<tr>
-							<td>{{ reply.id }}</td>
 							<td>{{ reply.content }}</td>
 							<td>
 								{% if reply.image %}
@@ -43,17 +41,17 @@
 							<td>{{ reply.status }}</td>
 							<td>{{ reply.countFlag }}</td>
 							<td>
-								<a href="{{ path('app_reply_show', {'id': reply.id}) }}">détail</a>
+								<a href="{{ path('app_reply_show', {'id': reply.id}) }}">Détail</a>
 								{% if is_granted('ROLE_ADMIN') or (app.user and reply.creator and app.user.id == reply.creator.id) %}
-									<a href="{{ path('app_reply_edit', {'id': reply.id}) }}">modifier</a>
+									<a href="{{ path('app_reply_edit', {'id': reply.id}) }}">Modifier</a>
 								{% endif %}
 								{% if app.user and reply not in app.user.flagReply %}
 									<form action={{ path('app_reply_addflag', {'id': reply.id} )}} method="post">
-										<input name="flag" id="flag" value="signaler" type="submit">
+										<input name="flag" id="flag" value="Signaler" type="submit">
 									</form>
 								{% else %}
 									<form action={{ path('app_reply_unflag', {'id': reply.id} )}} method="post">
-										<input name="unflag" id="unflag" value="retirer le signalement" type="submit">
+										<input name="unflag" id="unflag" value="Retirer le signalement" type="submit">
 									</form>
 								{% endif %}
 							</td>

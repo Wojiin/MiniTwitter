@@ -41,38 +41,38 @@
 							<td>{{ post.countLike }}</td>
 
 							<td>
-								<a href="{{ path('app_post_show', {'id': post.id}) }}">détails</a>
-								<a href="{{ path('app_reply_new', {'id': post.id}) }}">répondre</a>
+								<a href="{{ path('app_post_show', {'id': post.id}) }}">Détail</a>
+								<a href="{{ path('app_reply_new', {'id': post.id}) }}">Répondre</a>
 								{% if is_granted('ROLE_ADMIN') or (app.user and post.creator and app.user.id == post.creator.id) %}
-									<a href="{{ path('app_post_edit', {'id': post.id}) }}">modifier</a>
+									<a href="{{ path('app_post_edit', {'id': post.id}) }}">Modifier</a>
 								{% endif %}
 								{% if app.user and post not in app.user.likes %}
 									<form action={{ path('app_post_addlike', {'id': post.id} )}} method="post">
-										<input name="like" id="like" value="j'aime" type="submit">
+										<input name="like" id="like" value="J'aime" type="submit">
 									</form>
 								{% else %}
 									<form action={{ path('app_post_remlike', {'id': post.id} )}} method="post">
-										<input name="unlike" id="unlike" value="je n'aime plus" type="submit">
+										<input name="unlike" id="unlike" value="Je n'aime plus" type="submit">
 									</form>
 								{% endif %}
 
 								{% if app.user and post not in app.user.repost %}
 									<form action={{ path('app_post_addrepost', {'id': post.id} )}} method="post">
-										<input name="repost" id="repost" value="repost" type="submit">
+										<input name="repost" id="repost" value="Repost" type="submit">
 									</form>
 								{% else %}
 									<form action={{ path('app_post_remrepost', {'id': post.id} )}} method="post">
-										<input name="unrepost" id="unrepost" value="enlever le repost" type="submit">
+										<input name="unrepost" id="unrepost" value="Enlever le repost" type="submit">
 									</form>
 								{% endif %}
 
 								{% if app.user and post not in app.user.flagPost %}
 									<form action={{ path('app_post_addflag', {'id': post.id} )}} method="post">
-										<input name="flag" id="flag" value="signaler" type="submit">
+										<input name="flag" id="flag" value="Signaler" type="submit">
 									</form>
 								{% else %}
 									<form action={{ path('app_post_unflag', {'id': post.id} )}} method="post">
-										<input name="unflag" id="unflag" value="retirer le signalement" type="submit">
+										<input name="unflag" id="unflag" value="Retirer le signalement" type="submit">
 									</form>
 								{% endif %}
 								{% if is_granted('ROLE_ADMIN') or (app.user and post.creator and app.user.id == post.creator.id) %}

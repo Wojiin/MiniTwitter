@@ -1,14 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Discussion index{% endblock %}
+{% block title %}Liste des discussions{% endblock %}
 
 {% block body %}
-    <h1>Discussion index</h1>
+    <h1>Liste des discussions</h1>
 
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
                 <th>Title</th>
                 <th>Created_at</th>
                 <th>Updated_at</th>
@@ -18,22 +17,21 @@
         <tbody>
         {% for discussion in discussions %}
             <tr>
-                <td>{{ discussion.id }}</td>
                 <td>{{ discussion.title }}</td>
                 <td>{{ discussion.createdAt ? discussion.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ discussion.updatedAt ? discussion.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
-                    <a href="{{ path('app_discussion_show', {'id': discussion.id}) }}">show</a>
-                    <a href="{{ path('app_discussion_edit', {'id': discussion.id}) }}">edit</a>
+                    <a href="{{ path('app_discussion_show', {'id': discussion.id}) }}">Détail</a>
+                    <a href="{{ path('app_discussion_edit', {'id': discussion.id}) }}">Modifier</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="5">no records found</td>
+                <td colspan="5">Aucune discussion existante</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_discussion_new') }}">Create new</a>
+    <a href="{{ path('app_discussion_new') }}">Créer une nouvelle discussion</a>
 {% endblock %}

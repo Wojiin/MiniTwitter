@@ -7,7 +7,7 @@
 	<h1>Liste des utilisateurs</h1>
 
 	{% if is_granted('ROLE_ADMIN') %}
-		<h2>Utilisateurs signales</h2>
+		<h2>Utilisateurs signalés</h2>
 
 		{% set has_flagged_users = false %}
 		{% for user in users %}
@@ -20,26 +20,24 @@
 			<table class="table">
 				<thead>
 					<tr>
-						<th>Id</th>
 						<th>Email</th>
 						<th>Nom d'utilisateur</th>
 						<th>Statut</th>
 						<th>Compteur de flags</th>
-						<th>actions</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for user in users %}
 						{% if user.countFlag > 0 %}
 							<tr>
-								<td>{{ user.id }}</td>
 								<td>{{ user.email }}</td>
 								<td>{{ user.userName }}</td>
 								<td>{{ user.status }}</td>
 								<td>{{ user.countFlag }}</td>
 								<td>
-									<a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
-									<a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
+									<a href="{{ path('app_user_show', {'id': user.id}) }}">Détail</a>
+									<a href="{{ path('app_user_edit', {'id': user.id}) }}">Modifier</a>
 								</td>
 							</tr>
 						{% endif %}
@@ -47,7 +45,7 @@
 				</tbody>
 			</table>
 		{% else %}
-			<p>aucun utilisateur n'a de signalement</p>
+			<p>Aucun utilisateur n'a de signalement</p>
 		{% endif %}
 	{% endif %}
 
@@ -84,7 +82,7 @@
 						{% endif %}
 					</td>
 					<td>
-						<a href="{{ path('app_user_show', {'id': user.id}) }}">details</a>
+						<a href="{{ path('app_user_show', {'id': user.id}) }}">Détails</a>
 					</td>
 					<td>
 					{% set alreadyContact = false %}
@@ -99,7 +97,7 @@
 {% endfor %}
 {% if not alreadyContact and user != app.user %}
 					<form action="{{ path('app_contact_new', {'id': user.id}) }}" method="post">
-    <button type="submit">Ajouter au contact</button>
+    <button type="submit">Ajouter aux contacts</button>
 </form>
 {% elseif contactStatus == 'pending' and user != app.user %}
 <form action="{{ path('app_contact_delete', {'id': existingContact.id}) }}" method="post">
@@ -111,7 +109,7 @@
 				</tr>
 			{% else %}
 				<tr>
-					<td colspan="6">aucun utilisateur enregistré</td>
+					<td colspan="6">Aucun utilisateur enregistré</td>
 				</tr>
 			{% endfor %}
 		</tbody>
