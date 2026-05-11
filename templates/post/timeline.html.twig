@@ -214,22 +214,5 @@
 	</div>
 	{% include "_modal.html.twig" %}
 
-	<script>
-		let postForm = "";
-let forms = document.querySelectorAll(".suppr");
-forms.forEach(form => {
-form.addEventListener('submit', function (e) {
-    console.log(this);
-console.log(e.target);
-e.preventDefault();
-postForm = e.target;
-});
-});
-let oui = document.getElementById('oui');
-oui.addEventListener('click', function (e) {
-    console.log(postForm);
-    
-postForm.submit();
-})
-	</script>
+
 {% endblock %}

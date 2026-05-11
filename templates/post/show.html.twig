@@ -150,4 +150,6 @@
 		<td>Il n'y a pas de réponses à ce post</td>
 	</tr>
 {% endif %}</table><h2>
-<a href="{{ path('app_reply_new', {'id': post.id}) }}">Nouvelle réponse</a></h2><a href="{{ path('app_post_timeline') }}">Retour au fil d'actualité</a>{% endblock %}
+<a href="{{ path('app_reply_new', {'id': post.id}) }}">Nouvelle réponse</a></h2><a href="{{ path('app_post_timeline') }}">Retour au fil d'actualité</a>
+{% include "_modal.html.twig" %}
+{% endblock %}

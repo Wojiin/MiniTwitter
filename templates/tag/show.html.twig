@@ -23,4 +23,5 @@
     <a href="{{ path('app_tag_edit', {'id': tag.id}) }}">edit</a>
 
     {{ include('tag/_delete_form.html.twig') }}
+    {% include "_modal.html.twig" %}
 {% endblock %}
