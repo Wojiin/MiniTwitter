@@ -1,13 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Timeline{% endblock %}
+{% block title %}Timeline
+{% endblock %}
 
 {% block sidebar_left %}
-    {{ include('layout/_sidebar_left.html.twig') }}
+	{{ include('layout/_sidebar_left.html.twig') }}
 {% endblock %}
 
 {% block sidebar_right %}
-    {{ include('layout/_sidebar_right.html.twig') }}
+	{{ include('layout/_sidebar_right.html.twig') }}
 {% endblock %}
 
 {% block body %}
@@ -29,7 +30,7 @@
                 </div>
                 <div class="composer-disclosure" id="post-composer-disclosure">
                     <button type="button" class="btn-primary composer-disclosure-summary" id="post-composer-toggle" aria-expanded="false">
-                        Créer un post
+                        Creer un post
                     </button>
                     <div class="composer-disclosure-panel" id="post-composer-panel">
                         <div class="composer-disclosure-panel-inner">
@@ -66,97 +67,103 @@
                                 </a>
                             </header>
 
-                            <div class="post-content">
-                                <p class="post-text">{{ post.content }}</p>
+							<div class="post-content">
+								<p class="post-text">{{ post.content }}</p>
 
-                                {% if post.image %}
-                                    <img src="{{ asset('uploads/posts/' ~ post.image) }}" alt="Image du post {{ post.title }}" class="post-image">
-                                {% endif %}
+								{% if post.image %}
+									<img src="{{ asset('uploads/posts/' ~ post.image) }}" alt="Image du post {{ post.title }}" class="post-image">
+								{% endif %}
 
-                                {% if post.tags|length > 0 %}
-                                    <div class="tag-list">
-                                        {% for tag in post.tags %}
-                                            <span class="tag-pill">{{ tag.category }}</span>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
+								{% if post.tags|length > 0 %}
+									<div class="tag-list">
+										{% for tag in post.tags %}
+											<span class="tag-pill">{{ tag.category }}</span>
+										{% endfor %}
+									</div>
+								{% endif %}
 
-                                {% if post.idCitation is not null %}
-                                    {% if post.idCitation.status != 'supprime' %}
-                                        <div class="quote-card">
-                                            <h3 class="quote-title">Citation du post #{{ post.idCitation.id }}</h3>
-                                            <p class="quote-meta">
-                                                Par {{ post.idCitation.author }} le {{ post.idCitation.createdAt ? post.idCitation.createdAt|date('d/m/Y H:i') : '' }}
-                                            </p>
-                                            <p class="quote-text">{{ post.idCitation.content }}</p>
-                                        </div>
-                                    {% else %}
-                                        <div class="quote-empty">
-                                            Le post cite a ete supprime.
-                                        </div>
-                                    {% endif %}
-                                {% endif %}
-                            </div>
-                        </div>
+								{% if post.idCitation is not null %}
+									{% if post.idCitation.status != 'supprime' %}
+										<div class="quote-card">
+											<h3 class="quote-title">Citation du post #{{ post.idCitation.id }}</h3>
+											<p class="quote-meta">
+												Par
+												{{ post.idCitation.author }}
+												le
+												{{ post.idCitation.createdAt ? post.idCitation.createdAt|date('d/m/Y H:i') : '' }}
+											</p>
+											<p class="quote-text">{{ post.idCitation.content }}</p>
+										</div>
+									{% else %}
+										<div class="quote-empty">
+											Le post cite a ete supprime.
+										</div>
+									{% endif %}
+								{% endif %}
+							</div>
+						</div>
 
-                        <div class="surface-card-section">
-                            <div class="stat-list">
-                                <span class="stat-pill">J'aime : {{ post.countLike }}</span>
-                                <span class="stat-pill">Reposts : {{ post.countRepost }}</span>
-                                <span class="stat-pill">Signalements : {{ post.countFlag }}</span>
-                            </div>
+						<div class="surface-card-section">
+							<div class="stat-list">
+								<span class="stat-pill">J'aime :
+									{{ post.countLike }}</span>
+								<span class="stat-pill">Reposts :
+									{{ post.countRepost }}</span>
+								<span class="stat-pill">Signalements :
+									{{ post.countFlag }}</span>
+							</div>
 
-                            <div class="action-grid">
-                                <div>
-                                    {% if app.user and post not in app.user.likes %}
-                                        <form action="{{ path('app_post_addlike', {'id': post.id}) }}" method="post">
-                                            <input name="like" id="like-{{ post.id }}" value="J'aime" type="submit" class="btn-soft-blue">
-                                        </form>
-                                    {% else %}
-                                        <form action="{{ path('app_post_remlike', {'id': post.id}) }}" method="post">
-                                            <input name="unlike" id="unlike-{{ post.id }}" value="Je n'aime plus" type="submit" class="btn-soft-gray">
-                                        </form>
-                                    {% endif %}
-                                </div>
+							<div class="action-grid">
+								<div>
+									{% if app.user and post not in app.user.likes %}
+										<form action="{{ path('app_post_addlike', {'id': post.id}) }}" method="post">
+											<input name="like" id="like-{{ post.id }}" value="J'aime" type="submit" class="btn-soft-blue">
+										</form>
+									{% else %}
+										<form action="{{ path('app_post_remlike', {'id': post.id}) }}" method="post">
+											<input name="unlike" id="unlike-{{ post.id }}" value="Je n'aime plus" type="submit" class="btn-soft-gray">
+										</form>
+									{% endif %}
+								</div>
 
-                                <div>
-                                    {% if app.user and post not in app.user.repost %}
-                                        <form action="{{ path('app_post_addrepost', {'id': post.id}) }}" method="post">
-                                            <input name="repost" id="repost-{{ post.id }}" value="Repost" type="submit" class="btn-soft-emerald">
-                                        </form>
-                                    {% else %}
-                                        <form action="{{ path('app_post_remrepost', {'id': post.id}) }}" method="post">
-                                            <input name="unrepost" id="unrepost-{{ post.id }}" value="Enlever le repost" type="submit" class="btn-soft-gray">
-                                        </form>
-                                    {% endif %}
-                                </div>
+								<div>
+									{% if app.user and post not in app.user.repost %}
+										<form action="{{ path('app_post_addrepost', {'id': post.id}) }}" method="post">
+											<input name="repost" id="repost-{{ post.id }}" value="Repost" type="submit" class="btn-soft-emerald">
+										</form>
+									{% else %}
+										<form action="{{ path('app_post_remrepost', {'id': post.id}) }}" method="post">
+											<input name="unrepost" id="unrepost-{{ post.id }}" value="Enlever le repost" type="submit" class="btn-soft-gray">
+										</form>
+									{% endif %}
+								</div>
 
-                                <a href="{{ path('app_reply_new', {'id': post.id}) }}" class="btn-soft-violet">
-                                    Repondre
-                                </a>
+								<a href="{{ path('app_reply_new', {'id': post.id}) }}" class="btn-soft-violet">
+									Repondre
+								</a>
 
-                                <div>
-                                    {% if app.user and post not in app.user.flagPost %}
-                                        <form action="{{ path('app_post_addflag', {'id': post.id}) }}" method="post">
-                                            <input name="flag" id="flag-{{ post.id }}" value="Signaler" type="submit" class="btn-soft-rose">
-                                        </form>
-                                    {% else %}
-                                        <form action="{{ path('app_post_unflag', {'id': post.id}) }}" method="post">
-                                            <input name="unflag" id="unflag-{{ post.id }}" value="Retirer le signalement" type="submit" class="btn-soft-gray">
-                                        </form>
-                                    {% endif %}
-                                </div>
+								<div>
+									{% if app.user and post not in app.user.flagPost %}
+										<form action="{{ path('app_post_addflag', {'id': post.id}) }}" method="post">
+											<input name="flag" id="flag-{{ post.id }}" value="Signaler" type="submit" class="btn-soft-rose">
+										</form>
+									{% else %}
+										<form action="{{ path('app_post_unflag', {'id': post.id}) }}" method="post">
+											<input name="unflag" id="unflag-{{ post.id }}" value="Retirer le signalement" type="submit" class="btn-soft-gray">
+										</form>
+									{% endif %}
+								</div>
 
-                                {% if is_granted('ROLE_ADMIN') or (app.user and post.creator and app.user.id == post.creator.id) %}
-                                    <a href="{{ path('app_post_edit', {'id': post.id}) }}" class="btn-soft-amber">
-                                        Modifier
-                                    </a>
-                                    <div class="flex items-center">
-                                        {{ include('post/_delete_form.html.twig') }}
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
+								{% if is_granted('ROLE_ADMIN') or (app.user and post.creator and app.user.id == post.creator.id) %}
+									<a href="{{ path('app_post_edit', {'id': post.id}) }}" class="btn-soft-amber">
+										Modifier
+									</a>
+									<div class="flex items-center">
+										{{ include('post/_delete_form.html.twig') }}
+									</div>
+								{% endif %}
+							</div>
+						</div>
 
                         {% if post.replies|length > 0 %}
                             <section class="reply-section">
@@ -185,43 +192,44 @@
                                                 </span>
                                             </div>
 
-                                            <p class="post-text">{{ rep.content }}</p>
+											<p class="post-text">{{ rep.content }}</p>
 
-                                            {% if rep.image %}
-                                                <img src="{{ asset('uploads/replies/' ~ rep.image) }}" alt="Image de la reponse" class="reply-image">
-                                            {% endif %}
+											{% if rep.image %}
+												<img src="{{ asset('uploads/replies/' ~ rep.image) }}" alt="Image de la reponse" class="reply-image">
+											{% endif %}
 
-                                            <div class="grid gap-2 sm:grid-cols-3">
-                                                <a href="{{ path('app_reply_show', {'id': rep.id}) }}" class="btn-soft-blue-link">
-                                                    Details
-                                                </a>
+											<div class="grid gap-2 sm:grid-cols-3">
+												<a href="{{ path('app_reply_show', {'id': rep.id}) }}" class="btn-soft-blue-link">
+													Details
+												</a>
 
-                                                {% if is_granted('ROLE_ADMIN') or (app.user and rep.creator and app.user.id == rep.creator.id) %}
-                                                    <a href="{{ path('app_reply_edit', {'id': rep.id}) }}" class="btn-soft-amber">
-                                                        Modifier
-                                                    </a>
-                                                {% endif %}
+												{% if is_granted('ROLE_ADMIN') or (app.user and rep.creator and app.user.id == rep.creator.id) %}
+													<a href="{{ path('app_reply_edit', {'id': rep.id}) }}" class="btn-soft-amber">
+														Modifier
+													</a>
+												{% endif %}
 
-                                                <div>
-                                                    {% if app.user and rep not in app.user.flagReply %}
-                                                        <form action="{{ path('app_reply_addflag', {'id': rep.id}) }}" method="post">
-                                                            <input name="flag" id="reply-flag-{{ rep.id }}" value="Signaler" type="submit" class="btn-soft-rose">
-                                                        </form>
-                                                    {% else %}
-                                                        <form action="{{ path('app_reply_unflag', {'id': rep.id}) }}" method="post">
-                                                            <input name="unflag" id="reply-unflag-{{ rep.id }}" value="Retirer le signalement" type="submit" class="btn-soft-gray">
-                                                        </form>
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                        </article>
-                                    {% endfor %}
-                                </div>
-                            </section>
-                        {% endif %}
-                    </article>
-                {% endif %}
-            {% endfor %}
-        </section>
-    </div>
+												<div>
+													{% if app.user and rep not in app.user.flagReply %}
+														<form action="{{ path('app_reply_addflag', {'id': rep.id}) }}" method="post">
+															<input name="flag" id="reply-flag-{{ rep.id }}" value="Signaler" type="submit" class="btn-soft-rose">
+														</form>
+													{% else %}
+														<form action="{{ path('app_reply_unflag', {'id': rep.id}) }}" method="post">
+															<input name="unflag" id="reply-unflag-{{ rep.id }}" value="Retirer le signalement" type="submit" class="btn-soft-gray">
+														</form>
+													{% endif %}
+												</div>
+											</div>
+										</article>
+									{% endfor %}
+								</div>
+							</section>
+						{% endif %}
+					</article>
+				{% endif %}
+			{% endfor %}
+		</section>
+	</div>
+	{% include "_modal.html.twig" %}
 {% endblock %}

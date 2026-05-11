@@ -44,7 +44,6 @@
 						<th>Nombre de signalement</th>
 						<td>{{ reply.countFlag }}</td>
 					</tr>
-
 				</tbody>
 			</table>
 		</div>
@@ -56,6 +55,17 @@
 				<a class="table-link" href="{{ path('app_reply_edit', {'id': reply.id}) }}">modifier</a>
 				{{ include('reply/_delete_form.html.twig') }}
 			{% endif %}
+
+			{% if app.user and reply not in app.user.flagReply %}
+				<form action="{{ path('app_reply_addflag', {'id': reply.id}) }}" method="post">
+					<input name="flag" id="flag" value="Signaler" type="submit" class="btn-soft-rose">
+				</form>
+			{% else %}
+				<form action="{{ path('app_reply_unflag', {'id': reply.id}) }}" method="post">
+					<input name="unflag" id="unflag" value="Retirer le signalement" type="submit" class="btn-soft-gray">
+				</form>
+			{% endif %}
 		</div>
 	</div>
+	{% include "_modal.html.twig" %}
 {% endblock %}
