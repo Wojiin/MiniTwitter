@@ -4,63 +4,71 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Détails de l'utilisateur</h1>
+	<div class="page-stack-wide">
+		<section class="surface-card">
+			<div class="surface-card-body">
+				<h1 class="section-title-lg">Details de l'utilisateur</h1>
+			</div>
+		</section>
 
-	{% if user.profilPicture %}
-		<p>Photo de profil :
-			<img src="{{ asset('uploads/profile_pictures/' ~ user.profilPicture) }}" alt="Photo de profil de {{ user.userName }}" style="max-width: 120px; max-height: 120px;">
-		</p>
-	{% endif %}
+		<section class="surface-card">
+			<div class="surface-card-body">
+				<h2 class="section-title">Infos</h2>
+				<ul class="info-list">
+					<li>
+						<span class="font-semibold text-gray-900">Photo de profil :</span>
+						{% if user.profilPicture %}
+							<img src="{{ asset('uploads/profile_pictures/' ~ user.profilPicture) }}" alt="Photo de profil de {{ user.userName }}" class="message-image mt-2">
+						{% else %}
+							<span class="text-gray-500">Non renseignee</span>
+						{% endif %}
+					</li>
+					<li><span class="font-semibold text-gray-900">Email :</span> {{ user.email }}</li>
+					<li><span class="font-semibold text-gray-900">Nom d'utilisateur :</span> {{ user.userName }}</li>
+					<li><span class="font-semibold text-gray-900">Statut :</span> {{ user.status }}</li>
+					<li><span class="font-semibold text-gray-900">Fin de suspension :</span> {{ user.suspendedUntil ? user.suspendedUntil|date('d/m/Y H:i') : 'Aucune' }}</li>
+					<li><span class="font-semibold text-gray-900">Nombre de signalements :</span> {{ user.countFlag }}</li>
+					<li><span class="font-semibold text-gray-900">Compte cree le :</span> {{ user.createdAt|date('d/m/Y H:i') }}</li>
+				</ul>
+			</div>
+		</section>
 
-	<ul>
-		<h2>Infos</h2>
-		<li>Email :
-			{{ user.email }}</li>
-		<li>Nom d'utilisateur :
-			{{ user.userName }}</li>
-		<li>Statut :
-			{{ user.status }}</li>
-		<li>Fin de suspension :
-			{{ user.suspendedUntil ? user.suspendedUntil|date('d/m/Y H:i') : 'Aucune' }}</li>
-		<li>Nombre de signalements :
-			{{ user.countFlag }}</li>
-		<li>Compte créé le :
-			{{ user.createdAt|date('d/m/Y H:i') }}</li>
-	</ul>
+		<section class="surface-card">
+			<div class="surface-card-body">
+				<h2 class="section-title">Gazouillis</h2>
+				<ul class="info-list-compact">
+					{% for post in user.posts %}
+						{% if post.status != 'supprime' %}
+							<li><a class="simple-link" href="{{ path('app_post_show', {id: post.id}) }}">{{ post.title }}</a></li>
+						{% endif %}
+					{% else %}
+						<li class="text-gray-500">Aucun gazouillis pour le moment.</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</section>
 
-	<ul>
-		<h2>Gazouillis</h2>
+		<section class="surface-card">
+			<div class="surface-card-body">
+				<h2 class="section-title">Reposts</h2>
+				<ul class="info-list-compact">
+					{% for repost in user.repost %}
+						{% if repost.status != 'supprime' %}
+							<li><a class="simple-link" href="{{ path('app_post_show', {id: repost.id}) }}">{{ repost.title }}</a></li>
+						{% else %}
+							<li class="text-gray-500">Repost d'un post supprime</li>
+						{% endif %}
+					{% else %}
+						<li class="text-gray-500">Aucun repost pour le moment.</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</section>
 
-		{% for post in user.posts %}
-			{% if post.status !== "supprime" %}
-				<li>
-					<a href="{{ path('app_post_show', {id: post.id}) }}">{{ post.title }}</a>
-				</li>
-			{% endif %}
-		{% else %}
-			<li>Aucun gazouillis pour le moment.</li>
-
-		{% endfor %}
-
-	</ul>
-
-	<ul>
-		<h2>Reposts</h2>
-		{% for repost in user.repost %}
-			{% if repost.status !== "supprime" %}
-				<li>
-					<a href="{{ path('app_post_show', {id: repost.id}) }}">{{ repost.title }}</a>
-				</li>
-			{% else %}
-				<li>Repost d'un post supprimé</li>
-			{% endif %}
-
-		{% else %}
-			<li>Aucun repost pour le moment.</li>
-		{% endfor %}
-	</ul>
-
-	<a href="{{ path('app_user_index') }}">Retour à la liste des utilisateurs</a>
+		<section class="surface-card">
+			<div class="surface-card-body">
+				<div class="table-actions">
+					<a class="table-link" href="{{ path('app_user_index') }}">Retour a la liste des utilisateurs</a>
 
 	{% if app.user and app.user.id != user.id %}
 		{% if user not in app.user.flagUser %}
@@ -73,10 +81,25 @@
 			</form>
 		{% endif %}
 	{% endif %}
+					{% if app.user and app.user.id != user.id %}
+						{% if user not in app.user.flagUser %}
+							<form action="{{ path('app_user_addflag', {'id': user.id}) }}" method="post">
+								<input name="flag" id="flag" value="Signaler" type="submit" class="btn-soft-rose">
+							</form>
+						{% else %}
+							<form action="{{ path('app_user_unflag', {'id': user.id}) }}" method="post">
+								<input name="unflag" id="unflag" value="Retirer le signalement" type="submit" class="btn-soft-gray">
+							</form>
+						{% endif %}
+					{% endif %}
 
-	{% if is_granted('ROLE_ADMIN') %}
-		<a href="{{ path('app_user_edit', {'id': user.id}) }}">Modifier</a>
-		{{ include('user/_delete_form.html.twig') }}
-	{% endif %}
+					{% if is_granted('ROLE_ADMIN') %}
+						<a class="btn-soft-amber" href="{{ path('app_user_edit', {'id': user.id}) }}">Modifier</a>
+						{{ include('user/_delete_form.html.twig') }}
+					{% endif %}
+				</div>
+			</div>
+		</section>
+	</div>
 	{% include "_modal.html.twig" %}
 {% endblock %}

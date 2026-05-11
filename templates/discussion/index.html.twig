@@ -3,35 +3,87 @@
 {% block title %}Liste des discussions{% endblock %}
 
 {% block body %}
-    <h1>Liste des discussions</h1>
+    <div class="discussion-layout">
+        <aside class="discussion-sidebar-panel">
+            <div class="discussion-panel-header">
+                <h2 class="discussion-panel-title">Discussions</h2>
+                <a href="{{ path('app_discussion_new') }}" class="discussion-icon-button" title="Nouvelle discussion">+</a>
+            </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Created_at</th>
-                <th>Updated_at</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for discussion in discussions %}
-            <tr>
-                <td>{{ discussion.title }}</td>
-                <td>{{ discussion.createdAt ? discussion.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ discussion.updatedAt ? discussion.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_discussion_show', {'id': discussion.id}) }}">Détail</a>
-                    <a href="{{ path('app_discussion_edit', {'id': discussion.id}) }}">Modifier</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">Aucune discussion existante</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            <div class="discussion-search">
+                <input type="text" placeholder="Rechercher une discussion" class="discussion-search-input">
+            </div>
 
-    <a href="{{ path('app_discussion_new') }}">Créer une nouvelle discussion</a>
+            <div class="discussion-list">
+                {% for item in discussions %}
+                    {% set latestMessage = item.messages|last %}
+                    <a href="{{ path('app_discussion_show', {'id': item.id}) }}" class="discussion-item">
+                        <div class="profile-avatar">
+                            {% set avatarUser = null %}
+                            {% for participant in item.discuss %}
+                                {% if app.user and participant.id != app.user.id %}
+                                    {% set avatarUser = participant %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if avatarUser and avatarUser.profilPicture %}
+                                <img src="{{ asset('uploads/profile_pictures/' ~ avatarUser.profilPicture) }}" alt="Photo de profil de {{ avatarUser.userName }}" class="profile-avatar-image">
+                            {% else %}
+                                {{ (avatarUser ? avatarUser.userName : item.title)|first|upper }}
+                            {% endif %}
+                        </div>
+                        <div class="discussion-item-copy">
+                            <div class="flex items-center justify-between gap-2">
+                                <h3 class="discussion-item-title">{{ item.title }}</h3>
+                                <span class="discussion-item-meta">{{ item.updatedAt ? item.updatedAt|date('d/m H:i') : '' }}</span>
+                            </div>
+                            <p class="discussion-item-preview">
+                                {% if latestMessage %}
+                                    {{ latestMessage.content }}
+                                {% else %}
+                                    Aucun message pour le moment.
+                                {% endif %}
+                            </p>
+                        </div>
+                    </a>
+                {% else %}
+                    <p class="table-empty">Aucune discussion disponible.</p>
+                {% endfor %}
+            </div>
+        </aside>
+
+        <section class="discussion-main-panel">
+            <header class="discussion-chat-header">
+                <div class="profile-avatar">D</div>
+                <div>
+                    <h1 class="section-title">Aucune conversation ouverte</h1>
+                    <p class="discussion-chat-meta">Selectionnez une discussion dans la liste ou creez-en une nouvelle.</p>
+                </div>
+                <div class="ml-auto discussion-header-actions">
+                    <a href="{{ path('app_discussion_new') }}" class="discussion-icon-button" title="Nouvelle discussion">+</a>
+                </div>
+            </header>
+
+            <div class="discussion-chat-body">
+                <div class="discussion-thread">
+                    <article class="discussion-message-row">
+                        <div class="discussion-message-stack">
+                    </article>
+                    <article class="discussion-message-row discussion-message-row-own">
+                        <div class="discussion-message-stack discussion-message-stack-own">
+
+
+                    </article>
+                </div>
+            </div>
+
+            <div class="discussion-compose">
+                <div class="discussion-compose-form">
+                    <div class="discussion-compose-row">
+                        <input type="text" class="discussion-compose-input" placeholder="Ouvrez une discussion pour envoyer un message" disabled>
+                        <button class="discussion-compose-submit" type="button" disabled>></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 {% endblock %}

@@ -52,7 +52,7 @@ final class PostController extends AbstractController
             $entityManager->persist($post);
             $entityManager->flush();
             $eventDispatcher->dispatch(new PostCreatedEvent($post));
-            $this->addFlash('success', 'Votre post a Ã©tÃ© crÃ©Ã© avec succÃ¨s !');
+            $this->addFlash('success', 'Votre post a ete cree avec succes !');
 
             return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
         }

@@ -5,7 +5,7 @@
 {% block body %}
     <h1>Modifier un message</h1>
 
-    {{ include('message/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('message/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
 
     {% if message.discussion %}
         <a href="{{ path('app_discussion_show', {'id': message.discussion.id}) }}">Retourner à la discussion</a>

@@ -3,44 +3,46 @@
 {% block title %}Liste des contacts{% endblock %}
 
 {% block body %}
-    <h1>Liste des contacts favoris</h1>
+    <div class="page-stack-wide">
+        <h1 class="section-title-lg">Liste des contacts favoris</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Vos amis</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        <tr>
-<td>
-        {% for contact in contacts %}
-            {% if contact.status === 'accepted'%}
-            {% if contact.sender == app.user %}
-                {{contact.receiver.userName}}
-            {% else %}
-            {{contact.sender.userName}}
-            {% endif %}
-            
-            </td>
-            <td>
-            <form action="{{ path('app_contact_delete', {'id': contact.id}) }}" method="post">
-    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ contact.id) }}">
-    <button type="submit">Supprimer cet ami</button></form>
-            </td>
-         </tr>
-            {% endif %}
-        {% else %}
-            <tr>
-                <td colspan="3">aucun amis</td>
-            </tr>
-            
-    
-</form>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_contact_new', {'id': app.user.id}) }}">Créer un nouveau contact</a>
+        <div class="table-shell">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Vos amis</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% set has_contacts = false %}
+                {% for contact in contacts %}
+                    {% if contact.status == 'accepted' %}
+                        {% set has_contacts = true %}
+                        <tr>
+                            <td class="table-strong">
+                                {% if contact.sender == app.user %}
+                                    {{ contact.receiver.userName }}
+                                {% else %}
+                                    {{ contact.sender.userName }}
+                                {% endif %}
+                            </td>
+                            <td class="table-actions">
+                                <form action="{{ path('app_contact_delete', {'id': contact.id}) }}" method="post">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ contact.id) }}">
+                                    <button type="submit" class="btn-soft-gray">Supprimer cet ami</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                {% if not has_contacts %}
+                    <tr>
+                        <td colspan="2" class="table-empty">Aucun ami</td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% endblock %}

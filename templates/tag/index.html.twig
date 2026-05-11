@@ -3,31 +3,35 @@
 {% block title %}Liste des Tags{% endblock %}
 
 {% block body %}
-    <h1>Liste des Tags</h1>
+    <div class="page-stack-wide">
+        <h1 class="section-title-lg">Tags</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Categorie</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for tag in tags %}
-            <tr>
-                <td>{{ tag.category }}</td>
-                <td>
-                    <a href="{{ path('app_tag_show', {'id': tag.id}) }}">Détail</a>
-                    <a href="{{ path('app_tag_edit', {'id': tag.id}) }}">Modifier</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">Aucuns tags présents</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <div class="table-shell">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Categorie</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for tag in tags %}
+                    <tr>
+                        <td>{{ tag.category }}</td>
+                        <td class="table-actions">
+                            <a class="table-link" href="{{ path('app_tag_show', {'id': tag.id}) }}">Detail</a>
+                            <a class="table-link" href="{{ path('app_tag_edit', {'id': tag.id}) }}">Modifier</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="2" class="table-empty">Aucun tag présent</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
-    <a href="{{ path('app_tag_new') }}">Créer un nouveau tag</a>
+        <a class="btn-primary" href="{{ path('app_tag_new') }}">Créer un nouveau tag</a>
+    </div>
 {% endblock %}
