@@ -2070,6 +2070,22 @@
   .modal-button-danger:hover {
     background-color: var(--color-danger-700);
   }
+  .flash-succes {
+    background-color: var(--color-success-300);
+    font-size: var(--text-base);
+    line-height: var(--tw-leading, var(--text-base--line-height));
+    --tw-font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-neutral-900);
+  }
+  .flash-alert {
+    background-color: var(--color-danger-300);
+    font-size: var(--text-base);
+    line-height: var(--tw-leading, var(--text-base--line-height));
+    --tw-font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-neutral-900);
+  }
 }
 @property --tw-space-y-reverse {
   syntax: "*";

@@ -3,9 +3,9 @@
 {% block title %}Nouveau Tag{% endblock %}
 
 {% block body %}
-    <h1>Créer un nouveau tag</h1>
+    <h1  class="section-title-lg">Créer un nouveau tag</h1>
 
     {{ include('tag/_form.html.twig') }}
 
-    <a href="{{ path('app_tag_index') }}">Retour à la liste des tags</a>
+    <a class="table-link" href="{{ path('app_tag_index') }}">Retour à la liste des tags</a>
 {% endblock %}
