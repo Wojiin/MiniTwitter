@@ -4,12 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Post;
 use App\Entity\User;
+use App\Event\PostCreatedEvent;
 use App\Form\PostType;
 use App\Repository\PostRepository;
 use App\Service\UploadService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -24,16 +26,8 @@ final class PostController extends AbstractController
             'posts' => $postRepository->findAll(),
         ]);
     }
-    #[Route('/timeline', name: 'app_post_timeline', methods: ['GET'])]
-    public function timeline(PostRepository $postRepository): Response
-    {
-        return $this->render('post/timeline.html.twig', [
-            'posts' => $postRepository->findAll(),
-        ]);
-    }
-
-    #[Route('/new', name: 'app_post_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, UploadService $uploadService): Response
+    #[Route('/timeline', name: 'app_post_timeline', methods: ['GET', 'POST'])]
+    public function timeline(Request $request, PostRepository $postRepository, EntityManagerInterface $entityManager, UploadService $uploadService, EventDispatcherInterface $eventDispatcher): Response
     {
         $now = new \DateTimeImmutable();
         $post = new Post();
@@ -57,7 +51,45 @@ final class PostController extends AbstractController
 
             $entityManager->persist($post);
             $entityManager->flush();
+            $eventDispatcher->dispatch(new PostCreatedEvent($post));
+            $this->addFlash('success', 'Votre post a Ã©tÃ© crÃ©Ã© avec succÃ¨s !');
 
+            return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('post/timeline.html.twig', [
+            'posts' => $postRepository->findAll(),
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/new', name: 'app_post_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager, UploadService $uploadService, EventDispatcherInterface $eventDispatcher): Response
+    {
+        $now = new \DateTimeImmutable();
+        $post = new Post();
+        $form = $this->createForm(PostType::class, $post);
+        $form->handleRequest($request);
+        $post->setCreatedAt($now);
+        $post->setStatus('actif');
+        $post->setCountFlag(0);
+        $post->setCountLike(0);
+        $post->setCountRepost(0);
+        $post->setAuthor($this->getUser()->getUserName());
+        $post->setCreator($this->getUser());
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('image')->getData();
+
+            if ($imageFile) {
+                $fileName = $uploadService->upload($imageFile, 'uploads/posts');
+                $post->setImage($fileName);
+            }
+
+            $entityManager->persist($post);
+            $entityManager->flush();
+            $eventDispatcher->dispatch(new PostCreatedEvent($post));
+            $this->addFlash('success', 'Votre post a été créé avec succès !');
             return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -97,7 +129,7 @@ final class PostController extends AbstractController
             }
 
             $entityManager->flush();
-
+            $this->addFlash('success', 'Votre post a été modifié avec succès !');
             return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -115,8 +147,9 @@ final class PostController extends AbstractController
         }
 
         if ($this->isCsrfTokenValid('delete' . $post->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($post);
+            $post->setStatus('supprime');
             $entityManager->flush();
+            $this->addFlash('success', 'Le post a été supprimé avec succès !');
         }
 
         return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
@@ -218,6 +251,47 @@ final class PostController extends AbstractController
     }
 
 
+    #[Route('/postrepost/{id}', name: 'app_post_postrepost', methods: ['GET', 'POST'])]
+    public function postrepost(Post $repost, Request $request, EntityManagerInterface $entityManager, UploadService $uploadService): Response
+    {
 
-    
+        $user = $this->getUser();
+        $now = new \DateTimeImmutable();
+        $post = new Post();
+        $form = $this->createForm(PostType::class, $post);
+        $form->handleRequest($request);
+        $post->setCreatedAt($now);
+        $post->setStatus('actif');
+        $post->setCountFlag(0);
+        $post->setCountLike(0);
+        $post->setCountRepost(0);
+        $post->setAuthor($user->getUserName());
+        $post->setCreator($user);
+        $post->setIdCitation($repost);
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $user->addRepost($repost);
+                $repost->setCountRepost(+ ($repost->getCountRepost()) + 1);
+            }
+            $imageFile = $form->get('image')->getData();
+
+            if ($imageFile) {
+                $fileName = $uploadService->upload($imageFile, 'uploads/posts');
+                $post->setImage($fileName);
+            }
+
+            $entityManager->persist($post);
+            $entityManager->persist($repost);
+            $entityManager->flush();
+            $this->addFlash('success', 'Votre citation de post a été créée avec succès !');
+            return $this->redirectToRoute('app_post_timeline', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('post/new.html.twig', [
+            'post' => $post,
+            'form' => $form,
+        ]);
+    }
 }

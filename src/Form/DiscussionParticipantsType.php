@@ -42,6 +42,12 @@ class DiscussionParticipantsType extends AbstractType
                 'expanded' => true,
                 'mapped' => false,
                 'label' => 'Ajouter des participants',
+                'label_attr' => [
+                    'class' => 'form-label',
+                ],
+                'attr' => [
+                    'class' => 'form-choice-group',
+                ],
                 'query_builder' => static function (UserRepository $repository) use ($excludedIds) {
                     $queryBuilder = $repository->createQueryBuilder('u')
                         ->orderBy('u.user_name', 'ASC');

@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Discussion;
 use App\Entity\Message;
 use App\Entity\User;
+use App\Event\DiscussionMessageCreatedEvent;
+use App\Event\UserAddedToDiscussionEvent;
 use App\Form\DiscussionParticipantsType;
 use App\Form\DiscussionType;
 use App\Form\MessageType;
@@ -16,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 #[Route('/discussion')]
 final class DiscussionController extends AbstractController
@@ -38,9 +41,9 @@ final class DiscussionController extends AbstractController
     public function new(
         Request $request,
         EntityManagerInterface $entityManager,
-        UploadService $uploadService
-    ): Response
-    {
+        UploadService $uploadService,
+        EventDispatcherInterface $eventDispatcher,
+    ): Response {
         $user = $this->getUser();
 
         if (!$user instanceof User) {
@@ -57,6 +60,7 @@ final class DiscussionController extends AbstractController
             $now = new \DateTimeImmutable();
             $firstMessageContent = (string) $form->get('first_message')->getData();
             $firstMessageImage = $form->get('first_message_picture')->getData();
+            $firstMessage = null;
 
             if (!$discussion->getDiscuss()->contains($user)) {
                 $discussion->addDiscuss($user);
@@ -77,7 +81,7 @@ final class DiscussionController extends AbstractController
                     $participantNames[] = $participant->getUserName();
                 }
 
-                $discussion->setTitle('discussion avec : '.implode(', ', $participantNames));
+                $discussion->setTitle('discussion avec : ' . implode(', ', $participantNames));
             }
 
             $discussion->setUpdatedAt($now);
@@ -96,10 +100,21 @@ final class DiscussionController extends AbstractController
                 }
 
                 $entityManager->persist($firstMessage);
-            
             }
             $entityManager->flush();
 
+            foreach ($discussion->getDiscuss() as $participant) {
+                if ($participant->getId() === $user->getId()) {
+                    continue;
+                }
+
+                $eventDispatcher->dispatch(new UserAddedToDiscussionEvent($discussion, $participant, $user));
+            }
+
+            if ($firstMessage instanceof Message) {
+                $eventDispatcher->dispatch(new DiscussionMessageCreatedEvent($firstMessage));
+            }
+            $this->addFlash('success', 'Votre discussion a été créée avec succès !');
             return $this->redirectToRoute('app_discussion_show', [
                 'id' => $discussion->getId(),
             ], Response::HTTP_SEE_OTHER);
@@ -116,9 +131,9 @@ final class DiscussionController extends AbstractController
         Request $request,
         Discussion $discussion,
         EntityManagerInterface $entityManager,
-        UploadService $uploadService
-    ): Response
-    {
+        UploadService $uploadService,
+        EventDispatcherInterface $eventDispatcher,
+    ): Response {
         $user = $this->getUser();
 
         if (!$user instanceof User) {
@@ -157,6 +172,7 @@ final class DiscussionController extends AbstractController
 
             $entityManager->persist($message);
             $entityManager->flush();
+            $eventDispatcher->dispatch(new DiscussionMessageCreatedEvent($message));
 
             return $this->redirectToRoute('app_discussion_show', [
                 'id' => $discussion->getId(),
@@ -173,6 +189,10 @@ final class DiscussionController extends AbstractController
 
             $discussion->setUpdatedAt(new \DateTimeImmutable());
             $entityManager->flush();
+
+            foreach ($participantsToAdd as $participant) {
+                $eventDispatcher->dispatch(new UserAddedToDiscussionEvent($discussion, $participant, $user));
+            }
 
             return $this->redirectToRoute('app_discussion_show', [
                 'id' => $discussion->getId(),
@@ -204,7 +224,7 @@ final class DiscussionController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
-        if (!$this->isCsrfTokenValid('leave'.$discussion->getId(), $request->getPayload()->getString('_token'))) {
+        if (!$this->isCsrfTokenValid('leave' . $discussion->getId(), $request->getPayload()->getString('_token'))) {
             return $this->redirectToRoute('app_discussion_show', ['id' => $discussion->getId()], Response::HTTP_SEE_OTHER);
         }
 
@@ -221,7 +241,7 @@ final class DiscussionController extends AbstractController
         }
 
         $entityManager->flush();
-
+        $this->addFlash('success', 'Vous avez quitté la discussion avec succès !');
         return $this->redirectToRoute('app_discussion_index', [], Response::HTTP_SEE_OTHER);
     }
 
@@ -241,7 +261,7 @@ final class DiscussionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-
+            $this->addFlash('success', 'Votre discussion a été modifiée avec succès !');
             return $this->redirectToRoute('app_discussion_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -254,9 +274,10 @@ final class DiscussionController extends AbstractController
     #[Route('/{id}', name: 'app_discussion_delete', methods: ['POST'])]
     public function delete(Request $request, Discussion $discussion, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$discussion->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $discussion->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($discussion);
             $entityManager->flush();
+            $this->addFlash('success', 'Votre discussion a été supprimée avec succès !');
         }
 
         return $this->redirectToRoute('app_discussion_index', [], Response::HTTP_SEE_OTHER);
