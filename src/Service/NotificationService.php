@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Contact;
 use App\Entity\Discussion;
 use App\Entity\Message;
 use App\Entity\Notification;
@@ -117,6 +118,27 @@ final class NotificationService
             type: 'added_to_discussion',
             content: $content,
             discussion: $discussion,
+        );
+
+        $this->entityManager->flush();
+    }
+
+    public function notifyContactRequest(Contact $contact): void
+    {
+        $sender = $contact->getSender();
+        $receiver = $contact->getReceiver();
+
+        if (!$sender instanceof User || !$receiver instanceof User) {
+            return;
+        }
+
+        $this->createNotification(
+            recipient: $receiver,
+            type: 'contact_request',
+            content: sprintf(
+                '%s vous a envoye une demande d\'ajout.',
+                $sender->getUserName()
+            ),
         );
 
         $this->entityManager->flush();

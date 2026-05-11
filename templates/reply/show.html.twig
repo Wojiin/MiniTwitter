@@ -4,62 +4,68 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Détail de la réponse</h1>
+	<div class="page-stack-wide">
+		<h1 class="section-title-lg">Detail de la reponse</h1>
 
-	<table class="table">
-		<tbody>
-			<tr>
-				<th>Auteur</th>
-				<td>{{ reply.creator.userName }}</td>
-			</tr>
-			<tr>
-				<th>Contenu</th>
-				<td>{{ reply.content }}</td>
-			</tr>
-			<tr>
-				<th>Image</th>
-				<td>
-					{% if reply.image %}
-						<img src="{{ asset('uploads/replies/' ~ reply.image) }}" alt="Image de la reponse {{ reply.id }}" style="max-width: 250px; max-height: 250px;">
-					{% else %}
-						Aucune image
-					{% endif %}
-				</td>
-			</tr>
-			<tr>
-				<th>Créée le :</th>
-				<td>{{ reply.createdAt ? reply.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-			</tr>
-			<tr>
-				<th>Modifiée le :</th>
-				<td>{{ reply.updatedAt ? reply.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-			</tr>
-			<tr>
-				<th>Statut</th>
-				<td>{{ reply.status }}</td>
-			</tr>
-			<tr>
-				<th>Nombre de signalement :</th>
-				<td>{{ reply.countFlag }}</td>
-			</tr>
+		<div class="table-shell">
+			<table class="table">
+				<tbody>
+					<tr>
+						<th>Auteur</th>
+						<td>{{ reply.creator.userName }}</td>
+					</tr>
+					<tr>
+						<th>Contenu</th>
+						<td>{{ reply.content }}</td>
+					</tr>
+					<tr>
+						<th>Image</th>
+						<td>
+							{% if reply.image %}
+								<img src="{{ asset('uploads/replies/' ~ reply.image) }}" alt="Image de la reponse {{ reply.id }}" class="message-image">
+							{% else %}
+								<span class="status-badge status-badge-neutral">Aucune image</span>
+							{% endif %}
+						</td>
+					</tr>
+					<tr>
+						<th>Creee le</th>
+						<td>{{ reply.createdAt ? reply.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+					</tr>
+					<tr>
+						<th>Modifiee le</th>
+						<td>{{ reply.updatedAt ? reply.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+					</tr>
+					<tr>
+						<th>Statut</th>
+						<td><span class="status-badge status-badge-warning">{{ reply.status }}</span></td>
+					</tr>
+					<tr>
+						<th>Nombre de signalement</th>
+						<td>{{ reply.countFlag }}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 
-		</tbody>
-	</table>
+		<div class="table-actions">
+			<a class="table-link" href="{{ path('app_post_timeline') }}">Retour au fil d'actualite</a>
 
-	<a href="{{ path('app_post_timeline') }}">Retour au fil d'actualité</a>
+			{% if is_granted('ROLE_ADMIN') or (app.user and reply.creator and app.user.id == reply.creator.id) %}
+				<a class="table-link" href="{{ path('app_reply_edit', {'id': reply.id}) }}">modifier</a>
+				{{ include('reply/_delete_form.html.twig') }}
+			{% endif %}
 
-	{% if is_granted('ROLE_ADMIN') or (app.user and reply.creator and app.user.id == reply.creator.id) %}
-		<a href="{{ path('app_reply_edit', {'id': reply.id}) }}">modifier</a>
-		{{ include('reply/_delete_form.html.twig') }}
-	{% endif %}
-	{% if app.user and reply not in app.user.flagReply %}
-		<form action={{ path('app_reply_addflag', {'id': reply.id} )}} method="post">
-			<input name="flag" id="flag" value="signaler" type="submit">
-		</form>
-	{% else %}
-		<form action={{ path('app_reply_unflag', {'id': reply.id} )}} method="post">
-			<input name="unflag" id="unflag" value="retirer le signalement" type="submit">
-		</form>
-	{% endif %}
+			{% if app.user and reply not in app.user.flagReply %}
+				<form action="{{ path('app_reply_addflag', {'id': reply.id}) }}" method="post">
+					<input name="flag" id="flag" value="Signaler" type="submit" class="btn-soft-rose">
+				</form>
+			{% else %}
+				<form action="{{ path('app_reply_unflag', {'id': reply.id}) }}" method="post">
+					<input name="unflag" id="unflag" value="Retirer le signalement" type="submit" class="btn-soft-gray">
+				</form>
+			{% endif %}
+		</div>
+	</div>
 	{% include "_modal.html.twig" %}
 {% endblock %}

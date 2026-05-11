@@ -3,24 +3,32 @@
 {% block title %}Contact{% endblock %}
 
 {% block body %}
-    <h1>Contact</h1>
+    <div class="page-stack">
+        <h1 class="section-title-lg">Contact</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ contact.id }}</td>
-            </tr>
-            {# <tr>
-                <th>Is_active</th>
-                <td>{{ contact.isActive ? 'Yes' : 'No' }}</td>
-            </tr> #}
-        </tbody>
-    </table>
+        <div class="table-shell">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>Statut</th>
+                        <td>{{ contact.status }}</td>
+                    </tr>
+                    <tr>
+                        <th>Expediteur</th>
+                        <td>{{ contact.sender.userName }}</td>
+                    </tr>
+                    <tr>
+                        <th>Destinataire</th>
+                        <td>{{ contact.receiver.userName }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-    <a href="{{ path('app_contact_index') }}">back to list</a>
-
-    <a href="{{ path('app_contact_edit', {'id': contact.id}) }}">edit</a>
-
-    {{ include('contact/_delete_form.html.twig') }}
+        <div class="table-actions">
+            <a class="table-link" href="{{ path('app_contact_index') }}">back to list</a>
+            <a class="table-link" href="{{ path('app_contact_edit', {'id': contact.id}) }}">edit</a>
+            {{ include('contact/_delete_form.html.twig') }}
+        </div>
+    </div>
 {% endblock %}

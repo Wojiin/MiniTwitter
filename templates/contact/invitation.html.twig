@@ -4,40 +4,37 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Liste des invitations</h1>
-	{% for contact in contacts %}
-		{% if contact %}
-			<table class="table">
-				<thead>
-					<tr>
-						<th></th>
-						<th>Accepter la demande d'invitation ?</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>{{ contact.sender.userName }}
-							vous as envoyer une demande d'invitation</td>
-						<td>
-							{# <a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
-																																	<a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a> #}
-							<div class="flex">
-								<form action="{{ path('app_contact_invitation_accept', {'id': contact.id}) }}" method="post">
-    <button class="btn-primary" type="submit">Oui</button>
-</form>
+	<div class="page-stack-wide">
+		<h1 class="section-title-lg">Liste des invitations</h1>
 
-<form action="{{ path('app_contact_invitation_refuse', {'id': contact.id}) }}" method="post">
-    <button class="btn-soft-gray" type="submit">Non</button>
-</form>
-							</div>
-						</td>
-					</tr>
-
-
-				</tbody>
-			</table>
+		{% if contacts|length > 0 %}
+			<div class="table-shell">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Invitation</th>
+							<th>Decision</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for contact in contacts %}
+							<tr>
+								<td>{{ contact.sender.userName }} vous a envoye une demande d'invitation</td>
+								<td class="table-actions">
+									<form action="{{ path('app_contact_invitation_accept', {'id': contact.id}) }}" method="post">
+    									<button type="submit" class="btn-soft-emerald">Oui</button>
+									</form>
+									<form action="{{ path('app_contact_invitation_refuse', {'id': contact.id}) }}" method="post">
+    									<button type="submit" class="btn-soft-rose">Non</button>
+									</form>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
 		{% else %}
-			<p>aucun utilisateur n'a de signalement</p>
+			<p class="muted-text">aucune invitation en attente</p>
 		{% endif %}
-	{% endfor %}
+	</div>
 {% endblock %}

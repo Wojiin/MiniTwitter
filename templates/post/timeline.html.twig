@@ -12,48 +12,60 @@
 {% endblock %}
 
 {% block body %}
-	<div class="page-column">
-		<section class="surface-card">
-			<div class="surface-card-body">
-				<div class="composer-header">
-					<div class="profile-avatar">
-						{{ app.user ? app.user.userName|first|upper : 'P' }}
-					</div>
-					<div>
-						<h1 class="composer-title">Fil d'actualite</h1>
-						<p class="composer-subtitle">Creez une publication depuis votre feed.</p>
-					</div>
-				</div>
-				<div class="divider-top">
-					{{ include('post/_form.html.twig', {button_label: 'Publier'}) }}
-				</div>
-			</div>
-		</section>
+    <div class="page-column">
+        <section class="surface-card">
+            <div class="surface-card-body">
+                <div class="composer-header">
+                    <div class="profile-avatar">
+                        {% if app.user and app.user.profilPicture %}
+                            <img src="{{ asset('uploads/profile_pictures/' ~ app.user.profilPicture) }}" alt="Photo de profil de {{ app.user.userName }}" class="profile-avatar-image">
+                        {% else %}
+                            {{ app.user ? app.user.userName|first|upper : 'P' }}
+                        {% endif %}
+                    </div>
+                    <div>
+                        <h1 class="composer-title">Fil d'actualite</h1>
+                        <p class="composer-subtitle">Creez une publication depuis votre feed.</p>
+                    </div>
+                </div>
+                <div class="composer-disclosure" id="post-composer-disclosure">
+                    <button type="button" class="btn-primary composer-disclosure-summary" id="post-composer-toggle" aria-expanded="false">
+                        Creer un post
+                    </button>
+                    <div class="composer-disclosure-panel" id="post-composer-panel">
+                        <div class="composer-disclosure-panel-inner">
+                            {{ include('post/_form.html.twig', {button_label: 'Publier'}) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-		<section class="post-list">
-			{% for post in posts|reverse %}
-				{% if post.status != 'supprime' %}
-					<article class="post-card">
-						<div class="surface-card-body">
-							<header class="post-header">
-								<div class="post-author">
-									<div class="profile-avatar">
-										{{ post.author|first|upper }}
-									</div>
-									<div>
-										<h2 class="post-title">{{ post.title }}</h2>
-										<p class="post-meta">
-											Par
-											{{ post.author }}
-											le
-											{{ post.createdAt ? post.createdAt|date('d/m/Y H:i') : '' }}
-										</p>
-									</div>
-								</div>
-								<a href="{{ path('app_post_show', {'id': post.id}) }}" class="post-detail-link">
-									Details
-								</a>
-							</header>
+        <section class="post-list">
+            {% for post in posts|reverse %}
+                {% if post.status != 'supprime' %}
+                    <article class="post-card">
+                        <div class="surface-card-body">
+                            <header class="post-header">
+                                <div class="post-author">
+                                    <div class="profile-avatar">
+                                        {% if post.creator and post.creator.profilPicture %}
+                                            <img src="{{ asset('uploads/profile_pictures/' ~ post.creator.profilPicture) }}" alt="Photo de profil de {{ post.creator.userName }}" class="profile-avatar-image">
+                                        {% else %}
+                                            {{ post.author|first|upper }}
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <h2 class="post-title">{{ post.title }}</h2>
+                                        <p class="post-meta">
+                                            Par {{ post.author }} le {{ post.createdAt ? post.createdAt|date('d/m/Y H:i') : '' }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <a href="{{ path('app_post_show', {'id': post.id}) }}" class="post-detail-link">
+                                    Details
+                                </a>
+                            </header>
 
 							<div class="post-content">
 								<p class="post-text">{{ post.content }}</p>
@@ -153,25 +165,32 @@
 							</div>
 						</div>
 
-						{% if post.replies|length > 0 %}
-							<section class="reply-section">
-								<h3 class="reply-section-title">Reponses</h3>
-								<div class="reply-list">
-									{% for rep in post.replies %}
-										<article class="reply-card">
-											<div class="reply-header">
-												<div>
-													<p class="reply-author">{{ rep.creator.userName }}</p>
-													<p class="reply-meta">
-														Repondu le
-														{{ rep.createdAt ? rep.createdAt|date('d/m/Y H:i') : '' }}
-													</p>
-												</div>
-												<span class="reply-flag-count">
-													Signalements :
-													{{ rep.countFlag }}
-												</span>
-											</div>
+                        {% if post.replies|length > 0 %}
+                            <section class="reply-section">
+                                <h3 class="reply-section-title">Reponses</h3>
+                                <div class="reply-list">
+                                    {% for rep in post.replies %}
+                                        <article class="reply-card">
+                                            <div class="reply-header">
+                                                <div class="flex items-start gap-3">
+                                                    <div class="profile-avatar">
+                                                        {% if rep.creator and rep.creator.profilPicture %}
+                                                            <img src="{{ asset('uploads/profile_pictures/' ~ rep.creator.profilPicture) }}" alt="Photo de profil de {{ rep.creator.userName }}" class="profile-avatar-image">
+                                                        {% else %}
+                                                            {{ rep.creator.userName|first|upper }}
+                                                        {% endif %}
+                                                    </div>
+                                                    <div>
+                                                        <p class="reply-author">{{ rep.creator.userName }}</p>
+                                                        <p class="reply-meta">
+                                                            Repondu le {{ rep.createdAt ? rep.createdAt|date('d/m/Y H:i') : '' }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <span class="reply-flag-count">
+                                                    Signalements : {{ rep.countFlag }}
+                                                </span>
+                                            </div>
 
 											<p class="post-text">{{ rep.content }}</p>
 
@@ -213,6 +232,4 @@
 		</section>
 	</div>
 	{% include "_modal.html.twig" %}
-
-
 {% endblock %}
