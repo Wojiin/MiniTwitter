@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Contact index{% endblock %}
+{% block title %}Liste des contacts{% endblock %}
 
 {% block body %}
     <div class="page-stack-wide">
@@ -38,7 +38,7 @@
                 {% endfor %}
                 {% if not has_contacts %}
                     <tr>
-                        <td colspan="2" class="table-empty">aucun ami</td>
+                        <td colspan="2" class="table-empty">Aucun ami</td>
                     </tr>
                 {% endif %}
                 </tbody>

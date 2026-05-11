@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Discussion{% endblock %}
+{% block title %}Modifier Discussion{% endblock %}
 
 {% block body %}
-    <h1>Edit Discussion</h1>
+    <h1>Modification des discussions</h1>
 
-    {{ include('discussion/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('discussion/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
 
-    <a href="{{ path('app_discussion_index') }}">back to list</a>
+    <a href="{{ path('app_discussion_index') }}">Retour à la liste des discussions</a>
 
     {{ include('discussion/_delete_form.html.twig') }}
 {% endblock %}

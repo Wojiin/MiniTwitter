@@ -21,8 +21,8 @@
 						<tr>
 							<th>Contenu</th>
 							<th>Image</th>
-							<th>Creee le</th>
-							<th>Modifiee le</th>
+							<th>Créée le</th>
+							<th>Modifiée le</th>
 							<th>Statut</th>
 							<th>Signalements</th>
 							<th>Actions</th>
@@ -45,9 +45,9 @@
 									<td><span class="status-badge status-badge-warning">{{ reply.status }}</span></td>
 									<td>{{ reply.countFlag }}</td>
 									<td class="table-actions">
-										<a class="table-link" href="{{ path('app_reply_show', {'id': reply.id}) }}">detail</a>
+										<a class="table-link" href="{{ path('app_reply_show', {'id': reply.id}) }}">Détail</a>
 										{% if is_granted('ROLE_ADMIN') or (app.user and reply.creator and app.user.id == reply.creator.id) %}
-											<a class="table-link" href="{{ path('app_reply_edit', {'id': reply.id}) }}">modifier</a>
+											<a class="table-link" href="{{ path('app_reply_edit', {'id': reply.id}) }}">Modifier</a>
 										{% endif %}
 									</td>
 								</tr>
@@ -57,7 +57,7 @@
 				</table>
 			</div>
 		{% else %}
-			<p class="muted-text">aucune reponse n'a de signalement</p>
+			<p class="muted-text">Aucune reponse n'a de signalement</p>
 		{% endif %}
 	</div>
 
