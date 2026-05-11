@@ -22,3 +22,4 @@ config/reference.php
 /node_modules
 /assets/styles/output.css
 /tailwind/output.css
+assets/styles/output.css
