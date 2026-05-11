@@ -5,7 +5,7 @@
 
 {% block body %}
 	<div class="page-stack-wide">
-		<h1 class="section-title-lg">Liste des posts signales</h1>
+		<h1 class="section-title-lg">Liste des posts signalés</h1>
 
 		{% set has_flagged_posts = false %}
 		{% for post in posts %}
@@ -41,10 +41,10 @@
 									<td>{{ post.countRepost }}</td>
 									<td>{{ post.countLike }}</td>
 									<td class="table-actions">
-										<a class="table-link" href="{{ path('app_post_show', {'id': post.id}) }}">details</a>
-										<a class="table-link" href="{{ path('app_reply_new', {'id': post.id}) }}">repondre</a>
+										<a class="table-link" href="{{ path('app_post_show', {'id': post.id}) }}">Détails</a>
+										<a class="table-link" href="{{ path('app_reply_new', {'id': post.id}) }}">Répondre</a>
 										{% if is_granted('ROLE_ADMIN') or (app.user and post.creator and app.user.id == post.creator.id) %}
-											<a class="table-link" href="{{ path('app_post_edit', {'id': post.id}) }}">modifier</a>
+											<a class="table-link" href="{{ path('app_post_edit', {'id': post.id}) }}">Modifier</a>
 										{% endif %}
 									</td>
 								</tr>
@@ -54,7 +54,7 @@
 				</table>
 			</div>
 		{% else %}
-			<p class="muted-text">aucun post n'a de signalement</p>
+			<p class="muted-text">Aucun post n'a de signalement</p>
 		{% endif %}
 	</div>
 
