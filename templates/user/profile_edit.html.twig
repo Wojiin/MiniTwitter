@@ -15,7 +15,7 @@
                     {% if user.profilPicture %}
                         <img src="{{ asset('uploads/profile_pictures/' ~ user.profilPicture) }}" alt="Photo de profil de {{ user.userName }}" class="message-image mt-2">
                     {% else %}
-                        <span class="text-gray-500">Non renseignee</span>
+                        <span class="text-gray-500">Non renseignée</span>
                     {% endif %}
                 </li>
                 <li><span class="font-semibold text-gray-900">Statut :</span> {{ user.status }}</li>
@@ -47,7 +47,7 @@
                     {% if repost.status != 'supprime' %}
                         <li><a class="simple-link" href="{{ path('app_post_show', {id: repost.id}) }}">{{ repost.title }}</a></li>
                     {% else %}
-                        <li class="text-gray-500">Repost d'un post supprime</li>
+                        <li class="text-gray-500">Repost d'un post supprimé</li>
                     {% endif %}
                 {% else %}
                     <li class="text-gray-500">Aucun repost pour le moment.</li>

@@ -10,7 +10,7 @@
             <table class="table">
                 <tbody>
                     <tr>
-                        <th>Category</th>
+                        <th>Categorie</th>
                         <td>{{ tag.category }}</td>
                     </tr>
                 </tbody>
@@ -18,8 +18,8 @@
         </div>
 
         <div class="table-actions">
-            <a class="table-link" href="{{ path('app_tag_index') }}">back to list</a>
-            <a class="table-link" href="{{ path('app_tag_edit', {'id': tag.id}) }}">edit</a>
+            <a class="table-link" href="{{ path('app_tag_index') }}">Retour à la liste des tags</a>
+            <a class="table-link" href="{{ path('app_tag_edit', {'id': tag.id}) }}">Modifier</a>
             {{ include('tag/_delete_form.html.twig') }}
         </div>
     </div>
