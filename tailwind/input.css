@@ -304,14 +304,14 @@
   }
 
   .profile-avatar {
-      @apply flex h-11 w-11 items-center justify-center rounded-full text-sm font-semibold;
-      background-color: var(--color-primary-100);
-      color: var(--color-primary-600);
-    }
+    @apply flex h-11 w-11 items-center justify-center rounded-full text-sm font-semibold;
+    background-color: var(--color-primary-100);
+    color: var(--color-primary-600);
+  }
 
-    .profile-avatar-image {
-      @apply h-full w-full rounded-full object-cover;
-    }
+  .profile-avatar-image {
+    @apply h-full w-full rounded-full object-cover;
+  }
 
   .composer-header {
     @apply mb-4 flex items-center gap-3;
@@ -762,7 +762,7 @@
   }
 
   .discussion-layout {
-    @apply grid w-full gap-4 xl:grid-cols-[22rem_minmax(0,1fr)];
+    @apply grid w-full gap-4 xl:grid-cols-[22rem_minmax(0, 1fr)];
   }
 
   .discussion-sidebar-panel {
@@ -1073,5 +1073,17 @@
 
   .modal-button-danger:hover {
     background-color: var(--color-danger-700);
+  }
+
+  .flash-succes {
+    @apply text-base font-semibold;
+    background-color: var(--color-success-300);
+    color: var(--color-neutral-900);
+  }
+
+  .flash-alert {
+    @apply text-base font-semibold;
+    background-color: var(--color-danger-300);
+    color: var(--color-neutral-900);
   }
 }

@@ -3,11 +3,11 @@
 {% block title %}Edit Reply{% endblock %}
 
 {% block body %}
-    <h1>Modifier la réponse</h1>
+    <h1 class="section-title-lg" >Modifier la réponse</h1>
 
     {{ include('reply/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
 
-    <a href="{{ path('app_post_timeline') }}">Retour au fil d'actualité</a>
+    <a class="table-link" href="{{ path('app_post_timeline') }}">Retour au fil d'actualité</a>
 
     {{ include('reply/_delete_form.html.twig') }}
 {% endblock %}
