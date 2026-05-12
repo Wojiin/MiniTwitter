@@ -48,7 +48,7 @@
 			</table>
 		</div>
 
-		<div class="table-actions">
+		<div class="action-grid">
 			<a class="table-link" href="{{ path('app_post_timeline') }}">Retour au fil d'actualite</a>
 
 			{% if is_granted('ROLE_ADMIN') or (app.user and reply.creator and app.user.id == reply.creator.id) %}

@@ -17,7 +17,7 @@
             </table>
         </div>
 
-        <div class="table-actions">
+        <div class="action-grid">
             <a class="table-link" href="{{ path('app_tag_index') }}">Retour à la liste des tags</a>
             <a class="table-link" href="{{ path('app_tag_edit', {'id': tag.id}) }}">Modifier</a>
             {{ include('tag/_delete_form.html.twig') }}
