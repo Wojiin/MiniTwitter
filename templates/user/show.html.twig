@@ -67,10 +67,9 @@
 
 		<section class="surface-card">
 			<div class="surface-card-body">
-				<div class="table-actions">
+				<div class="action-grid">
 					<a class="table-link" href="{{ path('app_user_index') }}">Retour a la liste des utilisateurs</a>
 
-	
 
 					{% if app.user and app.user.id != user.id %}
 						{% if user not in app.user.flagUser %}
