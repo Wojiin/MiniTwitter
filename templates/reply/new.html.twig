@@ -3,9 +3,9 @@
 {% block title %}New Reply{% endblock %}
 
 {% block body %}
-    <h1>Create new Reply</h1>
+    <h1 class="section-title-lg">Créer une nouvelle réponse</h1>
 
     {{ include('reply/_form.html.twig') }}
 
-    <a href="{{ path('app_reply_index') }}">back to list</a>
+    <a class="table-link" href="{{ path('app_post_timeline') }}">Retour au fil d'actualité</a>
 {% endblock %}

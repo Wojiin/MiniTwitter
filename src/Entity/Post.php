@@ -59,16 +59,45 @@ class Post
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'likes')]
     private Collection $users;
 
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'repost')]
+    private Collection $repostedBy;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
     #[ORM\ManyToOne(inversedBy: 'flagPost')]
     private ?User $userFlag = null;
 
+    /**
+     * @var Collection<int, Tag>
+     */
+    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'posts')]
+    private Collection $tags;
+
+    /**
+     * @var Collection<int, Notification>
+     */
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'post_notif')]
+    private Collection $notifications;
+
+    #[ORM\OneToOne(targetEntity: self::class, cascade: ['persist', 'remove'])]
+    private ?self $id_citation = null;
+
+ 
+
+    
+
     public function __construct()
     {
         $this->replies = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->repostedBy = new ArrayCollection();
+        $this->tags = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -253,6 +282,33 @@ class Post
         return $this;
     }
 
+    /**
+     * @return Collection<int, User>
+     */
+    public function getRepostedBy(): Collection
+    {
+        return $this->repostedBy;
+    }
+
+    public function addRepostedBy(User $user): static
+    {
+        if (!$this->repostedBy->contains($user)) {
+            $this->repostedBy->add($user);
+            $user->addRepost($this);
+        }
+ 
+        return $this;
+    }
+
+    public function removeRepostedBy(User $user): static
+    {
+        if ($this->repostedBy->removeElement($user)) {
+            $user->removeRepost($this);
+        }
+
+        return $this;
+    }
+
     public function getImage(): ?string
     {
         return $this->image;
@@ -276,4 +332,72 @@ class Post
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Tag>
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function addTag(Tag $tag): static
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags->add($tag);
+        }
+
+        return $this;
+    }
+
+    public function removeTag(Tag $tag): static
+    {
+        $this->tags->removeElement($tag);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Notification>
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): static
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
+            $notification->setPostNotif($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): static
+    {
+        if ($this->notifications->removeElement($notification)) {
+            if ($notification->getPostNotif() === $this) {
+                $notification->setPostNotif(null);
+            }
+        }
+
+        return $this;
+    }
+    public function getIdCitation(): ?self
+    {
+        return $this->id_citation;
+    }
+
+    public function setIdCitation(?self $id_citation): static
+    {
+        $this->id_citation = $id_citation;
+
+        return $this;
+    }
+
+
+    
+    
 }

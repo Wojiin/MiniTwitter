@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block body %}
+    <div class="page-stack-wide">
+        <section class="surface-card">
+            <div class="surface-card-body">
+                <h1 class="section-title-lg">Notifications</h1>
+                <p class="section-subtitle">Retrouvez ici les nouveautes liees a vos discussions, posts et reponses.</p>
+            </div>
+        </section>
+
+        {% if notifications is empty %}
+            <section class="surface-card">
+                <div class="surface-card-body">
+                    <p class="muted-text">Vous n'avez aucune notification.</p>
+                </div>
+            </section>
+        {% else %}
+            <section class="post-list">
+                {% for notification in notifications %}
+                    <article class="surface-card">
+                        <div class="surface-card-body">
+                            <div class="post-header">
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <h2 class="post-title">{{ notification.content }}</h2>
+                                        {% if not notification.isRead %}
+                                            <span class="status-badge status-badge-info">Non lue</span>
+                                        {% endif %}
+                                    </div>
+                                    <p class="post-meta">
+                                        Recue le {{ notification.createdAt ? notification.createdAt|date('d/m/Y H:i') : '' }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="post-content">
+                                {% if notification.messageNotif %}
+                                    <div class="quote-card">
+                                        <h3 class="quote-title">Message</h3>
+                                        <p class="quote-text">{{ notification.messageNotif.content }}</p>
+                                    </div>
+                                {% endif %}
+
+                                {% if notification.postNotif %}
+                                    <div class="quote-card">
+                                        <h3 class="quote-title">Post</h3>
+                                        <p class="quote-text">{{ notification.postNotif.title }}</p>
+                                    </div>
+                                {% endif %}
+
+                                {% if notification.replyNotif %}
+                                    <div class="quote-card">
+                                        <h3 class="quote-title">Reponse</h3>
+                                        <p class="quote-text">{{ notification.replyNotif.content }}</p>
+                                    </div>
+                                {% endif %}
+
+                                {% if notification.discussionNotif %}
+                                    <div class="quote-card">
+                                        <h3 class="quote-title">Discussion</h3>
+                                        <p class="quote-text">{{ notification.discussionNotif.title }}</p>
+                                    </div>
+                                {% endif %}
+
+                                {% if notification.type == 'contact_request' %}
+                                    <div class="quote-card">
+                                        <h3 class="quote-title">Invitation</h3>
+                                        <p class="quote-text">Ouvrez cette notification pour acceder a votre liste d'invitations.</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="surface-card-section">
+                            <div class="table-actions">
+                                <a class="btn-soft-blue-link" href="{{ path('app_notification_open', {'id': notification.id}) }}">Voir la nouveaute</a>
+                                <form method="post" action="{{ path('app_notification_seen', {'id': notification.id}) }}">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('seen' ~ notification.id) }}">
+                                    <button type="submit" class="btn-soft-gray">Marquer comme vue</button>
+                                </form>
+                            </div>
+                        </div>
+                    </article>
+                {% endfor %}
+            </section>
+        {% endif %}
+    </div>
+{% endblock %}

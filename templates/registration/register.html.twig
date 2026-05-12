@@ -2,20 +2,29 @@
 
 {% block title %}Register{% endblock %}
 
+{% block sidebar_left %}{% endblock %}
+
+{% block sidebar_right %}{% endblock %}
+
 {% block body %}
-    <h1>Register</h1>
+    <div class="page-stack">
+        <h1 class="section-title-lg">Creation de compte</h1>
 
-    {{ form_errors(registrationForm) }}
+        {{ form_errors(registrationForm) }}
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.user_name) }}
-        <p>Le mot de passe doit contenir au moins 12 caracteres, avec une majuscule, une minuscule, un chiffre et un caractere special.</p>
-        {{ form_row(registrationForm.plainPassword.first) }}
-        {{ form_row(registrationForm.plainPassword.second) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+        {{ form_start(registrationForm, {'attr': {'class': 'form-card form-stack'}}) }}
+            {{ form_row(registrationForm.email) }}
+            {{ form_row(registrationForm.user_name) }}
+            <p class="muted-text">Le mot de passe doit contenir au moins 12 caracteres, avec une majuscule, une minuscule, un chiffre et un caractere special.</p>
+            {{ form_row(registrationForm.plainPassword.first) }}
+            {{ form_row(registrationForm.plainPassword.second) }}
+            {{ form_row(registrationForm.agreeTerms) }}
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
-    <a href="{{ path('app_login')}}">Se connecter</a>
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">Créer un compte</button>
+            </div>
+        {{ form_end(registrationForm) }}
+
+        <a class="simple-link" href="{{ path('app_login')}}">Se connecter</a>
+    </div>
 {% endblock %}

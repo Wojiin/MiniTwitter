@@ -1,13 +1,33 @@
-<nav>
+<nav class="nav-shell">
+    <div class="nav-group">
+        <div class="nav-brand">Parrot</div>
+            <div class="nav-links">
     {% if app.user %}
         {% if is_granted('ROLE_ADMIN') %}
-            <a href="{{ path('app_post_index') }}">Gazouillis</a>
-            <a href="{{ path('app_reply_index') }}">Réponses</a>
-            
+            <a class="nav-link" href="{{ path('app_post_index') }}">Gazouillis</a>
+            <a class="nav-link" href="{{ path('app_reply_index') }}">Reponses</a>
+            <a class="nav-link" href="{{ path('app_tag_index') }}">Tags</a>
         {% endif %}
-        <a href="{{ path('app_user_index') }}">Utilisateurs</a>
-        <a href="{{ path('app_post_timeline') }}">Fil d'actualité</a>
-        <a href="{{ path('app_user_profile_edit') }}">{{app.user.userName}}</a>
-        <a href="{{ path('app_logout') }}">Se déconnecter</a>
+        <a class="nav-link" href="{{ path('app_user_index') }}">Utilisateurs</a>
+        <a class="nav-link" href="{{ path('app_contact_invitation') }}">Invitations</a>
+        <a class="nav-link" href="{{ path('app_contact_index') }}">Amis</a>
+        <a class="nav-link" href="{{ path('app_post_timeline') }}">Fil d'actualite</a>
+        <a class="nav-link" href="{{ path('app_discussion_index') }}">Discussions</a>
+        <a class="nav-link" href="{{ path('app_notification_index') }}">
+            Notifications{% if app.user.countNotification > 0 %} ({{ app.user.countNotification }}){% endif %}
+        </a>
+        <a class="nav-link inline-flex items-center gap-2" href="{{ path('app_user_profile_edit') }}">
+            <span class="profile-avatar !h-8 !w-8 overflow-hidden text-xs">
+                {% if app.user.profilPicture %}
+                    <img src="{{ asset('uploads/profile_pictures/' ~ app.user.profilPicture) }}" alt="Photo de profil de {{ app.user.userName }}" class="profile-avatar-image">
+                {% else %}
+                    {{ app.user.userName|first|upper }}
+                {% endif %}
+            </span>
+            <span>{{ app.user.userName }}</span>
+        </a>
+        <a class="nav-link" href="{{ path('app_logout') }}">Se deconnecter</a>
     {% endif %}
+        </div>
+    </div>
 </nav>

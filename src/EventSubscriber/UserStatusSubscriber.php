@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Security;
+namespace App\EventSubscriber;
 
 use App\Entity\User;
 use App\Service\UserStatusService;

@@ -4,136 +4,158 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Post</h1>
+	<div class="page-column">
+		<article class="post-card">
+			<div class="surface-card-body">
+				<header class="post-header">
+					<div class="post-author">
+						<div class="profile-avatar">
+							{% if post.creator and post.creator.profilPicture %}
+								<img src="{{ asset('uploads/profile_pictures/' ~ post.creator.profilPicture) }}" alt="Photo de profil de {{ post.creator.userName }}" class="profile-avatar-image">
+							{% else %}
+								{{ post.author|first|upper }}
+							{% endif %}
+						</div>
+						<div>
+							<h1 class="post-title">{{ post.title }}</h1>
+							<p class="post-meta">
+								Par {{ post.author }} le {{ post.createdAt ? post.createdAt|date('d/m/Y H:i') : '' }}
+							</p>
+						</div>
+					</div>
 
-	<table class="table">
-		<tbody>
-			{# <tr>
-																												<th>Id</th>
-																												<td>{{ post.id }}</td>
-																											</tr> #}
-			<tr>
-				<th>Author</th>
-				<td>{{ post.author }}</td>
-			</tr>
-			<tr>
-				<th>Title</th>
-				<td>{{ post.title }}</td>
-			</tr>
-			<tr>
-				<th>Content</th>
-				<td>{{ post.content }}</td>
-			</tr>
-			<tr>
-				<th>Image</th>
-				<td>
+					<a href="{{ path('app_post_timeline') }}" class="post-detail-link">Retour</a>
+				</header>
+
+				<div class="post-content">
+					<p class="post-text">{{ post.content }}</p>
+
 					{% if post.image %}
-						<img src="{{ asset('uploads/posts/' ~ post.image) }}" alt="Image du post {{ post.title }}" style="max-width: 250px; max-height: 250px;">
-					{% else %}
-						Aucune image
+						<img src="{{ asset('uploads/posts/' ~ post.image) }}" alt="Image du post {{ post.title }}" class="post-image">
 					{% endif %}
-				</td>
-			</tr>
-			<tr>
-				<th>Created_at</th>
-				<td>{{ post.createdAt ? post.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-			</tr>
-			<tr>
-				<th>Updated_at</th>
-				<td>{{ post.updatedAt ? post.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-			</tr>
-			<tr>
-				<th>Count_repost</th>
-				<td>{{ post.countRepost }}</td>
-			</tr>
-			<tr>
-				<th>Count_like</th>
-				<td>{{ post.countLike }}</td>
-			</tr>
-			{# <tr>
-																												<th>Status</th>
-																												<td>{{ post.status }}</td>
-																											</tr> #}
-			<tr>
-				<th>Count_flag</th>
-				<td>{{ post.countFlag }}</td>
-			</tr>
 
-		</tbody>
-	</table>
+					{% if post.tags|length > 0 %}
+						<div class="tag-list">
+							{% for tag in post.tags %}
+								<span class="tag-pill">{{ tag.category }}</span>
+							{% endfor %}
+						</div>
+					{% endif %}
 
-	{% if is_granted('ROLE_ADMIN') or (app.user and post.creator and app.user.id == post.creator.id) %}
-		<a href="{{ path('app_post_edit', {'id': post.id}) }}">edit post</a>
-		{{ include('post/_delete_form.html.twig') }}
-	{% endif %}
-	{% if app.user and post not in app.user.flagPost %}
-		<form action={{ path('app_post_addflag', {'id': post.id} )}} method="post">
-			<input name="flag" id="flag" value="flag" type="submit">
-		</form>
-	{% else %}
-		<form action={{ path('app_post_unflag', {'id': post.id} )}} method="post">
-			<input name="unflag" id="unflag" value="remove flag" type="submit">
-		</form>
-	{% endif %}
-
-	<h2>Reply</h2>
-	<table class="table">
-		{% if replies|length > 0 %}
-			{% for rep in replies %}
-				<tr>
-					<th>Content</th>
-					<td>{{ rep.content }}</td>
-				</tr>
-				<tr>
-					<th>Image</th>
-					<td>
-						{% if rep.image %}
-							<img src="{{ asset('uploads/replies/' ~ rep.image) }}" alt="Image de la reponse" style="max-width: 200px; max-height: 200px;">
+					{% if post.idCitation is not null %}
+						{% if post.idCitation.status != 'supprime' %}
+							<div class="quote-card">
+								<h3 class="quote-title">Citation du post #{{ post.idCitation.id }}</h3>
+								<p class="quote-meta">
+									Par {{ post.idCitation.author }} le {{ post.idCitation.createdAt ? post.idCitation.createdAt|date('d/m/Y H:i') : '' }}
+								</p>
+								<p class="quote-text">{{ post.idCitation.content }}</p>
+							</div>
 						{% else %}
-							Aucune image
+							<div class="quote-empty">
+								Le post cite a ete supprime.
+							</div>
 						{% endif %}
-					</td>
-				</tr>
-				<tr>
-					<th>Creator</th>
-					<td>{{ rep.creator.userName }}</td>
-				</tr>
-				<tr>
-					<th>Created_at</th>
-					<td>{{ rep.createdAt ? rep.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-				</tr>
-				<tr>
-					<th>Actions</th>
-					<td>
-						<a href="{{ path('app_reply_show', {'id': rep.id}) }}">show</a>
-						{% if is_granted('ROLE_ADMIN') or (app.user and rep.creator and app.user.id == rep.creator.id) %}
-							<a href="{{ path('app_reply_edit', {'id': rep.id}) }}">edit</a>
-							<a href="{{ path('app_reply_delete', {'id': rep.id}) }}">delete reply</a>
-						{% endif %}
-						{% if app.user and post not in app.user.flagReply %}
-							<form action={{ path('app_reply_addflag', {'id': rep.id} )}} method="post">
-								<input name="flag" id="flag" value="flag" type="submit">
-							</form>
-						{% else %}
-							<form action={{ path('app_reply_unflag', {'id': rep.id} )}} method="post">
-								<input name="unflag" id="unflag" value="remove flag" type="submit">
-							</form>
-						{% endif %}
-					</td>
-				</tr>
-			{% endfor %}
-		{% else %}
-			<tr>
-				<td>Il n'y a pas de replies</td>
-			</tr>
-		{% endif %}
-	</table>
-	<h2>
-		<a href="{{ path('app_reply_new', {'id': post.id}) }}">New Reply</a>
-	</h2>
-	{# <a href="{{ path('app_reply_new', {'id': post.id}) }}">New Reply</a> #}
-	{# {{ include('reply/_form.html.twig') }} #}
-	<a href="{{ path('app_post_timeline') }}">back to list</a>
+					{% endif %}
+				</div>
+			</div>
 
+			<div class="surface-card-section">
+				<div class="stat-list">
+					<span class="stat-pill">J'aime : {{ post.countLike }}</span>
+					<span class="stat-pill">Reposts : {{ post.countRepost }}</span>
+					<span class="stat-pill">Signalements : {{ post.countFlag }}</span>
+				</div>
 
+				<div class="action-grid">
+					<a href="{{ path('app_post_postrepost', {'id': post.id}) }}" class="btn-soft-violet">Créer un repost</a>
+
+					{% if app.user and post not in app.user.flagPost %}
+						<form action="{{ path('app_post_addflag', {'id': post.id}) }}" method="post">
+							<input name="flag" id="flag" value="Signaler" type="submit" class="btn-soft-rose">
+						</form>
+					{% else %}
+						<form action="{{ path('app_post_unflag', {'id': post.id}) }}" method="post">
+							<input name="unflag" id="unflag" value="Retirer le signalement" type="submit" class="btn-soft-gray">
+						</form>
+					{% endif %}
+
+					<a href="{{ path('app_reply_new', {'id': post.id}) }}" class="btn-soft-blue-link">Nouvelle réponse</a>
+
+					{% if is_granted('ROLE_ADMIN') or (app.user and post.creator and app.user.id == post.creator.id) %}
+						<a href="{{ path('app_post_edit', {'id': post.id}) }}" class="btn-soft-amber">Modifier</a>
+						<div class="flex items-center">
+							{{ include('post/_delete_form.html.twig') }}
+						</div>
+					{% endif %}
+				</div>
+			</div>
+
+			<section class="reply-section">
+				<h2 class="reply-section-title">Réponses</h2>
+				{% if replies|length > 0 %}
+					<div class="reply-list">
+						{% for rep in replies %}
+							<article class="reply-card">
+								<div class="reply-header">
+									<div class="flex items-start gap-3">
+										<div class="profile-avatar">
+											{% if rep.creator and rep.creator.profilPicture %}
+												<img src="{{ asset('uploads/profile_pictures/' ~ rep.creator.profilPicture) }}" alt="Photo de profil de {{ rep.creator.userName }}" class="profile-avatar-image">
+											{% else %}
+												{{ rep.creator.userName|first|upper }}
+											{% endif %}
+										</div>
+										<div>
+											<p class="reply-author">{{ rep.creator.userName }}</p>
+											<p class="reply-meta">
+												Répondu le {{ rep.createdAt ? rep.createdAt|date('d/m/Y H:i') : '' }}
+											</p>
+										</div>
+									</div>
+									<span class="reply-flag-count">
+										Signalements : {{ rep.countFlag }}
+									</span>
+								</div>
+
+								<p class="post-text">{{ rep.content }}</p>
+
+								{% if rep.image %}
+									<img src="{{ asset('uploads/replies/' ~ rep.image) }}" alt="Image de la réponse" class="reply-image">
+								{% endif %}
+
+								<div class="grid gap-2 sm:grid-cols-3">
+									<a href="{{ path('app_reply_show', {'id': rep.id}) }}" class="btn-soft-blue-link">
+										Détails
+									</a>
+
+									{% if is_granted('ROLE_ADMIN') or (app.user and rep.creator and app.user.id == rep.creator.id) %}
+										<a href="{{ path('app_reply_edit', {'id': rep.id}) }}" class="btn-soft-amber">
+											Modifier
+										</a>
+									{% endif %}
+
+									<div>
+										{% if app.user and rep not in app.user.flagReply %}
+											<form action="{{ path('app_reply_addflag', {'id': rep.id}) }}" method="post">
+												<input name="flag" id="reply-flag-{{ rep.id }}" value="Signaler" type="submit" class="btn-soft-rose">
+											</form>
+										{% else %}
+											<form action="{{ path('app_reply_unflag', {'id': rep.id}) }}" method="post">
+												<input name="unflag" id="reply-unflag-{{ rep.id }}" value="Retirer le signalement" type="submit" class="btn-soft-gray">
+											</form>
+										{% endif %}
+									</div>
+								</div>
+							</article>
+						{% endfor %}
+					</div>
+				{% else %}
+					<p class="muted-text">Il n'y a pas de réponses à ce post.</p>
+				{% endif %}
+			</section>
+		</article>
+	</div>
+
+{% include "_modal.html.twig" %}
 {% endblock %}

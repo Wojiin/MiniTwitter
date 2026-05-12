@@ -1,0 +1,4 @@
+<form id="suppr{{tag.id}}" method="post" action="{{ path('app_post_delete', {'id': tag.id}) }}" class="w-full">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ tag.id) }}">    
+    <button type="button" data-modal-toggle="popup-modal" data-modal-target="popup-modal" class="btn-soft-violet suppr">Supprimer</button>
+</form>

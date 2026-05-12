@@ -18,3 +18,10 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+/node_modules/
+/assets/styles/output.css
+config/reference.php
+/assets/styles/output.css
+/tailwind/output.css
+assets/styles/output.css
+assets/styles/output.css

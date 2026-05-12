@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle Discussion{% endblock %}
+
+{% block body %}
+    <h1 class="section-title-lg">Créer une nouvelle discussion</h1>
+
+    {{ include('discussion/_form.html.twig') }}
+
+    <a class="table-link" href="{{ path('app_discussion_index') }}">Retour à la liste des discussions</a>
+{% endblock %}
