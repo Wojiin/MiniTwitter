@@ -7,7 +7,11 @@
 			{% endblock %}
 		</title>
 		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-		<link href="./tailwind/output.css" rel="stylesheet"> {% block stylesheets %}{% endblock %}
+		
+		{# <link href="./tailwind/output.css" rel="stylesheet">  #}
+		{% block stylesheets %}
+
+		{% endblock %}
 		<script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"></script>
 		{% block javascripts %}
 			{% block importmap %}
@@ -19,6 +23,8 @@
 			<meta name="frankenphp-hot-reload:url" content="{{ frankenphpHotReload }}">
 			<script src="https://cdn.jsdelivr.net/npm/idiomorph"></script>
 			<script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
+			<script src="../path/to/flowbite/dist/flowbite.min.js"></script>
+
 		{% endif %}
 	</head>
 	<body style="background-color: var(--color-neutral-50);">
@@ -44,5 +50,7 @@
 				{% endblock %}
 			</div>
 		{% endblock %}
+		<script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"></script>
+
 	</body>
 </html>
